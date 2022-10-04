@@ -1,13 +1,17 @@
 /* eslint-disable react/no-unused-state */
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
+import Lists from '../../common/interfaces/Lists';
+import List from './components/List/List';
+import './board.scss';
 
-interface MyState {
+interface TableState {
   title: string;
-  lists?: object;
+  lists: Lists[];
 }
-export default class Board extends React.Component<{}, MyState> {
-  constructor(props: {} | MyState) {
+
+export default class Board extends React.Component<{}, TableState> {
+  constructor(props: {} | TableState) {
     super(props);
     this.state = {
       title: 'Моя тестовая доска',
@@ -40,6 +44,23 @@ export default class Board extends React.Component<{}, MyState> {
 
   render(): JSX.Element {
     const { title } = this.state;
-    return <h1>{title}</h1>;
+    const { lists } = this.state;
+    return (
+      <div className="board-container">
+        <div className="board-title">
+          <h1>{title}</h1>
+        </div>
+        <div className="block-table">
+          <div className="block-lists">
+            {lists.map((el) => {
+              return List(el);
+            })}
+          </div>
+          <div className="btn-container">
+            <button className="add-list">+</button>
+          </div>
+        </div>
+      </div>
+    );
   }
 }

@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
+$main-font: 'Comfortaa', cursive;
+
+.board-container {
+    font-family: $main-font;
+    display: flex;
+    flex-direction: column;
+}
+.board-title {
+    background-color: rgba(174, 172, 255, 0.651);
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.block-table {
+    min-height: 600px;
+    background-color: rgb(182, 255, 192);
+    display: flex;
+}
+.btn-container {
+    padding: 20px;
+    .add-list {
+        box-sizing: border-box;
+        font-size: 35px;
+        cursor: pointer;
+        padding: 5px 15px;
+        border-radius: 50%;
+        border: none;
+        &:hover {
+            border: 2px solid rgba(115, 113, 252, 0.651);
+        }
+    }
+}
+.block-lists {
+    display: flex;
+    padding: 15px;
+}

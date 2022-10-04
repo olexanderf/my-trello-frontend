@@ -1,0 +1,25 @@
+.list {
+    margin: 0 15px 0 15px;
+    min-width: 450px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+h2 {
+    background-color: rgb(240, 236, 236);
+    padding: 20px;
+}
+.btn-container {
+    text-align: right;
+    padding: 5px;
+    .add-list {
+        box-sizing: border-box;
+        font-size: 25px;
+        cursor: pointer;
+        padding: 5px 15px;
+        border-radius: 50%;
+        border: none;
+        &:hover {
+            border: 2px solid rgba(115, 113, 252, 0.651);
+        }
+    }
+}
