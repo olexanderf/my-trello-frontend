@@ -1,0 +1,26 @@
+.board-on-table {
+  min-width: 200px;
+  min-height: 100px;
+  border: 2px solid #000;
+  border-radius: 15px;
+  margin: 15px;
+  cursor: pointer;
+  p {
+    margin: 5px;
+    padding: 10px;
+  }
+}
+.btn-container {
+  padding: 20px;
+  .add-list {
+    box-sizing: border-box;
+    font-size: 35px;
+    cursor: pointer;
+    padding: 5px 15px;
+    border-radius: 50%;
+    border: none;
+    &:hover {
+      border: 2px solid rgba(115, 113, 252, 0.651);
+    }
+  }
+}

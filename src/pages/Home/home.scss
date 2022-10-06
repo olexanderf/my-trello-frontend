@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
+$main-font: 'Comfortaa', cursive;
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: $main-font;
+}
+.table-board {
+  display: grid;
+  max-width: 70%;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  justify-self: center;
+  align-self: center;
+  font-size: 18px;
+}
+.table-name {
+  text-align: center;
+  font-size: 25px;
+}
