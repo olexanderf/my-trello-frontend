@@ -1,27 +1,20 @@
+import { connect } from 'react-redux';
 import React from 'react';
 import Board from '../../common/interfaces/Board';
 import IconBoard from './components/Board/Board';
 import './home.scss';
 
-interface Boards {
+type PropsType = {
   boards: Board[];
-}
+};
 
-export default class Home extends React.Component<{}, Boards> {
-  constructor(props: {} | Boards) {
-    super(props);
-    this.state = {
-      boards: [
-        { id: 1, title: 'покупки' },
-        { id: 2, title: 'подготовка к свадьбе' },
-        { id: 3, title: 'разработка интернет-магазина' },
-        { id: 4, title: 'курс по продвижению в соцсетях' },
-      ],
-    };
-  }
+type StateType = {
+  boards: Board[];
+};
 
+class Home extends React.Component<PropsType, StateType> {
   render(): JSX.Element {
-    const { boards } = this.state;
+    const { boards } = this.props;
     return (
       <div className="container">
         <h3 className="table-name">Мои Доски</h3>
@@ -37,3 +30,9 @@ export default class Home extends React.Component<{}, Boards> {
     );
   }
 }
+
+const mapStateToProps = (state: StateType): Board[] => ({
+  ...state.boards,
+});
+
+export default connect(mapStateToProps, {})(Home);
