@@ -3,16 +3,22 @@ import React from 'react';
 import Board from '../../common/interfaces/Board';
 import IconBoard from './components/Board/Board';
 import './home.scss';
+import { getBoards } from '../../store/modules/boards/actions';
 
 type PropsType = {
   boards: Board[];
+  getBoards: () => Promise<void>;
 };
-
 type StateType = {
   boards: Board[];
 };
 
 class Home extends React.Component<PropsType, StateType> {
+  async componentDidMount(): Promise<void> {
+    // eslint-disable-next-line react/destructuring-assignment
+    await this.props.getBoards();
+  }
+
   render(): JSX.Element {
     const { boards } = this.props;
     return (
@@ -35,4 +41,4 @@ const mapStateToProps = (state: StateType): Board[] => ({
   ...state.boards,
 });
 
-export default connect(mapStateToProps, {})(Home);
+export default connect(mapStateToProps, { getBoards })(Home);
