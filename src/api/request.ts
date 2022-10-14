@@ -10,5 +10,16 @@ const instance = axios.create({
 });
 
 instance.interceptors.response.use((res) => res.data);
+// instance.interceptors.request.use((res) => {
+// let token;
+// instance
+//   .post('/login', {
+//     email: 'vpupkin@example.com',
+//     password: 'dfdfdf',
+//   })
+//   .then((response) => (token = response.data));
+// console.log(token);
+// return token;
+// });
 
 export default instance;

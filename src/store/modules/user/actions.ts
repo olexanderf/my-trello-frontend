@@ -1,7 +1,31 @@
-import api from '/src/api';
-import config from '/src/common/constants/api';
+/* eslint-disable no-console */
 import { Dispatch } from 'redux';
+import api from '../../../api/request';
 
-export const getBoards = () => 
-export const getUser = () => 
-export const createBoard = () =>
+export const getToken =
+  () =>
+  async (dispatch: Dispatch): Promise<void> => {
+    try {
+      const response = await api.post('/login', {
+        email: 'ttt222@example.com',
+        password: 'dfdfdf',
+      });
+      console.log(response.data);
+    } catch (e) {
+      console.log(e);
+      dispatch({ type: 'ERROR_ACTION_TYPE' });
+    }
+  };
+  
+export const createUser = async (dispatch: Dispatch): Promise<void> => {
+  try {
+    const response = await api.post('/user', {
+      email: 'ttt222@example.com',
+      password: 'dfdfdf',
+    });
+    console.log(response.data);
+  } catch (e) {
+    console.log(e);
+    dispatch({ type: 'ERROR_ACTION_TYPE' });
+  }
+};

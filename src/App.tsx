@@ -10,6 +10,7 @@ function App(): JSX.Element {
       <div>
         <Link to="/">Home </Link>
         <Link to="/board">to Board </Link>
+        <Link to="/registration">Registration </Link>
       </div>
       <Routes>
         <Route path="/board/:board_id" element={<Board />} />

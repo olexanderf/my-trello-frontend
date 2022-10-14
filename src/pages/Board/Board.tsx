@@ -4,13 +4,14 @@ import React from 'react';
 import Lists from '../../common/interfaces/Lists';
 import List from './components/List/List';
 import './board.scss';
+import withRouter from '../../common/tools/wR';
 
 interface TableState {
   title: string;
   lists: Lists[];
 }
 
-export default class Board extends React.Component<{}, TableState> {
+class Board extends React.Component<{}, TableState> {
   constructor(props: {} | TableState) {
     super(props);
     this.state = {
@@ -64,3 +65,5 @@ export default class Board extends React.Component<{}, TableState> {
     );
   }
 }
+
+export default withRouter(Board);

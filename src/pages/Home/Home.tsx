@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import Board from '../../common/interfaces/Board';
 import IconBoard from './components/Board/Board';
 import './home.scss';
 import { getBoards } from '../../store/modules/boards/actions';
+import { AppState } from '../../store/store';
 
 type PropsType = {
   boards: Board[];
@@ -13,13 +14,13 @@ type StateType = {
   boards: Board[];
 };
 
-class Home extends React.Component<PropsType, StateType> {
+class Home extends React.Component<PropsType & StateType> {
   async componentDidMount(): Promise<void> {
     // eslint-disable-next-line react/destructuring-assignment
     await this.props.getBoards();
   }
 
-  render(): JSX.Element {
+  render(): ReactElement {
     const { boards } = this.props;
     return (
       <div className="container">
@@ -37,8 +38,8 @@ class Home extends React.Component<PropsType, StateType> {
   }
 }
 
-const mapStateToProps = (state: StateType): Board[] => ({
-  ...state.boards,
+const mapStateToProps = (state: AppState): StateType => ({
+  boards: state.boards,
 });
 
 export default connect(mapStateToProps, { getBoards })(Home);
