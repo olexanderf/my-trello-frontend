@@ -5,6 +5,7 @@ import IconBoard from './components/Board/Board';
 import './home.scss';
 import { getBoards } from '../../store/modules/boards/actions';
 import { AppState } from '../../store/store';
+// import Modal from './components/Modal/Modal';
 
 type PropsType = {
   boards: Board[];
@@ -14,14 +15,28 @@ type StateType = {
   boards: Board[];
 };
 
-class Home extends React.Component<PropsType & StateType> {
-  async componentDidMount(): Promise<void> {
+class Home extends React.Component<PropsType, StateType> {
+  // constructor(props: PropsType) {
+  //   super(props);
+  //   this.state = {
+  //     boards: [],
+  //     isVisibleModal: false,
+  //   };
+  // }
+
+  componentDidMount(): void {
     // eslint-disable-next-line react/destructuring-assignment
-    await this.props.getBoards();
+    this.props.getBoards();
   }
+
+  // toggleModal = (): void => {
+  //   const { isVisibleModal } = this.state;
+  //   this.setState({ isVisibleModal: !isVisibleModal });
+  // };
 
   render(): ReactElement {
     const { boards } = this.props;
+    // const { isVisibleModal } = this.state;
     return (
       <div className="container">
         <h3 className="table-name">Мои Доски</h3>
@@ -31,15 +46,23 @@ class Home extends React.Component<PropsType & StateType> {
           })}
         </div>
         <div className="btn-container">
-          <button className="add-list">+</button>
+          <button
+            className="add-list"
+            // onClick={(): void => {
+            //   return this.toggleModal();
+            // }}
+          >
+            +
+          </button>
         </div>
+        {/* <Modal isVisibleModal={isVisibleModal} toggleModal={this.toggleModal} /> */}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state: AppState): StateType => ({
-  boards: state.boards,
+const mapStateToProps = (store: AppState): StateType => ({
+  boards: store.boards,
 });
 
 export default connect(mapStateToProps, { getBoards })(Home);

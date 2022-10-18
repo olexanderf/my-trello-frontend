@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-state */
 /* eslint-disable react/prefer-stateless-function */
-import React from 'react';
+import React, { ReactElement } from 'react';
 import Lists from '../../common/interfaces/Lists';
 import List from './components/List/List';
 import './board.scss';
@@ -43,7 +43,7 @@ class Board extends React.Component<{}, TableState> {
     };
   }
 
-  render(): JSX.Element {
+  render(): ReactElement {
     const { title } = this.state;
     const { lists } = this.state;
     return (

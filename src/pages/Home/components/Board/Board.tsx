@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import randomColor from 'randomcolor';
 import { Link } from 'react-router-dom';
 import Board from '../../../../common/interfaces/Board';
 import './board.scss';
 
-export default function IconBoard(props: Board): JSX.Element {
+export default function IconBoard(props: Board): ReactElement {
   const { title } = props;
   const { id } = props;
   const color = randomColor();
