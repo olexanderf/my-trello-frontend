@@ -1,13 +1,13 @@
-import api from '/src/api';
-import config from '/src/common/constants/api';
-import { Dispatch } from 'redux';
+// import api from '/src/api';
+// import config from '/src/common/constants/api';
+// import { Dispatch } from 'redux';
 
-export const getLists = () => {
-  return async (dispatch: Dispatch): Promise<void> => {
-    try {
+// export const getLists = () => {
+//   return async (dispatch: Dispatch): Promise<void> => {
+//     try {
 
-    } catch (e) {
-      dispatch({ type: 'ERROR_ACTION_TYPE' });
-    }
-  };
-};
+//     } catch (e) {
+//       dispatch({ type: 'ERROR_ACTION_TYPE' });
+//     }
+//   };
+// };

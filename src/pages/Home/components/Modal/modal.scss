@@ -1,12 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
+$main-font: 'Comfortaa', cursive;
+
 .modal-container {
-    position: fixed;
-    top: 15%;
-    width: 200px;
-    height: 300px;
-    background-color: rgba(169, 250, 118, 0.671);
-    border-radius: 15px;
-    opacity: 0;
+  position: fixed;
+  top: 15%;
+  min-width: 200px;
+  min-height: 100px;
+  background-color: rgba(169, 250, 118, 0.671);
+  border-radius: 15px;
+  display: none;
 }
-.modal-container .active {
-    opacity: 1;
+.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.modal-input {
+  font-family: $main-font;
+  font-size: 16px;
+  border-radius: 4px;
+  min-height: 30px;
+  margin: 10px;
+  outline: none;
+  border: none;
+}
+.modal-btn {
+  cursor: pointer;
+  font-size: 16px;
+  font-family: $main-font;
+  padding: 5px;
+  border-radius: 5px;
+  border: 2px solid lightgray;
+  &:hover {
+    border: 2px solid rgba(115, 113, 252, 0.651);
+  }
+}
+.error {
+  border: 2px solid red;
 }

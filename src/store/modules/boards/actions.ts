@@ -16,13 +16,16 @@ export const getBoards = () => {
     }
   };
 };
-// export const createBoard = async (dispatch: Dispatch): Promise<void> => {
-//   try {
-//     await api.post('/board');
-//     await dispatch(getBoards());
-//   } catch (e) {
-//     // eslint-disable-next-line no-console
-//     console.log(e);
-//     dispatch({ type: 'ERROR_ACTION_TYPE' });
-//   }
-// };
+export const createBoard = (boardName: string) => {
+  return async (dispatch: Dispatch): Promise<void> => {
+    try {
+      await api.post('/board', {
+        title: boardName,
+      });
+      await dispatch({ type: 'CREATE_BOARD', payload: boardName });
+    } catch (e) {
+      console.log(e);
+      dispatch({ type: 'ERROR_ACTION_TYPE' });
+    }
+  };
+};

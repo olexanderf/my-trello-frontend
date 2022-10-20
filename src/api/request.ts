@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { api } from '../common/constants';
 
+// let token = '';
+
 const instance = axios.create({
   baseURL: api.baseURL,
   headers: {
@@ -11,15 +13,14 @@ const instance = axios.create({
 
 instance.interceptors.response.use((res) => res.data);
 // instance.interceptors.request.use((res) => {
-// let token;
-// instance
-//   .post('/login', {
-//     email: 'vpupkin@example.com',
-//     password: 'dfdfdf',
-//   })
-//   .then((response) => (token = response.data));
-// console.log(token);
-// return token;
+//   instance
+//     .post('/login', {
+//       email: 'vpupkin@example.com',
+//       password: 'dfdfdf',
+//     })
+//     .then((response) => (token = response.data));
+//   console.log(token);
+//   return token;
 // });
 
 export default instance;
