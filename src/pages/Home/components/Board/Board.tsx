@@ -11,7 +11,7 @@ export default function IconBoard(props: Board): ReactElement {
   return (
     <Link to={`/board/${id}`}>
       <div className="board-on-table" style={{ backgroundColor: color }}>
-        <p>{id}</p>
+        {/* <p>{id}</p> */}
         <p>{title}</p>
       </div>
     </Link>

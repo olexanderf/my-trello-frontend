@@ -19,9 +19,10 @@ export const getBoards = () => {
 export const createBoard = (boardName: string) => {
   return async (dispatch: Dispatch): Promise<void> => {
     try {
-      await api.post('/board', {
+      const response = await api.post('/board', {
         title: boardName,
       });
+      console.log(response);
       await dispatch({ type: 'CREATE_BOARD', payload: boardName });
     } catch (e) {
       console.log(e);

@@ -1,6 +1,6 @@
 import Board from '../../../common/interfaces/Board';
 
-const initialState = [] as Board[];
+const initialState = [{ id: 0, title: 'Initial board' }] as Board[];
 
 // eslint-disable-next-line @typescript-eslint/default-param-last
 export default function reducer(state = initialState, action: { type: string; payload: Board[] }): object {
@@ -9,7 +9,7 @@ export default function reducer(state = initialState, action: { type: string; pa
       return action.payload;
     case 'CREATE_BOARD':
       return {
-        ...state,
+        state,
       };
     default: {
       return state;

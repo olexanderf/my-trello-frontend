@@ -4,12 +4,13 @@ import Board from '../../common/interfaces/Board';
 import IconBoard from './components/Board/Board';
 import './home.scss';
 import { createBoard, getBoards } from '../../store/modules/boards/actions';
-import { AppState } from '../../store/store';
+import store, { AppState } from '../../store/store';
 import Modal from './components/Modal/Modal';
 
 type PropsType = {
   boards: Board[];
   getBoards: () => Promise<void>;
+  createBoard: (title: string) => Promise<void>;
 };
 type StateType = {
   boards: Board[];
@@ -35,6 +36,12 @@ class Home extends React.Component<PropsType, StateType> {
     this.props.getBoards();
   }
 
+  // componentDidUpdate(prevProps: Readonly<PropsType>): void {
+  //   if (prevProps.boards.length !== this.props.boards.length) {
+  //     this.props.getBoards();
+  //   }
+  // }
+
   handleValueModal = (title: string): void => {
     this.setState({ modalValue: title });
   };
@@ -46,6 +53,7 @@ class Home extends React.Component<PropsType, StateType> {
 
   handleClickCreateBoard = (): void => {
     const { modalValue } = this.state;
+    const { createBoard } = this.props;
     if (modalValue !== '') createBoard(modalValue);
   };
 
@@ -63,7 +71,7 @@ class Home extends React.Component<PropsType, StateType> {
         <h3 className="table-name">Мои Доски</h3>
         <div className="table-board">
           {boards.map((el) => {
-            return IconBoard(el);
+            return <IconBoard id={el.id} title={el.title} key={el.id} />;
           })}
         </div>
         <div className="btn-container">
@@ -91,4 +99,4 @@ const mapStateToProps = (store: AppState): StateType => ({
   boards: store.boards,
 });
 
-export default connect(mapStateToProps, { getBoards })(Home);
+export default connect(mapStateToProps, { getBoards, createBoard })(Home);
