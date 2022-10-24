@@ -8,9 +8,13 @@ export default function reducer(state = initialState, action: { type: string; pa
     case 'UPDATE_BOARDS':
       return action.payload;
     case 'CREATE_BOARD':
-      return {
-        state,
-      };
+      return [
+        ...state,
+        // {
+        //   id: action.payload.id,
+        //   title: action.payload.boardName,
+        // },
+      ];
     default: {
       return state;
     }

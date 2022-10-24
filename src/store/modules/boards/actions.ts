@@ -23,7 +23,7 @@ export const createBoard = (boardName: string) => {
         title: boardName,
       });
       console.log(response);
-      await dispatch({ type: 'CREATE_BOARD', payload: boardName });
+      await dispatch({ type: 'CREATE_BOARD', payload: { response, boardName } });
     } catch (e) {
       console.log(e);
       dispatch({ type: 'ERROR_ACTION_TYPE' });

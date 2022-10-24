@@ -4,8 +4,9 @@ import Board from '../../common/interfaces/Board';
 import IconBoard from './components/Board/Board';
 import './home.scss';
 import { createBoard, getBoards } from '../../store/modules/boards/actions';
-import store, { AppState } from '../../store/store';
+import { AppState } from '../../store/store';
 import Modal from './components/Modal/Modal';
+import { useDispatch } from 'react-redux';
 
 type PropsType = {
   boards: Board[];
