@@ -1,19 +1,33 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import randomColor from 'randomcolor';
 import { Link } from 'react-router-dom';
 import Board from '../../../../common/interfaces/Board';
 import './board.scss';
 
-export default function IconBoard(props: Board): ReactElement {
-  const { title } = props;
-  const { id } = props;
+type PropsType = {
+  board: Board;
+  handleClickDeleteBoard: (id: number) => void;
+};
+
+export default function IconBoard(props: PropsType): ReactElement {
+  const { title, id } = props.board;
+  const { handleClickDeleteBoard } = props;
   const color = randomColor();
   return (
-    <Link to={`/board/${id}`}>
-      <div className="board-on-table" style={{ backgroundColor: color }}>
-        {/* <p>{id}</p> */}
-        <p>{title}</p>
-      </div>
-    </Link>
+    <div className='board-container'>
+      <Link to={`/board/${id}`}>
+        <div className="board-on-table" style={{ backgroundColor: color }}>
+          <p>{title}</p>
+        </div>
+      </Link>
+      <button
+        className="btn-delete"
+        onClick={(): void => {
+          handleClickDeleteBoard(id);
+        }}
+      >
+        X
+      </button>
+    </div>
   );
 }

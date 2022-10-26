@@ -11,6 +11,9 @@
     color: #000;
   }
 }
+.board-container:hover .btn-delete {
+    display: inline-block;
+  }
 a {
   text-decoration: none;
 }
@@ -26,5 +29,21 @@ a {
     &:hover {
       border: 2px solid rgba(115, 113, 252, 0.651);
     }
+  }
+}
+.btn-delete {
+  display: none;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: red;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  position: relative;
+  top:-80%;
+  left: 85%;
+  &:hover {
+    border: 2px solid black;
   }
 }

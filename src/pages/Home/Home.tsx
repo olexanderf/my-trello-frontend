@@ -3,15 +3,15 @@ import React, { ReactElement } from 'react';
 import Board from '../../common/interfaces/Board';
 import IconBoard from './components/Board/Board';
 import './home.scss';
-import { createBoard, getBoards } from '../../store/modules/boards/actions';
+import { createBoard, deleteBoard, getBoards } from '../../store/modules/boards/actions';
 import { AppState } from '../../store/store';
 import Modal from './components/Modal/Modal';
-import { useDispatch } from 'react-redux';
 
 type PropsType = {
   boards: Board[];
   getBoards: () => Promise<void>;
   createBoard: (title: string) => Promise<void>;
+  deleteBoard: (id: number) => Promise<void>;
 };
 type StateType = {
   boards: Board[];
@@ -33,7 +33,6 @@ class Home extends React.Component<PropsType, StateType> {
   }
 
   componentDidMount(): void {
-    // eslint-disable-next-line react/destructuring-assignment
     this.props.getBoards();
   }
 
@@ -53,9 +52,17 @@ class Home extends React.Component<PropsType, StateType> {
   };
 
   handleClickCreateBoard = (): void => {
-    const { modalValue } = this.state;
+    let { modalValue } = this.state;
     const { createBoard } = this.props;
-    if (modalValue !== '') createBoard(modalValue);
+    if (modalValue !== '') {
+      createBoard(modalValue);
+      modalValue = '';
+    }
+  };
+
+  handleClickDeleteBoard = (id: number): void => {
+    const { deleteBoard } = this.props;
+    deleteBoard(id);
   };
 
   render(): ReactElement {
@@ -72,7 +79,7 @@ class Home extends React.Component<PropsType, StateType> {
         <h3 className="table-name">Мои Доски</h3>
         <div className="table-board">
           {boards.map((el) => {
-            return <IconBoard id={el.id} title={el.title} key={el.id} />;
+            return <IconBoard key={el.id} board={el} handleClickDeleteBoard={this.handleClickDeleteBoard} />;
           })}
         </div>
         <div className="btn-container">
@@ -100,4 +107,4 @@ const mapStateToProps = (store: AppState): StateType => ({
   boards: store.boards,
 });
 
-export default connect(mapStateToProps, { getBoards, createBoard })(Home);
+export default connect(mapStateToProps, { getBoards, createBoard, deleteBoard })(Home);
