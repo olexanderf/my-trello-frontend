@@ -6,6 +6,7 @@ import './home.scss';
 import { createBoard, deleteBoard, getBoards } from '../../store/modules/boards/actions';
 import { AppState } from '../../store/store';
 import Modal from './components/Modal/Modal';
+import { boardInputRegex } from '../../common/constants/regExp';
 
 type PropsType = {
   boards: Board[];
@@ -36,12 +37,6 @@ class Home extends React.Component<PropsType, StateType> {
     this.props.getBoards();
   }
 
-  // componentDidUpdate(prevProps: Readonly<PropsType>): void {
-  //   if (prevProps.boards.length !== this.props.boards.length) {
-  //     this.props.getBoards();
-  //   }
-  // }
-
   handleValueModal = (title: string): void => {
     this.setState({ modalValue: title });
   };
@@ -54,9 +49,9 @@ class Home extends React.Component<PropsType, StateType> {
   handleClickCreateBoard = (): void => {
     let { modalValue } = this.state;
     const { createBoard } = this.props;
-    if (modalValue !== '') {
+    if (modalValue.match(boardInputRegex)) {
       createBoard(modalValue);
-      modalValue = '';
+      this.setState({ modalValue: '' });
     }
   };
 

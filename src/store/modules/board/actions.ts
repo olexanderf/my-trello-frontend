@@ -1,13 +1,32 @@
-// import api from '/src/api';
-// import config from '/src/common/constants/api';
-// import { Dispatch } from 'redux';
+import { Dispatch } from 'redux';
+import api from '../../../api/request';
+import Board from '../../../common/interfaces/Board';
+import store from '../../store';
 
-// export const getLists = () => {
-//   return async (dispatch: Dispatch): Promise<void> => {
-//     try {
-
-//     } catch (e) {
-//       dispatch({ type: 'ERROR_ACTION_TYPE' });
-//     }
-//   };
-// };
+export const getBoard = (id: number) => {
+  return async (dispatch: Dispatch): Promise<void> => {
+    try {
+      const response = await api.get<string, { board: Board[] }>(`/board/${id}`);
+      // console.log(response);
+      await dispatch({ type: 'FETCH_BOARD', payload: response });
+    } catch (e) {
+      console.log(e);
+      dispatch({ type: 'ERROR_ACTION_TYPE' });
+    }
+  };
+};
+export const editNameBoard = (id: number, boardName: string) => {
+  return async (dispatch: Dispatch): Promise<void> => {
+    try {
+      const response = await api.put(`/board/${id}`, {
+        title: boardName,
+      });
+      // console.log(response);
+      await dispatch({ type: 'UPDATE_BOARD_NAME', payload: { response, boardName } });
+      store.dispatch(getBoard(id));
+    } catch (e) {
+      console.log(e);
+      dispatch({ type: 'ERROR_ACTION_TYPE' });
+    }
+  };
+};

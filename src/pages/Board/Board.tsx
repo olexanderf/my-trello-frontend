@@ -5,17 +5,32 @@ import Lists from '../../common/interfaces/Lists';
 import List from './components/List/List';
 import './board.scss';
 import withRouter from '../../common/tools/wR';
+import { AppState } from '../../store/store';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { editNameBoard, getBoard } from '../../store/modules/board/actions';
+import OneBoard from '../../common/interfaces/OneBoard';
 
-interface TableState {
+interface PropsType {
+  board: OneBoard;
+  getBoard: (id: number) => Promise<void>;
+  editNameBoard: (id: string, boardName: string) => Promise<void>;
+}
+
+interface StateType {
   title: string;
   lists: Lists[];
 }
 
-class Board extends React.Component<{}, TableState> {
-  constructor(props: {} | TableState) {
+type Params = {
+  board_id: string;
+};
+
+class Board extends React.Component<PropsType & RouteComponentProps<Params>, StateType> {
+  constructor(props: PropsType) {
     super(props);
     this.state = {
-      title: 'Моя тестовая доска',
+      title: props.board.title,
       lists: [
         {
           id: 1,
@@ -42,14 +57,22 @@ class Board extends React.Component<{}, TableState> {
       ],
     };
   }
+  componentDidMount(): void {
+    const { board_id } = this.props.router.params;
+    if(board_id !== undefined) this.props.getBoard(+board_id);
+  }
 
   render(): ReactElement {
-    const { title } = this.state;
+    const { title } = this.props.board;
     const { lists } = this.state;
     return (
       <div className="board-container">
         <div className="board-title">
-          <h1>{title}</h1>
+          <h1
+          onClick={():void =>{
+            
+          }}
+          >{title}</h1>
         </div>
         <div className="block-table">
           <div className="block-lists">
@@ -66,4 +89,8 @@ class Board extends React.Component<{}, TableState> {
   }
 }
 
-export default withRouter(Board);
+const mapStateToProps = (store: AppState): StateType => ({
+  board: store.board,
+});
+
+export default compose(withRouter, connect(mapStateToProps, { getBoard, editNameBoard }))(Board);

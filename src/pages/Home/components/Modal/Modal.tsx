@@ -1,4 +1,5 @@
 import React, { ChangeEvent, ReactElement, useState } from 'react';
+import { boardInputRegex } from '../../../../common/constants/regExp';
 import './modal.scss';
 
 type PropsType = {
@@ -19,15 +20,18 @@ export default function Modal(props: PropsType): ReactElement {
     <div className={isVisibleModal ? 'modal-container active' : 'modal-container'}>
       <div className="modal-content">
         <input
-          className={inputValue !== '' ? 'modal-input' : 'modal-input error'}
+          className={inputValue.match(boardInputRegex) ? 'modal-input' : 'modal-input error'}
           type="text"
           onChange={handleChange}
         />
         <button
           className="modal-btn"
           onClick={(): void => {
-            if (inputValue !== '') handleClickCreateBoard();
-            return toggleModal();
+            if (inputValue.match(boardInputRegex)) {
+              handleClickCreateBoard();
+              setValue('');
+            } 
+            toggleModal();
           }}
         >
           Добавить

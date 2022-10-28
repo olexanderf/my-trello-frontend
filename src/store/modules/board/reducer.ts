@@ -1,9 +1,15 @@
-// const initialState = {};
+import Board from "../../../common/interfaces/Board";
 
-// export default function reducer(state = initialState, action: { type: string; payload?: any }) {
-//   switch (action.type) {
-//     default: {
-//       return { ...state, ...action.payload };
-//     }
-//   }
-// }
+const initialState = {} as Board;
+
+export default function reducer(state = initialState, action: { type: string; payload?: Board }) {
+  switch (action.type) {
+    case 'FETCH_BOARD':
+      return action.payload;
+    case 'UPDATE_BOARD_NAME':
+      return {...state};
+    default: {
+      return {...state};
+    }
+  }
+}
