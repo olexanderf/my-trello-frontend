@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-state */
 /* eslint-disable react/prefer-stateless-function */
-import React, { ReactElement } from 'react';
+import React, { ChangeEvent, ReactElement } from 'react';
 import Lists from '../../common/interfaces/Lists';
 import List from './components/List/List';
 import './board.scss';
@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { editNameBoard, getBoard } from '../../store/modules/board/actions';
 import OneBoard from '../../common/interfaces/OneBoard';
+import { boardInputRegex } from '../../common/constants/regExp';
 
 interface PropsType {
   board: OneBoard;
@@ -20,6 +21,8 @@ interface PropsType {
 interface StateType {
   title: string;
   lists: Lists[];
+  editHeader: boolean;
+  newValueTitle: string;
 }
 
 type Params = {
@@ -30,7 +33,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
   constructor(props: PropsType) {
     super(props);
     this.state = {
-      title: props.board.title,
+      title: this.props.board.title,
       lists: [
         {
           id: 1,
@@ -55,24 +58,61 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
           ],
         },
       ],
+      editHeader: false,
+      newValueTitle: '',
     };
   }
   componentDidMount(): void {
     const { board_id } = this.props.router.params;
-    if(board_id !== undefined) this.props.getBoard(+board_id);
+    if (board_id !== undefined) {
+      this.props.getBoard(+board_id);
+    }
   }
-
+  componentDidUpdate(
+    prevProps: Readonly<PropsType & RouteComponentProps<Params>>,
+    prevState: Readonly<StateType>,
+    snapshot?: any
+  ): void {
+    if (this.props.board.title !== this.state.title) {
+      this.setState({ title: this.props.board.title });
+    }
+  }
+  changeTitleName = (e: ChangeEvent<HTMLInputElement>) => {
+    this.setState({ newValueTitle: e.target.value });
+  };
+  enterPressed = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') this.updateTitleName();
+  };
+  updateTitleName = () => {
+    const { newValueTitle, editHeader } = this.state;
+    const { board_id } = this.props.router.params;
+    if (newValueTitle.match(boardInputRegex) && board_id !== undefined) {
+      editNameBoard(+board_id, newValueTitle);
+      this.setState({ editHeader: !editHeader});
+    }
+  };
   render(): ReactElement {
-    const { title } = this.props.board;
-    const { lists } = this.state;
+    const { lists, editHeader, title } = this.state;
     return (
       <div className="board-container">
-        <div className="board-title">
-          <h1
-          onClick={():void =>{
-            
+        <div
+          className="board-title"
+          onClick={(e): void => {
+            if (!editHeader) this.setState({ editHeader: !editHeader });
           }}
-          >{title}</h1>
+        >
+          {editHeader ? (
+            <input
+              type="text"
+              value={title}
+              onChange={this.changeTitleName}
+              onBlur={this.updateTitleName}
+              onKeyDown={this.enterPressed}
+              className="header-input"
+            />
+          ) : (
+            <h1>{title}</h1>
+          )}
         </div>
         <div className="block-table">
           <div className="block-lists">

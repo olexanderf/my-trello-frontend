@@ -24,7 +24,7 @@ class Home extends React.Component<PropsType, StateType> {
   constructor(props: PropsType) {
     super(props);
     this.state = {
-      boards: props.boards,
+      boards: this.props.boards,
       isVisibleModal: false,
       modalValue: '',
     };
