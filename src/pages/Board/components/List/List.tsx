@@ -5,9 +5,13 @@ import Lists from '../../../../common/interfaces/Lists';
 import Card from '../Card/Card';
 import './list.scss';
 
-export default function List(props: Lists): JSX.Element {
-  const { title } = props;
-  const { cards } = props;
+type PropsType = {
+  list: Lists;
+}
+
+export default function List(props: PropsType): JSX.Element {
+  const { title } = props.list;
+  const { cards } = props.list;
   return (
     <div className="list">
       <h2>{title}</h2>

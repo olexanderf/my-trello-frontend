@@ -6,12 +6,13 @@ type PropsType = {
   isVisibleModal: boolean;
   toggleModal: () => void;
   handleValueModal: (title: string) => void;
-  handleClickCreateBoard: () => void;
+  handleClickCreateElement: () => void;
 };
 
 export default function Modal(props: PropsType): ReactElement {
   const [inputValue, setValue] = useState('');
-  const { isVisibleModal, toggleModal, handleValueModal, handleClickCreateBoard } = props;
+  const [isValidInput, setValidInput] = useState(true);
+  const { isVisibleModal, toggleModal, handleValueModal, handleClickCreateElement } = props;
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setValue(e.target.value);
     handleValueModal(e.target.value);
@@ -20,7 +21,7 @@ export default function Modal(props: PropsType): ReactElement {
     <div className={isVisibleModal ? 'modal-container active' : 'modal-container'}>
       <div className="modal-content">
         <input
-          className={inputValue.match(boardInputRegex) ? 'modal-input' : 'modal-input error'}
+          className={isValidInput ? 'modal-input' : 'modal-input error'}
           type="text"
           onChange={handleChange}
         />
@@ -28,10 +29,13 @@ export default function Modal(props: PropsType): ReactElement {
           className="modal-btn"
           onClick={(): void => {
             if (inputValue.match(boardInputRegex)) {
-              handleClickCreateBoard();
+              setValidInput(true);
+              handleClickCreateElement();
               setValue('');
-            } 
-            toggleModal();
+              toggleModal();
+            } else {
+              setValidInput(false);
+            }
           }}
         >
           Добавить

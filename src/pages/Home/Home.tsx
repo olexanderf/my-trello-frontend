@@ -30,7 +30,7 @@ class Home extends React.Component<PropsType, StateType> {
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleValueModal = this.handleValueModal.bind(this);
-    this.handleClickCreateBoard = this.handleClickCreateBoard.bind(this);
+    this.handleClickCreateElement = this.handleClickCreateElement.bind(this);
   }
 
   componentDidMount(): void {
@@ -46,7 +46,7 @@ class Home extends React.Component<PropsType, StateType> {
     this.setState({ isVisibleModal: !isVisibleModal });
   };
 
-  handleClickCreateBoard = (): void => {
+  handleClickCreateElement = (): void => {
     let { modalValue } = this.state;
     const { createBoard } = this.props;
     if (modalValue.match(boardInputRegex)) {
@@ -91,7 +91,7 @@ class Home extends React.Component<PropsType, StateType> {
           isVisibleModal={isVisibleModal}
           toggleModal={this.toggleModal}
           handleValueModal={this.handleValueModal}
-          handleClickCreateBoard={this.handleClickCreateBoard}
+          handleClickCreateElement={this.handleClickCreateElement}
         />
       </div>
     );

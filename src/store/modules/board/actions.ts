@@ -21,8 +21,23 @@ export const editNameBoard = (id: number, boardName: string) => {
       const response = await api.put(`/board/${id}`, {
         title: boardName,
       });
+      await dispatch({ type: 'UPDATE_BOARD_NAME' });
       // console.log(response);
-      await dispatch({ type: 'UPDATE_BOARD_NAME', payload: { response, boardName } });
+      store.dispatch(getBoard(id));
+    } catch (e) {
+      console.log(e);
+      dispatch({ type: 'ERROR_ACTION_TYPE' });
+    }
+  };
+};
+export const createList = (id: number, listName: string, position: number) => {
+  return async (dispatch: Dispatch): Promise<void> => {
+    try {
+      const response = await api.post(`/board/${id}/list`, {
+        title: listName,
+        position: position,
+      });
+      await dispatch({ type: 'CREATE_LIST'});
       store.dispatch(getBoard(id));
     } catch (e) {
       console.log(e);

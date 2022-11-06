@@ -8,14 +8,16 @@ import withRouter from '../../common/tools/wR';
 import { AppState } from '../../store/store';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { editNameBoard, getBoard } from '../../store/modules/board/actions';
+import { editNameBoard, getBoard, createList } from '../../store/modules/board/actions';
 import OneBoard from '../../common/interfaces/OneBoard';
 import { boardInputRegex } from '../../common/constants/regExp';
+import Modal from '../Home/components/Modal/Modal';
 
 interface PropsType {
   board: OneBoard;
   getBoard: (id: number) => Promise<void>;
   editNameBoard: (id: string, boardName: string) => Promise<void>;
+  createList: (id: number, listName: string, position: number) => Promise<void>;
 }
 
 interface StateType {
@@ -23,6 +25,8 @@ interface StateType {
   lists: Lists[];
   editHeader: boolean;
   newValueTitle: string;
+  isVisibleModal: boolean;
+  modalValue: string;
 }
 
 type Params = {
@@ -30,37 +34,19 @@ type Params = {
 };
 
 class Board extends React.Component<PropsType & RouteComponentProps<Params>, StateType> {
-  constructor(props: PropsType) {
+  constructor(props: PropsType & RouteComponentProps<Params>) {
     super(props);
     this.state = {
       title: this.props.board.title,
-      lists: [
-        {
-          id: 1,
-          title: 'Планы',
-          cards: [
-            { id: 1, title: 'помыть кота' },
-            { id: 2, title: 'приготовить суп' },
-            { id: 3, title: 'сходить в магазин' },
-          ],
-        },
-        {
-          id: 2,
-          title: 'В процессе',
-          cards: [{ id: 4, title: 'посмотреть сериал' }],
-        },
-        {
-          id: 3,
-          title: 'Сделано',
-          cards: [
-            { id: 5, title: 'сделать домашку' },
-            { id: 6, title: 'погулять с собакой' },
-          ],
-        },
-      ],
+      lists: this.props.board.lists,
       editHeader: false,
-      newValueTitle: '',
+      newValueTitle: this.props.board.title,
+      isVisibleModal: false,
+      modalValue: '',
     };
+    this.toggleModal = this.toggleModal.bind(this);
+    this.handleValueModal = this.handleValueModal.bind(this);
+    this.handleClickCreateElement = this.handleClickCreateElement.bind(this);
   }
   componentDidMount(): void {
     const { board_id } = this.props.router.params;
@@ -74,13 +60,21 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     snapshot?: any
   ): void {
     if (this.props.board.title !== this.state.title) {
-      this.setState({ title: this.props.board.title });
+      this.setState({
+        title: this.props.board.title,
+        newValueTitle: this.props.board.title,
+      });
+    }
+    if (this.props.board.lists !== this.state.lists) {
+      this.setState({
+        lists: this.props.board.lists,
+      });
     }
   }
   changeTitleName = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({ newValueTitle: e.target.value });
   };
-  enterPressed = (e: KeyboardEvent) => {
+  titleBoardEnterPressed = (e: KeyboardEvent) => {
     if (e.key === 'Enter') this.updateTitleName();
   };
   updateTitleName = () => {
@@ -88,26 +82,43 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     const { board_id } = this.props.router.params;
     if (newValueTitle.match(boardInputRegex) && board_id !== undefined) {
       editNameBoard(+board_id, newValueTitle);
-      this.setState({ editHeader: !editHeader});
+      this.setState({ editHeader: !editHeader });
     }
   };
+  toggleModal = (): void => {
+    const { isVisibleModal } = this.state;
+    this.setState({ isVisibleModal: !isVisibleModal });
+  };
+  handleValueModal = (title: string): void => {
+    this.setState({ modalValue: title });
+  };
+  handleClickCreateElement = (): void => {
+    let { modalValue, lists } = this.state;
+    const { createList } = this.props;
+    const { board_id: boardId } = this.props.router.params;
+    if (modalValue.match(boardInputRegex) && boardId !== undefined) {
+      createList(+boardId, modalValue, lists.length+1);
+      this.setState({ modalValue: '' });
+    }
+  };
+
   render(): ReactElement {
-    const { lists, editHeader, title } = this.state;
+    const { lists, editHeader, title, newValueTitle, isVisibleModal } = this.state;
     return (
       <div className="board-container">
         <div
           className="board-title"
-          onClick={(e): void => {
+          onClick={(): void => {
             if (!editHeader) this.setState({ editHeader: !editHeader });
           }}
         >
           {editHeader ? (
             <input
               type="text"
-              value={title}
+              value={newValueTitle}
               onChange={this.changeTitleName}
               onBlur={this.updateTitleName}
-              onKeyDown={this.enterPressed}
+              onKeyDown={this.titleBoardEnterPressed}
               className="header-input"
             />
           ) : (
@@ -116,14 +127,29 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
         </div>
         <div className="block-table">
           <div className="block-lists">
-            {lists.map((el) => {
-              return List(el);
-            })}
+            {this.state.lists
+              ? lists.map((el) => {
+                  return <List key={el.id} list={el} />;
+                })
+              : ''}
           </div>
           <div className="btn-container">
-            <button className="add-list">+</button>
+            <button
+              className="add-list"
+              onClick={(): void => {
+                return this.toggleModal();
+              }}
+            >
+              +
+            </button>
           </div>
         </div>
+        <Modal
+          isVisibleModal={isVisibleModal}
+          toggleModal={this.toggleModal}
+          handleValueModal={this.handleValueModal}
+          handleClickCreateElement={this.handleClickCreateElement}
+        />
       </div>
     );
   }
@@ -133,4 +159,4 @@ const mapStateToProps = (store: AppState): StateType => ({
   board: store.board,
 });
 
-export default compose(withRouter, connect(mapStateToProps, { getBoard, editNameBoard }))(Board);
+export default compose(withRouter, connect(mapStateToProps, { getBoard, editNameBoard, createList }))(Board);
