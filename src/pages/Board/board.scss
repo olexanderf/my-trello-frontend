@@ -15,11 +15,13 @@ $main-font: 'Comfortaa', cursive;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    width: 100%;
 }
 .block-table {
-    min-height: 600px;
+    min-height: 650px;
     background-color: rgb(182, 255, 192);
     display: flex;
+    width: 100%;
 }
 .btn-container {
     padding: 20px;

@@ -1,6 +1,9 @@
+.board-on-table-container {
+  min-height: 170px;
+}
 .board-on-table {
-  min-width: 200px;
-  min-height: 100px;
+  width: 200px;
+  height: 100px;
   border: 2px solid #000;
   border-radius: 15px;
   margin: 15px;
@@ -11,7 +14,7 @@
     color: #000;
   }
 }
-.board-container:hover .btn-delete {
+.board-on-table-container:hover .btn-delete {
     display: inline-block;
   }
 a {
@@ -41,7 +44,7 @@ a {
   height: 30px;
   font-weight: bold;
   position: relative;
-  top:-80%;
+  top:-75%;
   left: 85%;
   &:hover {
     border: 2px solid black;

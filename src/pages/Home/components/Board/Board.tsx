@@ -14,7 +14,7 @@ export default function IconBoard(props: PropsType): ReactElement {
   const { handleClickDeleteBoard } = props;
   const color = randomColor();
   return (
-    <div className='board-container'>
+    <div className='board-on-table-container'>
       <Link to={`/board/${id}`}>
         <div className="board-on-table" style={{ backgroundColor: color }}>
           <p>{title}</p>

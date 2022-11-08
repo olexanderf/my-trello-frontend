@@ -3,8 +3,13 @@
 $main-font: 'Comfortaa', cursive;
 
 .modal-container {
+  // position: fixed;
+  // top: 15%;
+  // left: 50%;
   position: fixed;
-  top: 15%;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   min-width: 200px;
   min-height: 100px;
   background-color: rgba(169, 250, 118, 0.671);
@@ -12,9 +17,9 @@ $main-font: 'Comfortaa', cursive;
   display: none;
 }
 .active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  // align-items: center;
+  // justify-content: center;
 }
 .modal-content {
   display: flex;
@@ -24,9 +29,10 @@ $main-font: 'Comfortaa', cursive;
 }
 .modal-input {
   font-family: $main-font;
-  font-size: 16px;
+  font-size: 18px;
   border-radius: 4px;
   min-height: 30px;
+  min-width: 200px;
   margin: 10px;
   outline: none;
   border: none;

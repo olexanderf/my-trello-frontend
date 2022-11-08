@@ -18,7 +18,7 @@ export const getBoard = (id: number) => {
 export const editNameBoard = (id: number, boardName: string) => {
   return async (dispatch: Dispatch): Promise<void> => {
     try {
-      const response = await api.put(`/board/${id}`, {
+      await api.put(`/board/${id}`, {
         title: boardName,
       });
       await dispatch({ type: 'UPDATE_BOARD_NAME' });
@@ -45,3 +45,4 @@ export const createList = (id: number, listName: string, position: number) => {
     }
   };
 };
+// export const editListName = ()

@@ -67,9 +67,9 @@ class Home extends React.Component<PropsType, StateType> {
     return (
       <div
         className="container"
-        // onClick={(): void => {
-        //   if (isVisibleModal) this.toggleModal();
-        // }}
+        onClick={(e): void => {
+          if (isVisibleModal) this.toggleModal();
+        }}
       >
         <h3 className="table-name">Мои Доски</h3>
         <div className="table-board">
@@ -77,6 +77,12 @@ class Home extends React.Component<PropsType, StateType> {
             return <IconBoard key={el.id} board={el} handleClickDeleteBoard={this.handleClickDeleteBoard} />;
           })}
         </div>
+        <Modal
+          isVisibleModal={isVisibleModal}
+          toggleModal={this.toggleModal}
+          handleValueModal={this.handleValueModal}
+          handleClickCreateElement={this.handleClickCreateElement}
+        />
         <div className="btn-container">
           <button
             className="add-list"
@@ -87,12 +93,6 @@ class Home extends React.Component<PropsType, StateType> {
             +
           </button>
         </div>
-        <Modal
-          isVisibleModal={isVisibleModal}
-          toggleModal={this.toggleModal}
-          handleValueModal={this.handleValueModal}
-          handleClickCreateElement={this.handleClickCreateElement}
-        />
       </div>
     );
   }

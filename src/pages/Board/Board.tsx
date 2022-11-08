@@ -16,7 +16,7 @@ import Modal from '../Home/components/Modal/Modal';
 interface PropsType {
   board: OneBoard;
   getBoard: (id: number) => Promise<void>;
-  editNameBoard: (id: string, boardName: string) => Promise<void>;
+  editNameBoard: (id: number, boardName: string) => Promise<void>;
   createList: (id: number, listName: string, position: number) => Promise<void>;
 }
 
@@ -81,10 +81,11 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     const { newValueTitle, editHeader } = this.state;
     const { board_id } = this.props.router.params;
     if (newValueTitle.match(boardInputRegex) && board_id !== undefined) {
-      editNameBoard(+board_id, newValueTitle);
+      this.props.editNameBoard(Number(board_id), newValueTitle);
       this.setState({ editHeader: !editHeader });
     }
   };
+  // Create Lists
   toggleModal = (): void => {
     const { isVisibleModal } = this.state;
     this.setState({ isVisibleModal: !isVisibleModal });
@@ -105,7 +106,12 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
   render(): ReactElement {
     const { lists, editHeader, title, newValueTitle, isVisibleModal } = this.state;
     return (
-      <div className="board-container">
+      <div
+        className="board-container"
+        onClick={(e): void => {
+          if (isVisibleModal) this.toggleModal();
+        }}
+      >
         <div
           className="board-title"
           onClick={(): void => {
@@ -143,13 +149,13 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
               +
             </button>
           </div>
+          <Modal
+            isVisibleModal={isVisibleModal}
+            toggleModal={this.toggleModal}
+            handleValueModal={this.handleValueModal}
+            handleClickCreateElement={this.handleClickCreateElement}
+          />
         </div>
-        <Modal
-          isVisibleModal={isVisibleModal}
-          toggleModal={this.toggleModal}
-          handleValueModal={this.handleValueModal}
-          handleClickCreateElement={this.handleClickCreateElement}
-        />
       </div>
     );
   }
