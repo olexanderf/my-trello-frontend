@@ -28,17 +28,26 @@ export default function List(props: PropsType): JSX.Element {
   };
 
   return (
-    <div
-      className="list"
-      onClick={(): void => {
-        setEditListName(true);
-      }}
-    >
-      {isEditListName ? (
-        <input type="text" value={valueOfListName} onChange={changeListName} onBlur={updateListName} />
-      ) : (
-        <h2>{title}</h2>
-      )}
+    <div className="list">
+      <div
+        className="list-title-container"
+        onClick={(): void => {
+          setEditListName(true);
+        }}
+      >
+        {isEditListName ? (
+          <input
+            type="text"
+            className="list-name-input"
+            value={valueOfListName}
+            onChange={changeListName}
+            onBlur={updateListName}
+            onClick={(e): void => e.stopPropagation()}
+          />
+        ) : (
+          <h2>{title}</h2>
+        )}
+      </div>
 
       {cards.map((card: ICard, index: number) => {
         return Card(cards[index].title);

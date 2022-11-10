@@ -45,4 +45,16 @@ export const createList = (id: number, listName: string, position: number) => {
     }
   };
 };
-// export const editListName = ()
+export const editListName = (board_id: number, listName: string, list_id: number, position: number) => {
+  return async (dispatch: Dispatch): Promise<void> => {
+    try {
+      const response = await api.put(`/board/${board_id}/list/${list_id}`, {
+        title: listName,
+        position: position,
+      })
+    } catch (e) {
+      // console.log(e);
+      dispatch({ type: 'ERROR_ACTION_TYPE' });
+    }
+  }
+}
