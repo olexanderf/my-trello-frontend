@@ -37,7 +37,7 @@ export const createList = (id: number, listName: string, position: number) => {
         title: listName,
         position: position,
       });
-      await dispatch({ type: 'CREATE_LIST'});
+      await dispatch({ type: 'CREATE_LIST' });
       store.dispatch(getBoard(id));
     } catch (e) {
       console.log(e);
@@ -51,10 +51,12 @@ export const editListName = (board_id: number, listName: string, list_id: number
       const response = await api.put(`/board/${board_id}/list/${list_id}`, {
         title: listName,
         position: position,
-      })
+      });
+      await dispatch({ type: 'UPDATE_LIST_NAME' });
+      store.dispatch(getBoard(board_id));
     } catch (e) {
       // console.log(e);
       dispatch({ type: 'ERROR_ACTION_TYPE' });
     }
-  }
-}
+  };
+};

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement } from 'react';
 import randomColor from 'randomcolor';
 import { Link } from 'react-router-dom';
 import Board from '../../../../common/interfaces/Board';
