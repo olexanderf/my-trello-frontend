@@ -34,7 +34,8 @@ class Home extends React.Component<PropsType, StateType> {
   }
 
   componentDidMount(): void {
-    this.props.getBoards();
+    const { getBoards: getBoardsAction } = this.props;
+    getBoardsAction();
   }
 
   handleValueModal = (title: string): void => {
@@ -47,27 +48,26 @@ class Home extends React.Component<PropsType, StateType> {
   };
 
   handleClickCreateElement = (): void => {
-    let { modalValue } = this.state;
-    const { createBoard } = this.props;
+    const { modalValue } = this.state;
+    const { createBoard: createBoardAction } = this.props;
     if (modalValue.match(boardInputRegex)) {
-      createBoard(modalValue);
+      createBoardAction(modalValue);
       this.setState({ modalValue: '' });
     }
   };
 
   handleClickDeleteBoard = (id: number): void => {
-    const { deleteBoard } = this.props;
-    deleteBoard(id);
+    const { deleteBoard: deleteBoardAction } = this.props;
+    deleteBoardAction(id);
   };
 
   render(): ReactElement {
     const { boards } = this.props;
     const { isVisibleModal } = this.state;
-    // const { modalValue } = this.state;
     return (
       <div
         className="container"
-        onClick={(e): void => {
+        onClick={(): void => {
           if (isVisibleModal) this.toggleModal();
         }}
       >

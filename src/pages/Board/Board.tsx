@@ -1,13 +1,11 @@
-/* eslint-disable react/no-unused-state */
-/* eslint-disable react/prefer-stateless-function */
 import React, { ChangeEvent, ReactElement } from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import Lists from '../../common/interfaces/Lists';
 import List from './components/List/List';
 import './board.scss';
 import withRouter from '../../common/tools/wR';
 import { AppState } from '../../store/store';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
 import { editNameBoard, getBoard, createList } from '../../store/modules/board/actions';
 import OneBoard from '../../common/interfaces/OneBoard';
 import { boardInputRegex } from '../../common/constants/regExp';
@@ -48,12 +46,14 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     this.handleValueModal = this.handleValueModal.bind(this);
     this.handleClickCreateElement = this.handleClickCreateElement.bind(this);
   }
+
   componentDidMount(): void {
     const { board_id } = this.props.router.params;
     if (board_id !== undefined) {
       this.props.getBoard(+board_id);
     }
   }
+
   componentDidUpdate(
     prevProps: Readonly<PropsType & RouteComponentProps<Params>>,
     prevState: Readonly<StateType>,
@@ -71,13 +71,16 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
       });
     }
   }
-  changeTitleName = (e: ChangeEvent<HTMLInputElement>) => {
+
+  changeTitleName = (e: ChangeEvent<HTMLInputElement>): void => {
     this.setState({ newValueTitle: e.target.value });
   };
-  titleBoardEnterPressed = (e: KeyboardEvent) => {
+
+  titleBoardEnterPressed = (e: KeyboardEvent): void => {
     if (e.key === 'Enter') this.updateTitleName();
   };
-  updateTitleName = () => {
+
+  updateTitleName = (): void => {
     const { newValueTitle, editHeader } = this.state;
     const { board_id } = this.props.router.params;
     if (newValueTitle.match(boardInputRegex) && board_id !== undefined) {
@@ -85,20 +88,23 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
       this.setState({ editHeader: !editHeader });
     }
   };
+
   // Create Lists
   toggleModal = (): void => {
     const { isVisibleModal } = this.state;
     this.setState({ isVisibleModal: !isVisibleModal });
   };
+
   handleValueModal = (title: string): void => {
     this.setState({ modalValue: title });
   };
+
   handleClickCreateElement = (): void => {
-    let { modalValue, lists } = this.state;
-    const { createList } = this.props;
-    const { board_id: boardId } = this.props.router.params;
+    const { modalValue, lists } = this.state;
+    const { createList: createListAction, router } = this.props;
+    const { board_id: boardId } = router.params;
     if (modalValue.match(boardInputRegex) && boardId !== undefined) {
-      createList(+boardId, modalValue, lists.length+1);
+      createListAction(+boardId, modalValue, lists.length + 1);
       this.setState({ modalValue: '' });
     }
   };
@@ -108,7 +114,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     return (
       <div
         className="board-container"
-        onClick={(e): void => {
+        onClick={(): void => {
           if (isVisibleModal) this.toggleModal();
         }}
       >
@@ -133,7 +139,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
         </div>
         <div className="block-table">
           <div className="block-lists">
-            {this.state.lists
+            {lists
               ? lists.map((el) => {
                   return <List key={el.id} list={el} />;
                 })

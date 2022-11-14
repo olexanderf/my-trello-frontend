@@ -6,6 +6,8 @@ $main-font: 'Comfortaa', cursive;
     font-family: $main-font;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .board-title {
     background-color: rgba(174, 172, 255, 0.651);
@@ -15,11 +17,11 @@ $main-font: 'Comfortaa', cursive;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    width: 100%;
+    width: 50%;
+    border-radius: 15px;
 }
 .block-table {
     min-height: 650px;
-    background-color: rgb(182, 255, 192);
     display: flex;
     width: 100%;
 }

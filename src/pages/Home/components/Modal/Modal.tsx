@@ -18,13 +18,12 @@ export default function Modal(props: PropsType): ReactElement {
     handleValueModal(e.target.value);
   };
   return (
-    <div className={isVisibleModal ? 'modal-container active' : 'modal-container'} onClick={(e):void => e.stopPropagation()}>
+    <div
+      className={isVisibleModal ? 'modal-container active' : 'modal-container'}
+      onClick={(e): void => e.stopPropagation()}
+    >
       <div className="modal-content">
-        <input
-          className={isValidInput ? 'modal-input' : 'modal-input error'}
-          type="text"
-          onChange={handleChange}
-        />
+        <input className={isValidInput ? 'modal-input' : 'modal-input error'} type="text" onChange={handleChange} />
         <button
           className="modal-btn"
           onClick={(): void => {
