@@ -1,0 +1,52 @@
+.board-on-table-container {
+  min-height: 170px;
+}
+.board-on-table {
+  width: 200px;
+  height: 100px;
+  border: 2px solid #000;
+  border-radius: 15px;
+  margin: 15px;
+  cursor: pointer;
+  p {
+    margin: 5px;
+    padding: 10px;
+    color: #000;
+  }
+}
+.board-on-table-container:hover .btn-delete {
+    display: inline-block;
+  }
+a {
+  text-decoration: none;
+}
+.btn-container {
+  padding: 20px;
+  .add-list {
+    box-sizing: border-box;
+    font-size: 35px;
+    cursor: pointer;
+    padding: 5px 15px;
+    border-radius: 50%;
+    border: none;
+    &:hover {
+      border: 2px solid rgba(115, 113, 252, 0.651);
+    }
+  }
+}
+.btn-delete {
+  display: none;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: red;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-weight: bold;
+  position: relative;
+  top:-75%;
+  left: 85%;
+  &:hover {
+    border: 2px solid black;
+  }
+}

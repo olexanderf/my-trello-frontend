@@ -5,7 +5,7 @@ import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import { createCard, editListName } from '../../../../store/modules/board/actions';
 import store from '../../../../store/store';
-import Modal from '../../../Home/components/Modal/Modal';
+import Modal from '../../../Multipurpose/Modal/Modal';
 import Card from '../Card/Card';
 import './list.scss';
 
@@ -42,6 +42,7 @@ export default function List(props: PropsType): JSX.Element {
   const toggleModal = (): void => {
     setVisibleModal(!isVisibleModal);
   };
+
   // work with card
   const handleClickCreateCard = (): void => {
     if (valueOfModal.match(boardInputRegex) && boardId !== undefined) {
@@ -67,7 +68,7 @@ export default function List(props: PropsType): JSX.Element {
             onChange={changeListName}
             onBlur={updateListName}
             onClick={(e): void => e.stopPropagation()}
-            onKeyDown={(e: KeyboardEvent): void => {
+            onKeyDown={(e: React.KeyboardEvent): void => {
               if (e.key === 'Enter') updateListName();
               if (e.key === 'Escape') setValueOfListName(title);
             }}

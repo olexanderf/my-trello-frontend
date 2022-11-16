@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import randomColor from 'randomcolor';
 import { Link } from 'react-router-dom';
 import Board from '../../../../common/interfaces/Board';
-import './board.scss';
+import './iconBoard.scss';
 
 type PropsType = {
   board: Board;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 import React, { ChangeEvent, ReactElement } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -9,7 +10,8 @@ import { AppState } from '../../store/store';
 import { editNameBoard, getBoard, createList } from '../../store/modules/board/actions';
 import OneBoard from '../../common/interfaces/OneBoard';
 import { boardInputRegex } from '../../common/constants/regExp';
-import Modal from '../Home/components/Modal/Modal';
+import Modal from '../Multipurpose/Modal/Modal';
+import ProgressBar from '../Multipurpose/ProgressBar/ProgressBar';
 
 interface PropsType {
   board: OneBoard;
@@ -34,11 +36,12 @@ type Params = {
 class Board extends React.Component<PropsType & RouteComponentProps<Params>, StateType> {
   constructor(props: PropsType & RouteComponentProps<Params>) {
     super(props);
+    const { board } = this.props;
     this.state = {
-      title: this.props.board.title,
-      lists: this.props.board.lists,
+      title: board.title,
+      lists: board.lists,
       editHeader: false,
-      newValueTitle: this.props.board.title,
+      newValueTitle: board.title,
       isVisibleModal: false,
       modalValue: '',
     };
@@ -48,26 +51,25 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
   }
 
   componentDidMount(): void {
-    const { board_id } = this.props.router.params;
-    if (board_id !== undefined) {
-      this.props.getBoard(+board_id);
+    const { router, getBoard: getBoardAction } = this.props;
+    const { board_id: boardId } = router.params;
+    if (boardId !== undefined) {
+      getBoardAction(+boardId);
     }
   }
 
-  componentDidUpdate(
-    prevProps: Readonly<PropsType & RouteComponentProps<Params>>,
-    prevState: Readonly<StateType>,
-    snapshot?: any
-  ): void {
-    if (this.props.board.title !== this.state.title) {
+  componentDidUpdate(): void {
+    const { board } = this.props;
+    const { title, lists } = this.state;
+    if (board.title !== title) {
       this.setState({
-        title: this.props.board.title,
-        newValueTitle: this.props.board.title,
+        title: board.title,
+        newValueTitle: board.title,
       });
     }
-    if (this.props.board.lists !== this.state.lists) {
+    if (board.lists !== lists) {
       this.setState({
-        lists: this.props.board.lists,
+        lists: board.lists,
       });
     }
   }
@@ -76,15 +78,18 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     this.setState({ newValueTitle: e.target.value });
   };
 
-  titleBoardEnterPressed = (e: KeyboardEvent): void => {
+  titleBoardEnterPressed = (e: React.KeyboardEvent): void => {
+    const { board } = this.props;
     if (e.key === 'Enter') this.updateTitleName();
+    if (e.key === 'Escape') this.setState({ newValueTitle: board.title });
   };
 
   updateTitleName = (): void => {
     const { newValueTitle, editHeader } = this.state;
-    const { board_id } = this.props.router.params;
-    if (newValueTitle.match(boardInputRegex) && board_id !== undefined) {
-      this.props.editNameBoard(Number(board_id), newValueTitle);
+    const { router, editNameBoard: editNameBoardAction } = this.props;
+    const { board_id: boardId } = router.params;
+    if (newValueTitle.match(boardInputRegex) && boardId !== undefined) {
+      editNameBoardAction(Number(boardId), newValueTitle);
       this.setState({ editHeader: !editHeader });
     }
   };
@@ -162,6 +167,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
             handleClickCreateElement={this.handleClickCreateElement}
           />
         </div>
+        <ProgressBar completed={50} />
       </div>
     );
   }

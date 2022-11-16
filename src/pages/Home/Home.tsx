@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
 import React, { ReactElement } from 'react';
 import Board from '../../common/interfaces/Board';
-import IconBoard from './components/Board/Board';
+import IconBoard from './components/Board/IconBoard';
 import './home.scss';
 import { createBoard, deleteBoard, getBoards } from '../../store/modules/boards/actions';
 import { AppState } from '../../store/store';
-import Modal from './components/Modal/Modal';
+import Modal from '../Multipurpose/Modal/Modal';
 import { boardInputRegex } from '../../common/constants/regExp';
+import ProgressBar from '../Multipurpose/ProgressBar/ProgressBar';
 
 type PropsType = {
   boards: Board[];
@@ -23,8 +24,9 @@ type StateType = {
 class Home extends React.Component<PropsType, StateType> {
   constructor(props: PropsType) {
     super(props);
+    const { boards } = this.props;
     this.state = {
-      boards: this.props.boards,
+      boards,
       isVisibleModal: false,
       modalValue: '',
     };
@@ -36,6 +38,16 @@ class Home extends React.Component<PropsType, StateType> {
   componentDidMount(): void {
     const { getBoards: getBoardsAction } = this.props;
     getBoardsAction();
+  }
+
+  componentDidUpdate(): void {
+    const { boards: boardsProps } = this.props;
+    const { boards } = this.state;
+    if (boards !== boardsProps) {
+      this.setState({
+        boards: boardsProps,
+      });
+    }
   }
 
   handleValueModal = (title: string): void => {
@@ -62,8 +74,7 @@ class Home extends React.Component<PropsType, StateType> {
   };
 
   render(): ReactElement {
-    const { boards } = this.props;
-    const { isVisibleModal } = this.state;
+    const { isVisibleModal, boards } = this.state;
     return (
       <div
         className="container"
@@ -93,6 +104,7 @@ class Home extends React.Component<PropsType, StateType> {
             +
           </button>
         </div>
+        <ProgressBar completed={50} />
       </div>
     );
   }

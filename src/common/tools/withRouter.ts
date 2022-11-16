@@ -1,4 +1,4 @@
-// class grapped from https://reactrouter.com/en/v6.3.0/faq
+// function grapped from https://reactrouter.com/en/v6.3.0/faq
 // import React from 'react';
 // import { useLocation, useNavigate, useParams } from 'react-router-dom';
 

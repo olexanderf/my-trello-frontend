@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ReactElement, useState } from 'react';
-import { boardInputRegex } from '../../../../common/constants/regExp';
+import { boardInputRegex } from '../../../common/constants/regExp';
 import './modal.scss';
 
 type PropsType = {

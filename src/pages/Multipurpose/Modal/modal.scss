@@ -3,9 +3,6 @@
 $main-font: 'Comfortaa', cursive;
 
 .modal-container {
-  // position: fixed;
-  // top: 15%;
-  // left: 50%;
   position: fixed;
   top: 35%;
   left: 50%;
@@ -18,8 +15,6 @@ $main-font: 'Comfortaa', cursive;
 }
 .active {
   display: block;
-  // align-items: center;
-  // justify-content: center;
 }
 .modal-content {
   display: flex;
