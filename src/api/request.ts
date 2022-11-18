@@ -11,8 +11,14 @@ const instance = axios.create({
   },
 });
 
-instance.interceptors.response.use((res) => res.data);
-// instance.interceptors.request.use((res) => {
+// instance.interceptors.response.use((res: AxiosResponse) => {
+//   store.dispatch(loader(false));
+//   res.data;
+// });
+// instance.interceptors.request.use((res: AxiosResponse) => {
+//   store.dispatch(loader(true));
+//   res.data;
+// });
 //   instance
 //     .post('/login', {
 //       email: 'vpupkin@example.com',
@@ -21,6 +27,5 @@ instance.interceptors.response.use((res) => res.data);
 //     .then((response) => (token = response.data));
 //   console.log(token);
 //   return token;
-// });
 
 export default instance;

@@ -11,7 +11,6 @@ import './list.scss';
 
 type PropsType = {
   list: Lists;
-  key: number;
 };
 
 export default function List(props: PropsType): JSX.Element {

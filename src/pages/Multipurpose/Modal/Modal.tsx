@@ -23,7 +23,12 @@ export default function Modal(props: PropsType): ReactElement {
       onClick={(e): void => e.stopPropagation()}
     >
       <div className="modal-content">
-        <input className={isValidInput ? 'modal-input' : 'modal-input error'} type="text" onChange={handleChange} />
+        <input
+          className={isValidInput ? 'modal-input' : 'modal-input error'}
+          type="text"
+          onChange={handleChange}
+          value={inputValue}
+        />
         <button
           className="modal-btn"
           onClick={(): void => {

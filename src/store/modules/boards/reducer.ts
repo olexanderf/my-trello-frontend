@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/default-param-last */
 import Board from '../../../common/interfaces/Board';
 
-const initialState = [{ id: 0, title: 'Initial board' }] as Board[];
+const initialState = [{ id: 0, title: 'Demo board' }] as Board[];
 
 export default function reducer(state = initialState, action: { type: string; payload: Board[] }): object {
   switch (action.type) {

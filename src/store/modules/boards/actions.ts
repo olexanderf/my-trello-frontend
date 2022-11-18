@@ -36,7 +36,7 @@ export const deleteBoard = (id: number) => {
   return async (dispatch: Dispatch): Promise<void> => {
     try {
       const response = await api.delete(`/board/${id}`);
-      await dispatch({ type: 'DELETE_BOARD' });
+      await dispatch({ type: 'DELETE_BOARD', payload: response });
       // console.log(response);
       store.dispatch(getBoards());
     } catch (e) {
