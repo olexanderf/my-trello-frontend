@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/comma-dangle */
 import { Dispatch } from 'redux';
 import api from '../../../api/request';
-import Board from '../../../common/interfaces/Board';
+import OneBoard from '../../../common/interfaces/OneBoard';
 import store from '../../store';
 
 export const getBoard = (id: number) => {
   return async (dispatch: Dispatch): Promise<void> => {
     try {
-      const response = await api.get<string, { board: Board[] }>(`/board/${id}`);
+      const response = await api.get<string, { board: OneBoard }>(`/board/${id}`);
       // console.log(response);
       await dispatch({ type: 'FETCH_BOARD', payload: response });
     } catch (e) {

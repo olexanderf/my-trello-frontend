@@ -14,21 +14,24 @@ type PropsType = {
   getBoards: () => Promise<void>;
   createBoard: (title: string) => Promise<void>;
   deleteBoard: (id: number) => Promise<void>;
+  loaderBar: boolean;
 };
 type StateType = {
   boards: Board[];
   isVisibleModal: boolean;
   modalValue: string;
+  progressBar: boolean;
 };
 
 class Home extends React.Component<PropsType, StateType> {
   constructor(props: PropsType) {
     super(props);
-    const { boards } = this.props;
+    const { boards, loaderBar } = this.props;
     this.state = {
       boards,
       isVisibleModal: false,
       modalValue: '',
+      progressBar: loaderBar,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleValueModal = this.handleValueModal.bind(this);
@@ -41,11 +44,16 @@ class Home extends React.Component<PropsType, StateType> {
   }
 
   componentDidUpdate(): void {
-    const { boards: boardsProps } = this.props;
-    const { boards } = this.state;
+    const { boards: boardsProps, loaderBar } = this.props;
+    const { boards, progressBar } = this.state;
     if (boards !== boardsProps) {
       this.setState({
         boards: boardsProps,
+      });
+    }
+    if (progressBar !== loaderBar) {
+      this.setState({
+        progressBar: loaderBar,
       });
     }
   }
@@ -74,7 +82,7 @@ class Home extends React.Component<PropsType, StateType> {
   };
 
   render(): ReactElement {
-    const { isVisibleModal, boards } = this.state;
+    const { isVisibleModal, boards, progressBar } = this.state;
     return (
       <div
         className="container"
@@ -104,7 +112,7 @@ class Home extends React.Component<PropsType, StateType> {
             +
           </button>
         </div>
-        <ProgressBar completed={50} />
+        {progressBar ? <ProgressBar completed={50} /> : ''}
       </div>
     );
   }
@@ -112,6 +120,7 @@ class Home extends React.Component<PropsType, StateType> {
 
 const mapStateToProps = (store: AppState): StateType => ({
   boards: store.boards,
+  progressBar: store.loaderBar,
 });
 
 export default connect(mapStateToProps, { getBoards, createBoard, deleteBoard })(Home);

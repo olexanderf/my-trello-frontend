@@ -9,8 +9,7 @@ export const getBoards = () => {
     try {
       const response = await api.get<string, { boards: Board[] }>('/board');
       // console.log(response);
-      const { boards } = response;
-      await dispatch({ type: 'UPDATE_BOARDS', payload: boards });
+      await dispatch({ type: 'UPDATE_BOARDS', payload: response.boards });
     } catch (e) {
       console.log(e);
       dispatch({ type: 'ERROR_ACTION_TYPE' });

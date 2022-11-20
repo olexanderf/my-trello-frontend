@@ -1,5 +1,7 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { api } from '../common/constants';
+import { loader } from '../store/modules/loadingBar/action';
+import store from '../store/store';
 
 // let token = '';
 
@@ -11,14 +13,15 @@ const instance = axios.create({
   },
 });
 
-// instance.interceptors.response.use((res: AxiosResponse) => {
-//   store.dispatch(loader(false));
-//   res.data;
-// });
-// instance.interceptors.request.use((res: AxiosResponse) => {
-//   store.dispatch(loader(true));
-//   res.data;
-// });
+instance.interceptors.response.use((res: AxiosResponse) => {
+  store.dispatch(loader(false));
+  return res.data;
+});
+instance.interceptors.request.use((res: AxiosResponse) => {
+  // console.log(res);
+  store.dispatch(loader(true));
+  return res;
+});
 //   instance
 //     .post('/login', {
 //       email: 'vpupkin@example.com',

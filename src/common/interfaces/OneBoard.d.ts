@@ -1,8 +1,9 @@
-import Lists from "./Lists";
+/* eslint-disable semi */
+import Lists from './Lists';
 
 export default interface OneBoard {
-  title: string,
-  custom?: object,
-  users?: [],
-  lists: Lists[], 
+  title: string;
+  custom?: object;
+  users?: [];
+  lists: Lists[];
 }
