@@ -18,6 +18,7 @@ interface PropsType {
   getBoard: (id: number) => Promise<void>;
   editNameBoard: (id: number, boardName: string) => Promise<void>;
   createList: (id: number, listName: string, position: number) => Promise<void>;
+  loaderBar: boolean;
 }
 
 interface StateType {
@@ -27,6 +28,7 @@ interface StateType {
   newValueTitle: string;
   isVisibleModal: boolean;
   modalValue: string;
+  loaderBar: boolean;
 }
 
 type Params = {
@@ -36,7 +38,7 @@ type Params = {
 class Board extends React.Component<PropsType & RouteComponentProps<Params>, StateType> {
   constructor(props: PropsType & RouteComponentProps<Params>) {
     super(props);
-    const { board } = this.props;
+    const { board, loaderBar } = this.props;
     this.state = {
       title: board.title,
       lists: board.lists,
@@ -44,6 +46,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
       newValueTitle: board.title,
       isVisibleModal: false,
       modalValue: '',
+      loaderBar,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleValueModal = this.handleValueModal.bind(this);
@@ -51,16 +54,17 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
   }
 
   componentDidMount(): void {
-    const { router, getBoard: getBoardAction } = this.props;
+    const { router, getBoard: getBoardAction, loaderBar } = this.props;
     const { board_id: boardId } = router.params;
     if (boardId !== undefined) {
       getBoardAction(+boardId);
     }
+    this.setState({ loaderBar });
   }
 
   componentDidUpdate(): void {
-    const { board } = this.props;
-    const { title, lists } = this.state;
+    const { board, loaderBar } = this.props;
+    const { title, lists, loaderBar: progressBar } = this.state;
     if (board.title !== title) {
       this.setState({
         title: board.title,
@@ -70,6 +74,11 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     if (board.lists !== lists) {
       this.setState({
         lists: board.lists,
+      });
+    }
+    if (progressBar !== loaderBar) {
+      this.setState({
+        loaderBar,
       });
     }
   }
@@ -115,7 +124,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
   };
 
   render(): ReactElement {
-    const { lists, editHeader, title, newValueTitle, isVisibleModal } = this.state;
+    const { lists, editHeader, title, newValueTitle, isVisibleModal, loaderBar } = this.state;
     return (
       <div
         className="board-container"
@@ -167,7 +176,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
             handleClickCreateElement={this.handleClickCreateElement}
           />
         </div>
-        <ProgressBar completed={50} />
+        {loaderBar && <ProgressBar />}
       </div>
     );
   }
@@ -175,6 +184,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
 
 const mapStateToProps = (store: AppState): StateType => ({
   board: store.board,
+  loaderBar: store.loaderBar,
 });
 
 export default compose(withRouter, connect(mapStateToProps, { getBoard, editNameBoard, createList }))(Board);

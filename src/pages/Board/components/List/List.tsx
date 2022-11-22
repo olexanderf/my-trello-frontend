@@ -1,10 +1,11 @@
 import React, { ChangeEvent, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import { createCard, editListName } from '../../../../store/modules/board/actions';
-import store from '../../../../store/store';
+import { AppDispatch } from '../../../../store/store';
 import Modal from '../../../Multipurpose/Modal/Modal';
 import Card from '../Card/Card';
 import './list.scss';
@@ -17,7 +18,7 @@ export default function List(props: PropsType): JSX.Element {
   const { list } = props;
   const { title, cards, id, position } = list;
   const { board_id: boardId } = useParams();
-
+  const dispatch: AppDispatch = useDispatch();
   // work with list name change
   const [isValidInput, setValidInput] = useState(true);
   const [isEditListName, setEditListName] = useState(false);
@@ -30,7 +31,7 @@ export default function List(props: PropsType): JSX.Element {
   const updateListName = (): void => {
     if (valueOfListName.match(boardInputRegex) && boardId !== undefined) {
       setValidInput(true);
-      store.dispatch(editListName(+boardId, valueOfListName, id, position));
+      dispatch(editListName(+boardId, valueOfListName, id, position));
       setEditListName(false);
     } else setValidInput(false);
   };
@@ -45,7 +46,7 @@ export default function List(props: PropsType): JSX.Element {
   // work with card
   const handleClickCreateCard = (): void => {
     if (valueOfModal.match(boardInputRegex) && boardId !== undefined) {
-      store.dispatch(createCard(+boardId, valueOfModal, id, cards.length + 1));
+      dispatch(createCard(+boardId, valueOfModal, id, cards.length + 1));
       setValueOfModal('');
       setVisibleModal(false);
     }

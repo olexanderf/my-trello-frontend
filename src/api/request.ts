@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { api } from '../common/constants';
 import { loader } from '../store/modules/loadingBar/action';
 import store from '../store/store';
@@ -17,8 +17,7 @@ instance.interceptors.response.use((res: AxiosResponse) => {
   store.dispatch(loader(false));
   return res.data;
 });
-instance.interceptors.request.use((res: AxiosResponse) => {
-  // console.log(res);
+instance.interceptors.request.use((res: AxiosRequestConfig) => {
   store.dispatch(loader(true));
   return res;
 });

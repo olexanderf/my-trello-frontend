@@ -1,8 +1,9 @@
 .progressBar-container {
-  display: none;
+  display: flex;
   height: 100px;
   width: 350px;
-  background-color: rgba(173, 216, 230, 0.767);
+  background-color: rgba(224, 229, 231, 0.767);
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   position: absolute;
@@ -16,6 +17,13 @@
 }
 .progressBar-filler {
   height: 100%;
-  background-color: #00695c;
+  background-color: #026e99;
   border-radius: inherit;
+  transition: 0.5s ease;
+  transition-delay: 0.1s;
+}
+.progressBar-name {
+  font-size: 18px;
+  margin-top: 0;
+  margin-bottom: 10px;
 }
