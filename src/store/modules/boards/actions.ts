@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
+import axios from 'axios';
 import { Dispatch } from 'redux';
 import api from '../../../api/request';
 import Board from '../../../common/interfaces/Board';
 import store from '../../store';
+import { handleResponseError } from '../errorHandler/action';
 
 export const getBoards = () => {
   return async (dispatch: Dispatch): Promise<void> => {
@@ -11,8 +13,9 @@ export const getBoards = () => {
       // console.log(response);
       await dispatch({ type: 'UPDATE_BOARDS', payload: response.boards });
     } catch (e) {
-      console.log(e);
-      dispatch({ type: 'ERROR_ACTION_TYPE' });
+      if (axios.isAxiosError(e)) {
+        store.dispatch(handleResponseError(e.message));
+      } else console.log(e);
     }
   };
 };

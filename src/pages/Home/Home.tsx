@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import React, { ReactElement } from 'react';
 import Board from '../../common/interfaces/Board';
 import IconBoard from './components/Board/IconBoard';
@@ -120,9 +120,10 @@ class Home extends React.Component<PropsType, StateType> {
   }
 }
 
-const mapStateToProps = (store: AppState): StateType => ({
+const mapStateToProps = (store: AppState): PropFromRedux => ({
   boards: store.boards,
   loaderBar: store.loaderBar,
 });
 
 export default connect(mapStateToProps, { getBoards, createBoard, deleteBoard })(Home);
+type PropFromRedux = ConnectedProps<typeof connect>;

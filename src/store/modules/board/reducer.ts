@@ -3,7 +3,7 @@ import Board from '../../../common/interfaces/Board';
 
 const initialState = {} as Board;
 
-export default function reducer(state = initialState, action: { type: string; payload?: Board }): Board | undefined {
+export default function reducer(state = initialState, action: { type: string; payload?: Board }): Board {
   switch (action.type) {
     case 'FETCH_BOARD':
       return action.payload;
