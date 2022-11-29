@@ -3,6 +3,7 @@ import { Dispatch } from 'redux';
 import api from '../../../api/request';
 import OneBoard from '../../../common/interfaces/OneBoard';
 import store from '../../store';
+import { handleResponseError } from '../errorHandler/action';
 
 export const getBoard = (id: number) => {
   return async (dispatch: Dispatch): Promise<void> => {
@@ -11,8 +12,7 @@ export const getBoard = (id: number) => {
       // console.log(response);
       await dispatch({ type: 'FETCH_BOARD', payload: response });
     } catch (e) {
-      // console.log(e);
-      dispatch({ type: 'ERROR_ACTION_TYPE' });
+      store.dispatch(handleResponseError(e));
     }
   };
 };
@@ -26,8 +26,7 @@ export const editNameBoard = (id: number, boardName: string) => {
       // console.log(response);
       store.dispatch(getBoard(id));
     } catch (e) {
-      // console.log(e);
-      dispatch({ type: 'ERROR_ACTION_TYPE' });
+      store.dispatch(handleResponseError(e));
     }
   };
 };
@@ -41,8 +40,7 @@ export const createList = (id: number, listName: string, position: number) => {
       await dispatch({ type: 'CREATE_LIST' });
       store.dispatch(getBoard(id));
     } catch (e) {
-      // console.log(e);
-      dispatch({ type: 'ERROR_ACTION_TYPE' });
+      store.dispatch(handleResponseError(e));
     }
   };
 };
@@ -56,8 +54,7 @@ export const editListName = (board_id: number, listName: string, list_id: number
       await dispatch({ type: 'UPDATE_LIST_NAME' });
       store.dispatch(getBoard(board_id));
     } catch (e) {
-      // console.log(e);
-      dispatch({ type: 'ERROR_ACTION_TYPE' });
+      store.dispatch(handleResponseError(e));
     }
   };
 };
@@ -81,8 +78,7 @@ export const createCard = (
       await dispatch({ type: 'CREATE_CARD' });
       store.dispatch(getBoard(board_id));
     } catch (e) {
-      // console.log(e);
-      dispatch({ type: 'ERROR_ACTION_TYPE' });
+      store.dispatch(handleResponseError(e));
     }
   };
 };

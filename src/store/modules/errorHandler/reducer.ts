@@ -3,6 +3,8 @@ export default function reducer(state = {}, action: { type: string; payload: obj
   switch (action.type) {
     case 'RESPONSE_ERROR':
       return action.payload;
+    case 'CLEAR_ERROR_STATE':
+      return '';
     default:
       return state;
   }

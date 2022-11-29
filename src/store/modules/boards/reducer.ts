@@ -3,7 +3,7 @@ import Board from '../../../common/interfaces/Board';
 
 const initialState = [{ id: 0, title: 'Demo board' }] as Board[];
 
-export default function reducer(state = initialState, action: { type: string; payload: Board[] }): object {
+export default function reducer(state = initialState, action: { type: string; payload: Board[] }): Board[] {
   switch (action.type) {
     case 'UPDATE_BOARDS':
       return action.payload;

@@ -9,6 +9,17 @@
   position: absolute;
   border-radius: 10px;
 }
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
+$main-font: 'Comfortaa', cursive;
+
+.progressBar-container {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .progressBar-bg {
   border-radius: 20px;
   background-color: #e0e0de;
@@ -23,6 +34,7 @@
   transition-delay: 0.1s;
 }
 .progressBar-name {
+  font-family: $main-font;
   font-size: 18px;
   margin-top: 0;
   margin-bottom: 10px;

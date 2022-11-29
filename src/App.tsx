@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
 import { ToastContainer, toast, ToastContent } from 'react-toastify';
 import { useSelector } from 'react-redux';
@@ -7,9 +7,12 @@ import Board from './pages/Board/Board';
 import './App.css';
 import Home from './pages/Home/Home';
 import 'react-toastify/dist/ReactToastify.css';
+import ProgressBar from './pages/Multipurpose/ProgressBar/ProgressBar';
 
 function App(): ReactElement {
   const errorMessage = useSelector((store: AppState) => store.errorMessage);
+  const loaderBar = useSelector((store: AppState) => store.loaderBar);
+  const [loaderBarState, setLoaderBarState] = useState(false);
 
   const notify = (message: string): ToastContent =>
     toast.error(`${message}`, {
@@ -22,12 +25,18 @@ function App(): ReactElement {
       progress: undefined,
       theme: 'colored',
     });
+
   useEffect(() => {
-    // console.log('useEffect');
+    setLoaderBarState(loaderBar);
+  }, [loaderBar]);
+
+  useEffect(() => {
     if (typeof errorMessage === 'string' && errorMessage !== '') {
+      setLoaderBarState(false);
       notify(errorMessage);
     }
-  });
+  }, [errorMessage]);
+
   return (
     <div className="App">
       <div>
@@ -39,6 +48,7 @@ function App(): ReactElement {
         <Route path="/board/:board_id" element={<Board />} />
         <Route path="/" element={<Home />} />
       </Routes>
+      {loaderBarState && <ProgressBar />}
       <div>
         <ToastContainer />
       </div>

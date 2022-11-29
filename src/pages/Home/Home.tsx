@@ -1,4 +1,4 @@
-import { connect, ConnectedProps } from 'react-redux';
+import { connect } from 'react-redux';
 import React, { ReactElement } from 'react';
 import Board from '../../common/interfaces/Board';
 import IconBoard from './components/Board/IconBoard';
@@ -7,31 +7,27 @@ import { createBoard, deleteBoard, getBoards } from '../../store/modules/boards/
 import { AppState } from '../../store/store';
 import Modal from '../Multipurpose/Modal/Modal';
 import { boardInputRegex } from '../../common/constants/regExp';
-import ProgressBar from '../Multipurpose/ProgressBar/ProgressBar';
 
 type PropsType = {
   boards: Board[];
   getBoards: () => Promise<void>;
   createBoard: (title: string) => Promise<void>;
   deleteBoard: (id: number) => Promise<void>;
-  loaderBar: boolean;
 };
 type StateType = {
   boards: Board[];
   isVisibleModal: boolean;
   modalValue: string;
-  loaderBar: boolean;
 };
 
 class Home extends React.Component<PropsType, StateType> {
   constructor(props: PropsType) {
     super(props);
-    const { boards, loaderBar } = this.props;
+    const { boards } = this.props;
     this.state = {
       boards,
       isVisibleModal: false,
       modalValue: '',
-      loaderBar,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleValueModal = this.handleValueModal.bind(this);
@@ -39,23 +35,16 @@ class Home extends React.Component<PropsType, StateType> {
   }
 
   componentDidMount(): void {
-    const { getBoards: getBoardsAction, loaderBar } = this.props;
+    const { getBoards: getBoardsAction } = this.props;
     getBoardsAction();
-    this.setState({ loaderBar });
   }
 
   componentDidUpdate(): void {
-    const { boards: boardsProps, loaderBar } = this.props;
-    const { boards, loaderBar: progressBar } = this.state;
+    const { boards: boardsProps } = this.props;
+    const { boards } = this.state;
     if (boards !== boardsProps) {
       this.setState({
         boards: boardsProps,
-        loaderBar,
-      });
-    }
-    if (progressBar !== loaderBar) {
-      this.setState({
-        loaderBar,
       });
     }
   }
@@ -84,7 +73,7 @@ class Home extends React.Component<PropsType, StateType> {
   };
 
   render(): ReactElement {
-    const { isVisibleModal, boards, loaderBar } = this.state;
+    const { isVisibleModal, boards } = this.state;
     return (
       <div
         className="container"
@@ -114,16 +103,13 @@ class Home extends React.Component<PropsType, StateType> {
             +
           </button>
         </div>
-        {loaderBar && <ProgressBar />}
       </div>
     );
   }
 }
 
-const mapStateToProps = (store: AppState): PropFromRedux => ({
+const mapStateToProps = (store: AppState): StateType => ({
   boards: store.boards,
-  loaderBar: store.loaderBar,
 });
 
 export default connect(mapStateToProps, { getBoards, createBoard, deleteBoard })(Home);
-type PropFromRedux = ConnectedProps<typeof connect>;
