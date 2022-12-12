@@ -19,6 +19,7 @@ export default function List(props: PropsType): JSX.Element {
   const { title, cards, id, position } = list;
   const { board_id: boardId } = useParams();
   const dispatch: AppDispatch = useDispatch();
+
   // work with list name change
   const [isValidInput, setValidInput] = useState(true);
   const [isEditListName, setEditListName] = useState(false);
@@ -43,7 +44,7 @@ export default function List(props: PropsType): JSX.Element {
     setVisibleModal(!isVisibleModal);
   };
 
-  // work with card
+  // work with create card
   const handleClickCreateCard = (): void => {
     if (valueOfModal.match(boardInputRegex) && boardId !== undefined) {
       dispatch(createCard(+boardId, valueOfModal, id, cards.length + 1));
@@ -52,6 +53,11 @@ export default function List(props: PropsType): JSX.Element {
     }
   };
 
+  // work with card move
+  const startDrag = (e: DragEvent<HTMLDivElement>, arrOfCards: ICard[]): void => {
+    e.prevenetDefault();
+
+  };
   return (
     <div className="list">
       <div
@@ -78,9 +84,15 @@ export default function List(props: PropsType): JSX.Element {
         )}
       </div>
 
-      {cards.map((card: ICard) => {
-        return <Card key={card.id} {...card} />;
-      })}
+      {cards
+        .sort((a, b) => a.position - b.position)
+        .map((card: ICard) => {
+          return (
+            <div key={card.id} draggable onDragStart={(e): void => startDrag(e, cards)}>
+              <Card {...card} />
+            </div>
+          );
+        })}
       <div className="btn-container">
         <button className="add-list" onClick={toggleModal}>
           +
