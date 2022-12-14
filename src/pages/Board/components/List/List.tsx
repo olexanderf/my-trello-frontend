@@ -54,10 +54,13 @@ export default function List(props: PropsType): JSX.Element {
   };
 
   // work with card move
-  const startDrag = (e: DragEvent<HTMLDivElement>, arrOfCards: ICard[]): void => {
-    e.prevenetDefault();
-
+  const startDrag = (e: DragEvent<HTMLDivElement>, card: ICard, arrOfCards: ICard[]): void => {
+    // console.log(card);
+    // console.log(e.target);
+    // const slot = { ...card };
+    // arrOfCards.
   };
+
   return (
     <div className="list">
       <div
@@ -83,16 +86,17 @@ export default function List(props: PropsType): JSX.Element {
           <h2>{title}</h2>
         )}
       </div>
-
-      {cards
-        .sort((a, b) => a.position - b.position)
-        .map((card: ICard) => {
-          return (
-            <div key={card.id} draggable onDragStart={(e): void => startDrag(e, cards)}>
-              <Card {...card} />
-            </div>
-          );
-        })}
+      <div className="list-item-container">
+        {cards
+          .sort((a, b) => a.position - b.position)
+          .map((card: ICard) => {
+            return (
+              <div key={card.id} draggable onDragStart={(e): void => startDrag(e, card, cards)}>
+                <Card {...card} />
+              </div>
+            );
+          })}
+      </div>
       <div className="btn-container">
         <button className="add-list" onClick={toggleModal}>
           +
