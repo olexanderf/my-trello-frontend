@@ -5,7 +5,7 @@ import './card.scss';
 export default function Card(props: ICard): JSX.Element {
   const { title } = props;
   return (
-    <div className="card">
+    <div>
       <p>{title}</p>
     </div>
   );

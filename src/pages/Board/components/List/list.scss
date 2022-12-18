@@ -43,3 +43,16 @@ h2 {
 .error {
     border: 2px solid red;
 }
+.card {
+    padding: 10px;
+    margin: 10px 0 10px 0;
+    background-color: rgba(105, 211, 0, 0.377);
+  }
+.slot {
+    @extend .card;
+    background-color: gray;
+    color: transparent;
+  }
+.slot::after {
+    
+}

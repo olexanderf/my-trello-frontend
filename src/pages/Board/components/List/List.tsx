@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, HtmlHTMLAttributes, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
@@ -54,13 +54,28 @@ export default function List(props: PropsType): JSX.Element {
   };
 
   // work with card move
-  const startDrag = (e: DragEvent<HTMLDivElement>, card: ICard, arrOfCards: ICard[]): void => {
-    // console.log(card);
-    // console.log(e.target);
-    // const slot = { ...card };
-    // arrOfCards.
-  };
+  const [arrOfCards, changeArrOfCards] = useState(cards);
+  useEffect(() => {
+    changeArrOfCards(cards);
+  }, [cards]);
 
+  // const startDrag = (card: ICard): void => {
+  //   const { position: slotPosition, title: slotTitle } = card;
+  //   const slotCard = { position: slotPosition, title: slotTitle, slot: true };
+  //   const arr = arrOfCards.filter((el) => el.id !== card.id);
+  //   changeArrOfCards([...arr, slotCard]);
+  // };
+  const startDrag = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.target.classList.remove('card');
+    e.target.classList.add('slot');
+  };
+  const dropOverHandler = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.preventDefault();
+    e.target.classList.add('card');
+    e.target.classList.remvoe('slot');
+    e.dataTransfer.setData('text/html', e.target.outerHTML);
+    e.dataTransfer.dropEffect = 'move';
+  };
   return (
     <div className="list">
       <div
@@ -86,12 +101,16 @@ export default function List(props: PropsType): JSX.Element {
           <h2>{title}</h2>
         )}
       </div>
-      <div className="list-item-container">
-        {cards
+      <div
+        className="list-item-container"
+        onDragOver={(e): void => e.preventDefault()}
+        onDrop={(e): void => dropOverHandler(e)}
+      >
+        {arrOfCards
           .sort((a, b) => a.position - b.position)
           .map((card: ICard) => {
             return (
-              <div key={card.id} draggable onDragStart={(e): void => startDrag(e, card, cards)}>
+              <div key={card.id} className="card" draggable onDragStart={(e): void => startDrag(e)}>
                 <Card {...card} />
               </div>
             );
