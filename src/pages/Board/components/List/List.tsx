@@ -1,4 +1,4 @@
-import React, { ChangeEvent, HtmlHTMLAttributes, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
@@ -55,6 +55,7 @@ export default function List(props: PropsType): JSX.Element {
 
   // work with card move
   const [arrOfCards, changeArrOfCards] = useState(cards);
+  const [dragCard, setDragCard] = useState<ICard | null>(null);
   useEffect(() => {
     changeArrOfCards(cards);
   }, [cards]);
@@ -65,16 +66,42 @@ export default function List(props: PropsType): JSX.Element {
   //   const arr = arrOfCards.filter((el) => el.id !== card.id);
   //   changeArrOfCards([...arr, slotCard]);
   // };
-  const startDrag = (e: React.DragEvent<HTMLDivElement>): void => {
-    e.target.classList.remove('card');
-    e.target.classList.add('slot');
+  const startDrag = (e: React.DragEvent<HTMLDivElement>, card: ICard): void => {
+    // e.target.classList.remove('card');
+    // e.target.classList.add('slot');
+    // e.dataTransfer.setData('text/html', e.target.outerHTML);
+    // e.dataTransfer.dropEffect = 'move';
+    setDragCard(card);
+    // console.log(e.target);
+  };
+  const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard): void => {
+    e.preventDefault();
+    changeArrOfCards(
+      arrOfCards.map((cardInArr) => {
+        if (dragCard !== null) {
+          if (cardInArr.id === card.id) {
+            return { ...cardInArr, position: dragCard.position };
+          }
+          if (cardInArr.id === dragCard.id) {
+            return { ...cardInArr, position: card.position };
+          }
+        }
+        return cardInArr;
+      })
+    );
+    // e.target.classList.add('card');
+    // e.target.classList.remove('slot');
+    // const card = e.dataTransfer.getData('text/html');
+    // setDragCard(card);
   };
   const dropOverHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
-    e.target.classList.add('card');
-    e.target.classList.remvoe('slot');
-    e.dataTransfer.setData('text/html', e.target.outerHTML);
-    e.dataTransfer.dropEffect = 'move';
+  };
+  const dragEnterHandler = (e): void => {};
+  const dragLeaveHandler = (e): void => {
+    // if (e.target.classList.contains('card')) {
+    //   e.target.append(dragCard);
+    // }
   };
   return (
     <div className="list">
@@ -101,16 +128,21 @@ export default function List(props: PropsType): JSX.Element {
           <h2>{title}</h2>
         )}
       </div>
-      <div
-        className="list-item-container"
-        onDragOver={(e): void => e.preventDefault()}
-        onDrop={(e): void => dropOverHandler(e)}
-      >
+      <div className="list-item-container">
         {arrOfCards
           .sort((a, b) => a.position - b.position)
           .map((card: ICard) => {
             return (
-              <div key={card.id} className="card" draggable onDragStart={(e): void => startDrag(e)}>
+              <div
+                key={card.id}
+                className="card"
+                draggable
+                onDragOver={(e): void => dropOverHandler(e)}
+                onDrop={(e): void => dropHandler(e, card)}
+                onDragEnter={(e): void => dragEnterHandler(e)}
+                onDragLeave={(e): void => dragLeaveHandler(e)}
+                onDragStart={(e): void => startDrag(e, card)}
+              >
                 <Card {...card} />
               </div>
             );
