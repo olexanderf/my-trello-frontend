@@ -65,24 +65,46 @@ export default function List(props: PropsType): JSX.Element {
     e.target.classList.add('slot');
     setDragElement(e.target);
     setDragCard(card);
+    // dragElement.innerText = '';
 
     // console.log(e.target);
   };
+  const replaceCard = (card: ICard): ICard[] => {
+    if (dragCard !== null) {
+      if (card.position < dragCard.position) {
+        const prevDragPosition = dragCard.position;
+        dragCard.position = card.position;
+        return arrOfCards.map((cardInArr) => {
+          if (
+            cardInArr.position >= dragCard.position &&
+            cardInArr.position < prevDragPosition &&
+            cardInArr.id !== dragCard.id
+          ) {
+            return { ...cardInArr, position: cardInArr.position + 1 };
+          }
+          return cardInArr;
+        });
+      }
+      if (card.position > dragCard.position) {
+        const prevDragPosition = dragCard.position;
+        dragCard.position = card.position;
+        return arrOfCards.map((cardInArr) => {
+          if (
+            cardInArr.position <= dragCard.position &&
+            cardInArr.position > prevDragPosition &&
+            cardInArr.id !== dragCard.id
+          ) {
+            return { ...cardInArr, position: cardInArr.position - 1 };
+          }
+          return cardInArr;
+        });
+      }
+    }
+    return arrOfCards;
+  };
   const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard): void => {
     e.preventDefault();
-    changeArrOfCards(
-      arrOfCards.map((cardInArr) => {
-        if (dragCard !== null) {
-          if (cardInArr.position === card.position) {
-            return { ...cardInArr, position: dragCard.position };
-          }
-          if (cardInArr.position === dragCard.position) {
-            return { ...cardInArr, position: card.position };
-          }
-        }
-        return cardInArr;
-      })
-    );
+    changeArrOfCards(replaceCard(card));
     dragElement.innerText = dragCard?.title;
     dragElement.classList.remove('slot');
     dragElement.classList.add('card');
@@ -90,6 +112,7 @@ export default function List(props: PropsType): JSX.Element {
   };
   const dropOverHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
+    dragElement.innerText = dragCard?.title;
   };
   const dragEnterHandler = (e): void => {
     dragElement.hidden = false;
@@ -109,6 +132,7 @@ export default function List(props: PropsType): JSX.Element {
     dragElement.classList.add('card');
     dragElement.innerText = dragCard?.title;
   };
+
   return (
     <div className="list">
       <div
@@ -134,7 +158,11 @@ export default function List(props: PropsType): JSX.Element {
           <h2>{title}</h2>
         )}
       </div>
-      <div className="list-item-container">
+      <div
+        className="list-item-container"
+        onDragOver={(e): void => dropOverHandler(e)}
+        onDrop={(e): void => dropHandler(e)}
+      >
         {arrOfCards
           .sort((a, b) => a.position - b.position)
           .map((card: ICard) => {

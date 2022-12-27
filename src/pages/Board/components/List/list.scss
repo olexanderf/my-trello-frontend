@@ -54,6 +54,7 @@ h2 {
     min-height: 50px;
   }
 .list-item-container {
+    min-height: 30px;
   // display: flex;
   // flex-direction: column;
   //   overflow: hidden;
@@ -66,12 +67,12 @@ h2 {
     // color: transparent;
 }
 .slot::after {
+  margin: 10px 0 10px 0;
   display: block;
   content: 'b';
   background-color: gray;
   color: transparent;
   width: 100%;
   height: 75px;
-  z-index: 5;
 }
 
