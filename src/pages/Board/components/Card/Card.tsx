@@ -4,9 +4,5 @@ import './card.scss';
 
 export default function Card(props: ICard): JSX.Element {
   const { title } = props;
-  return (
-    <div>
-      <p>{title}</p>
-    </div>
-  );
+  return <p>{title}</p>;
 }

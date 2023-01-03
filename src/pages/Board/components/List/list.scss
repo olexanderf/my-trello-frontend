@@ -44,17 +44,17 @@ h2 {
   border: 2px solid red;
 }
 .card {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: left;
-    padding: 10px;
-    margin: 10px 0 10px 0;
-    background-color: rgba(105, 211, 0, 0.377);
-    min-height: 50px;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  padding: 10px;
+  margin: 10px 0 10px 0;
+  background-color: rgba(105, 211, 0, 0.377);
+  min-height: 50px;
+}
 .list-item-container {
-    min-height: 30px;
+  min-height: 30px;
   // display: flex;
   // flex-direction: column;
   //   overflow: hidden;
@@ -62,17 +62,19 @@ h2 {
   //   width: 100%;
 }
 .slot {
-    // @extend .card;
-    // background-color: gray;
-    // color: transparent;
+  @extend .card;
+  background-color: gray;
+  color: transparent;
 }
-.slot::after {
-  margin: 10px 0 10px 0;
+.hidden-text {
+  color: transparent;
+}
+.slot1::before {
+  @extend .card;
   display: block;
   content: 'b';
   background-color: gray;
   color: transparent;
-  width: 100%;
-  height: 75px;
+  // width: 100%;
+  // height: 75px;
 }
-

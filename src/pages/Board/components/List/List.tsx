@@ -56,21 +56,13 @@ export default function List(props: PropsType): JSX.Element {
   // work with card move
   const [arrOfCards, changeArrOfCards] = useState(cards);
   const [dragCard, setDragCard] = useState<ICard | null>(null);
-  const [dragElement, setDragElement] = useState(null);
+  const [dragElement, setDragElement] = useState<HTMLDivElement | null>(null);
   useEffect(() => {
     changeArrOfCards(cards);
   }, [cards]);
 
-  const startDrag = (e: React.DragEvent<HTMLDivElement>, card: ICard): void => {
-    e.target.classList.add('slot');
-    setDragElement(e.target);
-    setDragCard(card);
-    // dragElement.innerText = '';
-
-    // console.log(e.target);
-  };
   const replaceCard = (card: ICard): ICard[] => {
-    if (dragCard !== null) {
+    if (dragCard !== null && card !== undefined) {
       if (card.position < dragCard.position) {
         const prevDragPosition = dragCard.position;
         dragCard.position = card.position;
@@ -102,35 +94,53 @@ export default function List(props: PropsType): JSX.Element {
     }
     return arrOfCards;
   };
+  const startDrag = (e: React.DragEvent<HTMLDivElement>, card: ICard): void => {
+    // e.currentTarget.classList.add('slot');
+    // e.currentTarget.classList.remove('card');
+    setDragElement(e.currentTarget);
+    setDragCard(card);
+    // console.log(e.currentTarget);
+    // console.log(dragElement);
+    // console.log('start drag');
+  };
   const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard): void => {
     e.preventDefault();
+    // console.log('drop');
     changeArrOfCards(replaceCard(card));
-    dragElement.innerText = dragCard?.title;
-    dragElement.classList.remove('slot');
-    dragElement.classList.add('card');
-    dragElement.hidden = false;
+    if (dragElement?.classList.contains('slot')) {
+      dragElement?.classList.remove('slot');
+      dragElement?.classList.add('card');
+      dragElement?.classList.remove('hidden-text');
+    }
+    // setDragElement(null);
+    // setDragCard(null);
   };
   const dropOverHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
-    dragElement.innerText = dragCard?.title;
   };
-  const dragEnterHandler = (e): void => {
-    dragElement.hidden = false;
-    dragElement.classList.remove('card');
-    const target = e.target;
-    if (target.className !== 'slot' && target.className === 'card') {
-      e.target.classList.add('slot');
+  const dragEnterHandler = (e: React.DragEvent<HTMLDivElement>): void => {
+    if (dragElement === e.currentTarget) {
+      dragElement?.classList.add('slot');
+      dragElement?.classList.remove('hidden-text');
+    }
+    dragElement?.classList.remove('card');
+    if (dragElement !== e.currentTarget) {
+      e.currentTarget.classList.add('slot1');
     }
   };
-  const dragLeaveHandler = (e): void => {
-    dragElement.hidden = true;
-    dragElement.innerText = '';
-    e.target.classList.remove('slot');
+  const dragLeaveHandler = (e: React.DragEvent<HTMLDivElement>): void => {
+    dragElement?.classList.remove('slot');
+    dragElement?.classList.add('hidden-text');
+    e.currentTarget.classList.remove('slot1');
+    // console.log('drag leave');
   };
-  const dragEndHandler = (e): void => {
-    dragElement.hidden = false;
-    dragElement.classList.add('card');
-    dragElement.innerText = dragCard?.title;
+  const dragEndHandler = (e: React.DragEvent<HTMLDivElement>): void => {
+    dragElement?.classList.add('card');
+    dragElement?.classList.remove('hidden-text');
+    e.currentTarget.classList.remove('slot1');
+    // console.log('drag end');
+    setDragElement(null);
+    setDragCard(null);
   };
 
   return (
@@ -160,8 +170,8 @@ export default function List(props: PropsType): JSX.Element {
       </div>
       <div
         className="list-item-container"
-        onDragOver={(e): void => dropOverHandler(e)}
-        onDrop={(e): void => dropHandler(e)}
+        // onDragOver={(e): void => dropOverHandler(e)}
+        // onDrop={(e): void => dropHandler(e)}
       >
         {arrOfCards
           .sort((a, b) => a.position - b.position)
