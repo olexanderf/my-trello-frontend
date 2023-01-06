@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, createRef, Ref, useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
@@ -94,14 +94,21 @@ export default function List(props: PropsType): JSX.Element {
     }
     return arrOfCards;
   };
+
+  // Create dynamically ref code taken from gitHub https://gist.github.com/whoisryosuke/06f91d7cbcaa76b969bb73576062bb83
+  const [cardsHeight, setCardsHeight] = useState([]);
+  const cardRef = useRef(arrOfCards.map(() => createRef()));
+
+  useEffect(() => {
+    const nextCardHeight = cardRef.current.map((ref) => {
+      return ref.current.getBoundingClientRect().height;
+    });
+    setCardsHeight(nextCardHeight);
+  }, []);
+
   const startDrag = (e: React.DragEvent<HTMLDivElement>, card: ICard): void => {
-    // e.currentTarget.classList.add('slot');
-    // e.currentTarget.classList.remove('card');
     setDragElement(e.currentTarget);
     setDragCard(card);
-    // console.log(e.currentTarget);
-    // console.log(dragElement);
-    // console.log('start drag');
   };
   const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard): void => {
     e.preventDefault();
@@ -112,13 +119,14 @@ export default function List(props: PropsType): JSX.Element {
       dragElement?.classList.add('card');
       dragElement?.classList.remove('hidden-text');
     }
-    // setDragElement(null);
-    // setDragCard(null);
+    e.currentTarget.classList.remove('slot1');
+    // e.currentTarget.classList.remove('card-top');
+    e.currentTarget.style.top = '';
   };
   const dropOverHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
   };
-  const dragEnterHandler = (e: React.DragEvent<HTMLDivElement>): void => {
+  const dragEnterHandler = (e: React.DragEvent<HTMLDivElement>, index: number): void => {
     if (dragElement === e.currentTarget) {
       dragElement?.classList.add('slot');
       dragElement?.classList.remove('hidden-text');
@@ -126,23 +134,31 @@ export default function List(props: PropsType): JSX.Element {
     dragElement?.classList.remove('card');
     if (dragElement !== e.currentTarget) {
       e.currentTarget.classList.add('slot1');
+      e.currentTarget.style.top = `${e.currentTarget.style.top + cardsHeight[index + 1]}px`;
+      // e.currentTarget.style.bottom += cardsHeight[index + 1];
+      // console.log(cardsHeight[index + 1]);
     }
   };
   const dragLeaveHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     dragElement?.classList.remove('slot');
     dragElement?.classList.add('hidden-text');
-    e.currentTarget.classList.remove('slot1');
+    // e.currentTarget.classList.remove('slot1');
+    // e.currentTarget.style.marginTop = '';
+    // e.currentTarget.classList.remove('card-top');
     // console.log('drag leave');
   };
   const dragEndHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     dragElement?.classList.add('card');
     dragElement?.classList.remove('hidden-text');
     e.currentTarget.classList.remove('slot1');
-    // console.log('drag end');
+    e.currentTarget.style.top = '';
+    // e.currentTarget.classList.remove('card-top');
     setDragElement(null);
     setDragCard(null);
   };
-
+  const containerDropHandler = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.preventDefault();
+  };
   return (
     <div className="list">
       <div
@@ -170,20 +186,21 @@ export default function List(props: PropsType): JSX.Element {
       </div>
       <div
         className="list-item-container"
-        // onDragOver={(e): void => dropOverHandler(e)}
-        // onDrop={(e): void => dropHandler(e)}
+        onDragOver={(e): void => dropOverHandler(e)}
+        onDrop={(e): void => containerDropHandler(e)}
       >
         {arrOfCards
           .sort((a, b) => a.position - b.position)
-          .map((card: ICard) => {
+          .map((card: ICard, index: number) => {
             return (
               <div
                 key={card.id}
+                ref={cardRef.current[index]}
                 draggable
                 className="card"
                 onDragOver={(e): void => dropOverHandler(e)}
                 onDrop={(e): void => dropHandler(e, card)}
-                onDragEnter={(e): void => dragEnterHandler(e)}
+                onDragEnter={(e): void => dragEnterHandler(e, index)}
                 onDragLeave={(e): void => dragLeaveHandler(e)}
                 onDragStart={(e): void => startDrag(e, card)}
                 onDragEnd={(e): void => dragEndHandler(e)}

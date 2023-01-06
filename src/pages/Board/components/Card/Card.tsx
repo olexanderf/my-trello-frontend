@@ -4,5 +4,5 @@ import './card.scss';
 
 export default function Card(props: ICard): JSX.Element {
   const { title } = props;
-  return <p>{title}</p>;
+  return <p className="card-text">{title}</p>;
 }
