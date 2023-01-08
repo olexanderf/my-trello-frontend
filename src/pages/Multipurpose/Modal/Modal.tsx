@@ -13,7 +13,7 @@ export default function Modal(props: PropsType): ReactElement {
   const [inputValue, setValue] = useState('');
   const [isValidInput, setValidInput] = useState(true);
   const { isVisibleModal, toggleModal, handleValueModal, handleClickCreateElement } = props;
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setValue(e.target.value);
     handleValueModal(e.target.value);
   };
@@ -23,7 +23,7 @@ export default function Modal(props: PropsType): ReactElement {
       onClick={(e): void => e.stopPropagation()}
     >
       <div className="modal-content">
-        <textarea
+        <input
           className={isValidInput ? 'modal-input' : 'modal-input error'}
           type="text"
           onChange={handleChange}
