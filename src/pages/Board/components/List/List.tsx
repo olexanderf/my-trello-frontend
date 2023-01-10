@@ -1,4 +1,3 @@
-import { render } from '@testing-library/react';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -54,11 +53,22 @@ export default function List(props: PropsType): JSX.Element {
     }
   };
 
+  // Handle mouse move on card code taken from article https://bobbyhadz.com/blog/react-get-mouse-position
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>): void => {
+    setCoords({
+      x: e.clientX - e.currentTarget.offsetLeft,
+      y: e.clientY - e.currentTarget.offsetTop,
+    });
+    // console.log(coords);
+  };
+
   // work with card move
   const [arrOfCards, changeArrOfCards] = useState(cards);
   const [dragCard, setDragCard] = useState<ICard | null>(null);
   const [dragElement, setDragElement] = useState<HTMLDivElement | null>(null);
-  const [currentList, setCurrentList] = useState<Lists[] | null>(null);
+  const [currentArrCards, setCurrentArrCards] = useState<ICard[] | null>(null);
   useEffect(() => {
     changeArrOfCards(cards);
   }, [cards]);
@@ -96,12 +106,29 @@ export default function List(props: PropsType): JSX.Element {
     }
     return arrOfCards;
   };
+  // const replaceCard = (card: ICard, targetArrCards: ICard[]): void => {
+  //   if (dragCard !== null && card !== undefined && currentArrCards !== null) {
+  //     const currentIndex = currentArrCards.indexOf(dragCard);
+  //     currentArrCards?.splice(currentIndex, 1);
+  //     const dropIndex = targetArrCards.indexOf(card);
+  //     targetArrCards.splice(dropIndex + 1, 0, dragCard);
+  //     targetArrCards.map((c, index) => {
+  //       return { ...c, position: index + 1 };
+  //     });
+  //     changeArrOfCards(
+  //       currentArrCards.map((c, index) => {
+  //         return { ...c, position: index + 1 };
+  //       })
+  //     );
+  //   }
+  // };
 
-  const startDrag = (e: React.DragEvent<HTMLDivElement>, card: ICard): void => {
+  const startDrag = (e: React.DragEvent<HTMLDivElement>, card: ICard, arrCards: ICard[]): void => {
     setDragElement(e.currentTarget);
     setDragCard(card);
+    setCurrentArrCards(arrCards);
   };
-  const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard): void => {
+  const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard, arrCards: ICard[]): void => {
     e.preventDefault();
     changeArrOfCards(replaceCard(card));
     if (dragElement?.classList.contains('slot')) {
@@ -109,8 +136,10 @@ export default function List(props: PropsType): JSX.Element {
       dragElement?.classList.add('card');
       dragElement?.classList.remove('hidden-text');
     }
-    e.currentTarget.classList.remove('slot1');
+    e.currentTarget.classList.remove('slot-before');
     e.currentTarget.classList.remove('card-top');
+    e.currentTarget.classList.remove('slot-after');
+    e.currentTarget.classList.remove('card-bottom');
   };
   const dropOverHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
@@ -122,27 +151,40 @@ export default function List(props: PropsType): JSX.Element {
     }
     dragElement?.classList.remove('card');
     if (dragElement !== e.currentTarget) {
-      e.currentTarget.classList.add('slot1');
+      // if (coords.y < e.currentTarget.offsetHeight / 2) {
+      e.currentTarget.classList.add('slot-before');
       e.currentTarget.classList.add('card-top');
+      // }
+      // if (coords.y > e.currentTarget.offsetHeight / 2) {
+      //   e.currentTarget.classList.add('slot-after');
+      //   e.currentTarget.classList.add('card-bottom');
+      // }
+      // console.log(coords);
+      // console.log(e.currentTarget.offsetHeight);
     }
   };
   const dragLeaveHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     dragElement?.classList.remove('slot');
     dragElement?.classList.add('hidden-text');
-    e.currentTarget.classList.remove('slot1');
+    e.currentTarget.classList.remove('slot-before');
     e.currentTarget.classList.remove('card-top');
+    e.currentTarget.classList.remove('slot-after');
+    e.currentTarget.classList.remove('card-bottom');
   };
   const dragEndHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     dragElement?.classList.add('card');
     dragElement?.classList.remove('hidden-text');
-    e.currentTarget.classList.remove('slot1');
+    e.currentTarget.classList.remove('slot-before');
     e.currentTarget.classList.remove('card-top');
+    e.currentTarget.classList.remove('slot-after');
+    e.currentTarget.classList.remove('card-bottom');
     setDragElement(null);
     setDragCard(null);
   };
   const containerDropHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
   };
+
   return (
     <div className="list">
       <div
@@ -182,12 +224,14 @@ export default function List(props: PropsType): JSX.Element {
                 draggable
                 className="card"
                 onDragOver={(e): void => dropOverHandler(e)}
-                onDrop={(e): void => dropHandler(e, card)}
+                onDrop={(e): void => dropHandler(e, card, arrOfCards)}
                 onDragEnter={(e): void => dragEnterHandler(e)}
                 onDragLeave={(e): void => dragLeaveHandler(e)}
-                onDragStart={(e): void => startDrag(e, card)}
+                onDragStart={(e): void => startDrag(e, card, arrOfCards)}
                 onDragEnd={(e): void => dragEndHandler(e)}
+                onMouseMove={handleMouseMove}
               >
+                <div />
                 <Card {...card} />
               </div>
             );
