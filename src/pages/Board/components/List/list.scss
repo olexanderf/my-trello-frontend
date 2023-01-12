@@ -68,9 +68,10 @@ h2 {
   @extend .card;
   background-color: gray;
   color: transparent;
+  transition: all 0.2s ease-out;
 }
-.hidden-text {
-  color: transparent;
+.hidden-card {
+  display: none;
 }
 .slot-before::before {
   display: block;
@@ -82,7 +83,7 @@ h2 {
   left: 0;
   width: 100%;
   height: 70px;
-  transition: all 0.5s linear;
+  // transition: all 0.05s ease-out;
 }
 .slot-after::after {
   display: block;
@@ -90,19 +91,19 @@ h2 {
   content: '';
   background-color: gray;
   margin: 10px 0 10px 0;
-  bottom: 100%;
+  top: 100%;
   left: 0;
   width: 100%;
   height: 70px;
-  transition: all 0.5s linear;
+  // transition: all 0.5s linear;
 }
 .card-top {
   transform: translateY(calc(100% + 10px));
   margin-bottom: 90px;
-  transition: all 0.5s linear;
+  // transition: all 0.05s ease-out;
 }
 .card-bottom {
-  transform: translateY(calc(100% + 10px));
-  margin-top: 90px;
-  transition: all 0.5s linear;
+  transform: -translateY(calc(100% + 10px));
+  margin-bottom: 90px;
+  // transition: all 0.5s linear;
 }

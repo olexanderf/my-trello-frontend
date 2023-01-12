@@ -53,22 +53,40 @@ export default function List(props: PropsType): JSX.Element {
     }
   };
 
-  // Handle mouse move on card code taken from article https://bobbyhadz.com/blog/react-get-mouse-position
-  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  // // Handle mouse move on card code taken from article https://bobbyhadz.com/blog/react-get-mouse-position
+  // const [coords, setCoords] = useState({ x: 0, y: 0 });
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>): void => {
-    setCoords({
-      x: e.clientX - e.currentTarget.offsetLeft,
-      y: e.clientY - e.currentTarget.offsetTop,
-    });
-    // console.log(coords);
-  };
+  // const [globalCoords, setGlobalCoords] = useState({ x: 0, y: 0 });
+
+  // useEffect(() => {
+  //   // 👇️ get global mouse coordinates
+  //   const handleWindowMouseMove = (e: MouseEvent): void => {
+  //     setGlobalCoords({
+  //       x: e.screenX,
+  //       y: e.screenY,
+  //     });
+  //   };
+  //   window.addEventListener('mousemove', handleWindowMouseMove);
+
+  //   return () => {
+  //     window.removeEventListener('mousemove', handleWindowMouseMove);
+  //   };
+  // }, []);
+
+  // const handleMouseMove = (e: React.MouseEvent<HTMLElement>): void => {
+  //   setCoords({
+  //     x: e.clientX - e.currentTarget.offsetLeft,
+  //     y: e.clientY - e.currentTarget.offsetTop,
+  //   });
+  //   // console.log(coords);
+  // };
 
   // work with card move
   const [arrOfCards, changeArrOfCards] = useState(cards);
   const [dragCard, setDragCard] = useState<ICard | null>(null);
   const [dragElement, setDragElement] = useState<HTMLDivElement | null>(null);
   const [currentArrCards, setCurrentArrCards] = useState<ICard[] | null>(null);
+  // const [targetElement, setTargetElement] = useState(null);
   useEffect(() => {
     changeArrOfCards(cards);
   }, [cards]);
@@ -134,12 +152,12 @@ export default function List(props: PropsType): JSX.Element {
     if (dragElement?.classList.contains('slot')) {
       dragElement?.classList.remove('slot');
       dragElement?.classList.add('card');
-      dragElement?.classList.remove('hidden-text');
+      dragElement?.classList.remove('hidden-card');
     }
     e.currentTarget.classList.remove('slot-before');
     e.currentTarget.classList.remove('card-top');
-    e.currentTarget.classList.remove('slot-after');
-    e.currentTarget.classList.remove('card-bottom');
+    // e.currentTarget.classList.remove('slot-after');
+    // e.currentTarget.classList.remove('card-bottom');
   };
   const dropOverHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
@@ -147,42 +165,49 @@ export default function List(props: PropsType): JSX.Element {
   const dragEnterHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     if (dragElement === e.currentTarget) {
       dragElement?.classList.add('slot');
-      dragElement?.classList.remove('hidden-text');
+      dragElement?.classList.remove('hidden-card');
     }
     dragElement?.classList.remove('card');
     if (dragElement !== e.currentTarget) {
-      // if (coords.y < e.currentTarget.offsetHeight / 2) {
       e.currentTarget.classList.add('slot-before');
       e.currentTarget.classList.add('card-top');
+
+      // if (coords.y < e.currentTarget.offsetHeight / 2) {
       // }
       // if (coords.y > e.currentTarget.offsetHeight / 2) {
-      //   e.currentTarget.classList.add('slot-after');
-      //   e.currentTarget.classList.add('card-bottom');
       // }
+      // console.log('x: ' + x + ', y: ' + y);
+
       // console.log(coords);
       // console.log(e.currentTarget.offsetHeight);
     }
   };
   const dragLeaveHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     dragElement?.classList.remove('slot');
-    dragElement?.classList.add('hidden-text');
+    dragElement?.classList.add('hidden-card');
     e.currentTarget.classList.remove('slot-before');
     e.currentTarget.classList.remove('card-top');
-    e.currentTarget.classList.remove('slot-after');
-    e.currentTarget.classList.remove('card-bottom');
+    // e.currentTarget.classList.remove('slot-after');
+    // e.currentTarget.classList.remove('card-bottom');
   };
   const dragEndHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     dragElement?.classList.add('card');
-    dragElement?.classList.remove('hidden-text');
+    dragElement?.classList.remove('hidden-card');
     e.currentTarget.classList.remove('slot-before');
     e.currentTarget.classList.remove('card-top');
-    e.currentTarget.classList.remove('slot-after');
-    e.currentTarget.classList.remove('card-bottom');
+    // e.currentTarget.classList.remove('slot-after');
+    // e.currentTarget.classList.remove('card-bottom');
     setDragElement(null);
     setDragCard(null);
   };
   const containerDropHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
+  };
+  const containerDragEnterHandler = (e: React.DragEvent<HTMLDivElement>): void => {
+    if (arrOfCards.length === 0) e.currentTarget.classList.add('slot');
+  };
+  const containerDragLeaveHandler = (e: React.DragEvent<HTMLDivElement>): void => {
+    e.currentTarget.classList.remove('slot');
   };
 
   return (
@@ -214,6 +239,8 @@ export default function List(props: PropsType): JSX.Element {
         className="list-item-container"
         onDragOver={(e): void => dropOverHandler(e)}
         onDrop={(e): void => containerDropHandler(e)}
+        onDragEnter={(e): void => containerDragEnterHandler(e)}
+        onDragLeave={(e): void => containerDragLeaveHandler(e)}
       >
         {arrOfCards
           .sort((a, b) => a.position - b.position)
@@ -229,7 +256,6 @@ export default function List(props: PropsType): JSX.Element {
                 onDragLeave={(e): void => dragLeaveHandler(e)}
                 onDragStart={(e): void => startDrag(e, card, arrOfCards)}
                 onDragEnd={(e): void => dragEndHandler(e)}
-                onMouseMove={handleMouseMove}
               >
                 <div />
                 <Card {...card} />
