@@ -171,7 +171,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
   }
 }
 
-const mapStateToProps = (store: AppState): StateType => ({
+const mapStateToProps = (store: AppState): object => ({
   board: store.board,
 });
 

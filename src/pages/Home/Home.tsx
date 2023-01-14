@@ -108,7 +108,7 @@ class Home extends React.Component<PropsType, StateType> {
   }
 }
 
-const mapStateToProps = (store: AppState): StateType => ({
+const mapStateToProps = (store: AppState): object => ({
   boards: store.boards,
 });
 
