@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/default-param-last */
-import Board from '../../../common/interfaces/Board';
+import OneBoard from '../../../common/interfaces/OneBoard';
 
-const initialState = {} as Board;
+const initialState = {} as OneBoard;
 
-export default function reducer(state = initialState, action: { type: string; payload?: Board }): Board {
+export default function reducer(state = initialState, action: { type: string; payload?: OneBoard }): OneBoard {
   switch (action.type) {
     case 'FETCH_BOARD':
       return action.payload;
@@ -15,6 +15,8 @@ export default function reducer(state = initialState, action: { type: string; pa
       return { ...state };
     case 'CREATE_CARD':
       return { ...state };
+    case 'REPLACE_CARD_IN_LIST':
+      return { ...state, lists: action.payload };
     default: {
       return state;
     }

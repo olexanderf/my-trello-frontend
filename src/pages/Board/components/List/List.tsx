@@ -1,18 +1,18 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { ChangeEvent, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
-import { createCard, editListName } from '../../../../store/modules/board/actions';
-import { AppDispatch } from '../../../../store/store';
+import { createCard, editListName, replaceCardInList } from '../../../../store/modules/board/actions';
+import { AppDispatch, AppState } from '../../../../store/store';
 import Modal from '../../../Multipurpose/Modal/Modal';
 import Card from '../Card/Card';
 import './list.scss';
 
-type PropsType = {
+interface PropsType {
   list: Lists;
-};
+}
 
 export default function List(props: PropsType): JSX.Element {
   const { list } = props;
@@ -54,76 +54,35 @@ export default function List(props: PropsType): JSX.Element {
   };
 
   // work with card move
-  const [arrOfCards, changeArrOfCards] = useState(cards);
   const [dragCard, setDragCard] = useState<ICard | null>(null);
   const [dragElement, setDragElement] = useState<HTMLDivElement | null>(null);
   const [currentArrCards, setCurrentArrCards] = useState<ICard[] | null>(null);
-  // const [targetElement, setTargetElement] = useState(null);
-  useEffect(() => {
-    changeArrOfCards(cards);
-  }, [cards]);
+  const currentBoardLists = useSelector((state: AppState) => state.board.lists);
 
-  // const replaceCard = (card: ICard): ICard[] => {
-  //   if (dragCard !== null && card !== undefined) {
-  //     if (card.position < dragCard.position) {
-  //       const prevDragPosition = dragCard.position;
-  //       dragCard.position = card.position;
-  //       return arrOfCards.map((cardInArr) => {
-  //         if (
-  //           cardInArr.position >= dragCard.position &&
-  //           cardInArr.position < prevDragPosition &&
-  //           cardInArr.id !== dragCard.id
-  //         ) {
-  //           return { ...cardInArr, position: cardInArr.position + 1 };
-  //         }
-  //         return cardInArr;
-  //       });
-  //     }
-  //     if (card.position > dragCard.position) {
-  //       const prevDragPosition = dragCard.position;
-  //       dragCard.position = card.position;
-  //       return arrOfCards.map((cardInArr) => {
-  //         if (
-  //           cardInArr.position <= dragCard.position &&
-  //           cardInArr.position > prevDragPosition &&
-  //           cardInArr.id !== dragCard.id
-  //         ) {
-  //           return { ...cardInArr, position: cardInArr.position - 1 };
-  //         }
-  //         return cardInArr;
-  //       });
-  //     }
-  //   }
-  //   return arrOfCards;
-  // };
-  const replaceCard = (card: ICard, targetArrCards: ICard[]): ICard[] => {
-    // if (dragCard !== null && card !== undefined && currentArrCards !== null) {
-    //   const currentIndex = currentArrCards.indexOf(dragCard);
-    //   currentArrCards?.splice(currentIndex, 1);
-    //   const dropIndex = targetArrCards.indexOf(card);
-    //   targetArrCards.splice(dropIndex + 1, 0, dragCard);
-    //   targetArrCards.map((c, index) => {
-    //     return { ...c, position: index + 1 };
-    //   });
-    //   changeArrOfCards(
-    //     currentArrCards.map((c, index) => {
-    //       return { ...c, position: index + 1 };
-    //     })
-    //   );
-    // }
-    if (dragCard !== null && card !== undefined && currentArrCards !== null) {
-      const currentIndex = list.cards.indexOf(dragCard);
+  const replaceCard = (card: ICard, targetList: Lists): void => {
+    if (currentArrCards !== null && dragCard !== null) {
+      const indexOfListDragedCard = currentBoardLists.indexOf(list);
+      const currentIndex = currentBoardLists[indexOfListDragedCard].cards.indexOf(dragCard);
       currentArrCards.splice(currentIndex, 1);
-      currentArrCards.map((c, index) => {
-        return { ...c, position: index + 1 };
-      });
+      setCurrentArrCards(
+        currentArrCards.map((c, index) => {
+          return { ...c, position: index + 1 };
+        })
+      );
+
       const dropIndex = card.position - 1;
-      targetArrCards.splice(dropIndex - 1, 0, dragCard);
-      targetArrCards.map((c, index) => {
-        return { ...c, position: index + 1 };
-      });
-      return currentArrCards;
-    } else return currentArrCards;
+      if (list === targetList) {
+        currentArrCards.splice(dropIndex, 0, dragCard);
+        currentArrCards.map((c, index) => {
+          return { ...c, position: index + 1 };
+        });
+      }
+      console.log(currentArrCards);
+      const newList = { ...list, cards: currentArrCards };
+      const newLists = currentBoardLists.splice(indexOfListDragedCard, 1, newList);
+      console.log(newLists);
+      // dispatch(replaceCardInList(newLists));
+    }
   };
 
   const startDrag = (e: React.DragEvent<HTMLDivElement>, card: ICard, arrCards: ICard[]): void => {
@@ -131,9 +90,10 @@ export default function List(props: PropsType): JSX.Element {
     setDragCard(card);
     setCurrentArrCards(arrCards);
   };
-  const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard, arrCards: ICard[]): void => {
+
+  const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard, targetList: Lists): void => {
     e.preventDefault();
-    changeArrOfCards(replaceCard(card, arrCards));
+    replaceCard(card, targetList);
     if (dragElement?.classList.contains('slot')) {
       dragElement?.classList.remove('slot');
       dragElement?.classList.add('card');
@@ -214,14 +174,8 @@ export default function List(props: PropsType): JSX.Element {
           <h2>{title}</h2>
         )}
       </div>
-      <div
-        className="list-item-container"
-        // onDragOver={(e): void => dropOverHandler(e)}
-        // onDrop={(e): void => containerDropHandler(e)}
-        // onDragEnter={(e): void => containerDragEnterHandler(e)}
-        // onDragLeave={(e): void => containerDragLeaveHandler(e)}
-      >
-        {arrOfCards
+      <div className="list-item-container">
+        {cards
           .sort((a, b) => a.position - b.position)
           .map((card: ICard) => {
             return (
@@ -230,10 +184,10 @@ export default function List(props: PropsType): JSX.Element {
                 draggable
                 className="card"
                 onDragOver={(e): void => dropOverHandler(e)}
-                onDrop={(e): void => dropHandler(e, card, arrOfCards)}
+                onDrop={(e): void => dropHandler(e, card, list)}
                 onDragEnter={(e): void => dragEnterHandler(e)}
                 onDragLeave={(e): void => dragLeaveHandler(e)}
-                onDragStart={(e): void => startDrag(e, card, arrOfCards)}
+                onDragStart={(e): void => startDrag(e, card, cards)}
                 onDragEnd={(e): void => dragEndHandler(e)}
               >
                 <Card {...card} />
@@ -243,7 +197,7 @@ export default function List(props: PropsType): JSX.Element {
         <div
           className="slot last"
           onDragOver={(e): void => dropOverHandler(e)}
-          onDrop={(e): void => containerDropHandler(e, arrOfCards)}
+          onDrop={(e): void => containerDropHandler(e, cards)}
           onDragEnter={(e): void => containerDragEnterHandler(e)}
           onDragLeave={(e): void => containerDragLeaveHandler(e)}
         />
