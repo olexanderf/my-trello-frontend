@@ -1,10 +1,9 @@
-import { useDispatch } from 'react-redux';
+import { AnyAction, Dispatch } from 'redux';
 /* eslint-disable @typescript-eslint/comma-dangle */
-import { Dispatch } from 'redux';
 import api from '../../../api/request';
 import Lists from '../../../common/interfaces/Lists';
 import OneBoard from '../../../common/interfaces/OneBoard';
-import store, { AppState } from '../../store';
+import store from '../../store';
 import { handleResponseError } from '../errorHandler/action';
 
 export const getBoard = (id: number) => {
@@ -84,6 +83,6 @@ export const createCard = (
     }
   };
 };
-export const replaceCardInList = (lists: Lists): void => {
-  store.dispatch({ type: 'REPLACE_CARD_IN_LIST', payload: lists });
+export const replaceCardInList = (lists: Lists[]): AnyAction => {
+  return { type: 'REPLACE_CARD_IN_LIST', payload: lists };
 };
