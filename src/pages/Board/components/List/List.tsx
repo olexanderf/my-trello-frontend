@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
+import UpdatedCards from '../../../../common/interfaces/UpdatedCards';
 import { createCard, editListName, moveCards, replaceCardInList } from '../../../../store/modules/board/actions';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
 import { AppDispatch, AppState } from '../../../../store/store';
@@ -60,7 +61,7 @@ export default function List(props: PropsType): JSX.Element {
   const { card: dragCard, dragListID } = useSelector((state: AppState) => state.dragNDropItems);
 
   const replaceCard = (targetList: Lists, card?: ICard): void => {
-    if (dragCard !== null) {
+    if (dragCard !== null && boardId !== undefined) {
       const indexOfListDragedCard = currentBoardLists.findIndex((l) => l.id === dragListID);
       const currentIndex = currentBoardLists[indexOfListDragedCard].cards.indexOf(dragCard);
 
@@ -85,8 +86,11 @@ export default function List(props: PropsType): JSX.Element {
           // update list and replace to new
           const changedArrOfList = [...currentBoardLists];
           changedArrOfList.splice(indexOfListDragedCard, 1, newList);
-          // update state
-          dispatch(replaceCardInList(changedArrOfList));
+          // update state and send request to server
+          const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
+            return { id: c.id, position: c.position, list_id: id };
+          });
+          dispatch(moveCards(+boardId, arrUpdatedCards, changedArrOfList));
         }
 
         // move card to atnother list
@@ -105,7 +109,15 @@ export default function List(props: PropsType): JSX.Element {
           const changedArrOfLists = [...currentBoardLists];
           changedArrOfLists.splice(indexOfListDragedCard, 1, newList);
           changedArrOfLists.splice(currentBoardLists.indexOf(targetList), 1, newTargetList);
-          dispatch(replaceCardInList(changedArrOfLists));
+
+          // update state and send request
+          const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
+            return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDragedCard].id };
+          });
+          const targetArrUpdatedCards: UpdatedCards[] = changedArrOfCards.map((c) => {
+            return { id: c.id, position: c.position, list_id: targetList.id };
+          });
+          dispatch(moveCards(+boardId, [...arrUpdatedCards, ...targetArrUpdatedCards], changedArrOfLists));
         }
       } else {
         if (targetList.cards.length === 0) {
@@ -116,7 +128,13 @@ export default function List(props: PropsType): JSX.Element {
           const changedArrOfList = [...currentBoardLists];
           changedArrOfList.splice(indexOfListDragedCard, 1, newList);
           changedArrOfList.splice(currentBoardLists.indexOf(targetList), 1, newTargetList);
-          dispatch(replaceCardInList(changedArrOfList));
+
+          // update state and send request to serever
+          const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
+            return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDragedCard].id };
+          });
+          arrUpdatedCards.push({ id: newCard.id, position: newCard.position, list_id: targetList.id });
+          dispatch(moveCards(+boardId, arrUpdatedCards, changedArrOfList));
         }
         if (targetList.cards.length !== 0) {
           const newCard = { ...dragCard, position: targetList.cards.length + 1 };
@@ -135,7 +153,14 @@ export default function List(props: PropsType): JSX.Element {
           const changedArrOfList = [...currentBoardLists];
           changedArrOfList.splice(indexOfListDragedCard, 1, newList);
           changedArrOfList.splice(currentBoardLists.indexOf(targetList), 1, newTargetList);
-          dispatch(replaceCardInList(changedArrOfList));
+          // update state and send request
+          const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
+            return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDragedCard].id };
+          });
+          const targetArrUpdatedCards: UpdatedCards[] = changedArrOfCards.map((c) => {
+            return { id: c.id, position: c.position, list_id: targetList.id };
+          });
+          dispatch(moveCards(+boardId, [...arrUpdatedCards, ...targetArrUpdatedCards], changedArrOfList));
         }
       }
     }

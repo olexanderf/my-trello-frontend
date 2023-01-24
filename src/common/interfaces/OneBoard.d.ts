@@ -1,4 +1,3 @@
-/* eslint-disable semi */
 import Lists from './Lists';
 
 export default interface OneBoard {

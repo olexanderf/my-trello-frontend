@@ -55,7 +55,9 @@
     "no-alert": "error",
     "eol-last": "error",
     "semi": "error",
-    "no-console": "error"
+    "no-console": "error",
+    "comma-dangle": "off",
+    "@typescript-eslint/comma-dangle": "off",
   },
   "overrides": []
 }

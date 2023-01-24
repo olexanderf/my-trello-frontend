@@ -91,9 +91,7 @@ export const moveCards = (boadrd_id: number, arrUpdatedCards: UpdatedCards[], li
   return async (dispatch: Dispatch): Promise<void> => {
     dispatch(replaceCardInList(lists));
     try {
-      await api.post(`/board/${boadrd_id}/card`, {
-        arrUpdatedCards,
-      });
+      await api.put(`/board/${boadrd_id}/card`, arrUpdatedCards);
       store.dispatch(getBoard(boadrd_id));
     } catch (e) {
       store.dispatch(handleResponseError(e));

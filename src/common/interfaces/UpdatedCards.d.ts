@@ -1,5 +1,5 @@
 export default interface UpdatedCards {
-  card_id: number;
+  id: number;
   position: number;
   list_id: number;
 }
