@@ -30,7 +30,7 @@ a {
     border-radius: 50%;
     border: none;
     &:hover {
-      border: 2px solid rgba(115, 113, 252, 0.651);
+      outline: 2px solid rgba(115, 113, 252, 0.651);
     }
   }
 }
@@ -47,6 +47,6 @@ a {
   top:-75%;
   left: 85%;
   &:hover {
-    border: 2px solid black;
+    outline: 2px solid black;
   }
 }

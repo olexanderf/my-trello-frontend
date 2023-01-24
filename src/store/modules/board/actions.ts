@@ -1,8 +1,8 @@
 import { AnyAction, Dispatch } from 'redux';
-/* eslint-disable @typescript-eslint/comma-dangle */
 import api from '../../../api/request';
 import Lists from '../../../common/interfaces/Lists';
 import OneBoard from '../../../common/interfaces/OneBoard';
+import UpdatedCards from '../../../common/interfaces/UpdatedCards';
 import store from '../../store';
 import { handleResponseError } from '../errorHandler/action';
 
@@ -85,4 +85,18 @@ export const createCard = (
 };
 export const replaceCardInList = (lists: Lists[]): AnyAction => {
   return { type: 'REPLACE_CARD_IN_LIST', payload: lists };
+};
+
+export const moveCards = (boadrd_id: number, arrUpdatedCards: UpdatedCards[], lists: Lists[]) => {
+  return async (dispatch: Dispatch): Promise<void> => {
+    dispatch(replaceCardInList(lists));
+    try {
+      await api.post(`/board/${boadrd_id}/card`, {
+        arrUpdatedCards,
+      });
+      store.dispatch(getBoard(boadrd_id));
+    } catch (e) {
+      store.dispatch(handleResponseError(e));
+    }
+  };
 };

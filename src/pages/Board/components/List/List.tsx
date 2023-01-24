@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
-import { createCard, editListName, replaceCardInList } from '../../../../store/modules/board/actions';
+import { createCard, editListName, moveCards, replaceCardInList } from '../../../../store/modules/board/actions';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
 import { AppDispatch, AppState } from '../../../../store/store';
 import Modal from '../../../Multipurpose/Modal/Modal';
@@ -71,9 +71,9 @@ export default function List(props: PropsType): JSX.Element {
         return { ...c, position: index + 1 };
       });
 
+      // change card position if list same
       if (card !== undefined) {
         const dropIndex = card.position - 1;
-        // change card position if list same
         if (dragListID === targetList.id) {
           // add card to list and change position
           cardsDragStart.splice(dropIndex, 0, dragCard);
@@ -120,7 +120,15 @@ export default function List(props: PropsType): JSX.Element {
         }
         if (targetList.cards.length !== 0) {
           const newCard = { ...dragCard, position: targetList.cards.length + 1 };
-          const changedArrOfCards = [...targetList.cards];
+
+          // Condition for avoiding dublication of cards
+          let changedArrOfCards: ICard[] = [];
+          if (targetList.id !== dragListID) {
+            changedArrOfCards = [...targetList.cards];
+          } else {
+            changedArrOfCards = [...cardsDragStart];
+          }
+
           changedArrOfCards.push(newCard);
           const newList = { ...currentBoardLists[indexOfListDragedCard], cards: cardsDragStart };
           const newTargetList = { ...targetList, cards: changedArrOfCards };
