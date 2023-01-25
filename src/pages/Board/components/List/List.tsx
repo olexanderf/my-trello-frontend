@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
-import UpdatedCards from '../../../../common/interfaces/UpdatedCards';
-import cardMover, { useCardMover } from '../../../../common/tools/cardMover';
+import cardMover from '../../../../common/tools/cardMover';
 import { createCard, editListName, moveCards } from '../../../../store/modules/board/actions';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
 import { AppDispatch, AppState } from '../../../../store/store';
@@ -56,7 +55,7 @@ export default function List(props: PropsType): JSX.Element {
     }
   };
 
-  // work with card move - drag-n-drop
+  // data for card move - drag-n-drop
   const [dragElement, setDragElement] = useState<HTMLDivElement | null>(null);
   const currentBoardLists = useSelector((state: AppState) => state.board.lists);
   const { card: dragCard, dragListID } = useSelector((state: AppState) => state.dragNDropItems);
@@ -69,12 +68,10 @@ export default function List(props: PropsType): JSX.Element {
 
   const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard, targetList: Lists): void => {
     e.preventDefault();
-    // replaceCard(targetList, card);
     const { arrUpdatedCards, changedArrOfList } = cardMover(targetList, currentBoardLists, dragListID, dragCard, card);
     if (boardId !== undefined) {
       dispatch(moveCards(+boardId, arrUpdatedCards, changedArrOfList));
     }
-    // useCardMover(+boardId, targetList, card);
     if (dragElement?.classList.contains('slot')) {
       dragElement?.classList.remove('slot');
       dragElement?.classList.add('card');
@@ -115,12 +112,10 @@ export default function List(props: PropsType): JSX.Element {
   const containerDropHandler = (e: React.DragEvent<HTMLDivElement>, targetList: Lists): void => {
     e.preventDefault();
     if (e.currentTarget.classList.contains('slot')) e.currentTarget.classList.add('last');
-    // replaceCard(targetList);
     const { arrUpdatedCards, changedArrOfList } = cardMover(targetList, currentBoardLists, dragListID, dragCard);
     if (boardId !== undefined) {
       dispatch(moveCards(+boardId, arrUpdatedCards, changedArrOfList));
     }
-    // useCardMover(+boardId, targetList);
   };
   const containerDragEnterHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     if (e.currentTarget.classList.contains('last')) e.currentTarget.classList.remove('last');
