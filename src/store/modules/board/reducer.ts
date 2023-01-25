@@ -2,7 +2,10 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import SingleBoard from '../../../common/interfaces/OneBoard';
 
-const initialState = {} as SingleBoard;
+const initialState = {
+  title: 'Demo board',
+  lists: [],
+} as SingleBoard;
 
 export default function reducer(
   state = initialState,
