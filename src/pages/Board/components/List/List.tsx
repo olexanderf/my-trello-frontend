@@ -5,7 +5,8 @@ import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import UpdatedCards from '../../../../common/interfaces/UpdatedCards';
-import { createCard, editListName, moveCards, replaceCardInList } from '../../../../store/modules/board/actions';
+import cardMover, { useCardMover } from '../../../../common/tools/cardMover';
+import { createCard, editListName, moveCards } from '../../../../store/modules/board/actions';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
 import { AppDispatch, AppState } from '../../../../store/store';
 import Modal from '../../../Multipurpose/Modal/Modal';
@@ -60,112 +61,6 @@ export default function List(props: PropsType): JSX.Element {
   const currentBoardLists = useSelector((state: AppState) => state.board.lists);
   const { card: dragCard, dragListID } = useSelector((state: AppState) => state.dragNDropItems);
 
-  const replaceCard = (targetList: Lists, card?: ICard): void => {
-    if (dragCard !== null && boardId !== undefined) {
-      const indexOfListDragedCard = currentBoardLists.findIndex((l) => l.id === dragListID);
-      const currentIndex = currentBoardLists[indexOfListDragedCard].cards.indexOf(dragCard);
-
-      // delete card from cards arr in list
-      let cardsDragStart = [...currentBoardLists[indexOfListDragedCard].cards];
-      cardsDragStart.splice(currentIndex, 1);
-      cardsDragStart = cardsDragStart.map((c, index) => {
-        return { ...c, position: index + 1 };
-      });
-
-      // change card position if list same
-      if (card !== undefined) {
-        const dropIndex = card.position - 1;
-        if (dragListID === targetList.id) {
-          // add card to list and change position
-          cardsDragStart.splice(dropIndex, 0, dragCard);
-          cardsDragStart = cardsDragStart.map((c, index) => {
-            return { ...c, position: index + 1 };
-          });
-          // update cards arr in list
-          const newList = { ...targetList, cards: cardsDragStart };
-          // update list and replace to new
-          const changedArrOfList = [...currentBoardLists];
-          changedArrOfList.splice(indexOfListDragedCard, 1, newList);
-          // update state and send request to server
-          const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
-            return { id: c.id, position: c.position, list_id: id };
-          });
-          dispatch(moveCards(+boardId, arrUpdatedCards, changedArrOfList));
-        }
-
-        // move card to atnother list
-        if (dragListID !== targetList.id) {
-          // add card to target card arr and change positions of card
-          let changedArrOfCards = [...targetList.cards];
-          changedArrOfCards.splice(dropIndex, 0, dragCard);
-          changedArrOfCards = changedArrOfCards.map((c, index) => {
-            return { ...c, position: index + 1 };
-          });
-          // update start drag list
-          const newList = { ...currentBoardLists[indexOfListDragedCard], cards: cardsDragStart };
-          // update card arr in target list
-          const newTargetList = { ...targetList, cards: changedArrOfCards };
-          // update list and replace to new
-          const changedArrOfLists = [...currentBoardLists];
-          changedArrOfLists.splice(indexOfListDragedCard, 1, newList);
-          changedArrOfLists.splice(currentBoardLists.indexOf(targetList), 1, newTargetList);
-
-          // update state and send request
-          const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
-            return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDragedCard].id };
-          });
-          const targetArrUpdatedCards: UpdatedCards[] = changedArrOfCards.map((c) => {
-            return { id: c.id, position: c.position, list_id: targetList.id };
-          });
-          dispatch(moveCards(+boardId, [...arrUpdatedCards, ...targetArrUpdatedCards], changedArrOfLists));
-        }
-      } else {
-        if (targetList.cards.length === 0) {
-          const newCard = { ...dragCard, position: 1 };
-          const tempArr = [newCard];
-          const newList = { ...currentBoardLists[indexOfListDragedCard], cards: cardsDragStart };
-          const newTargetList = { ...targetList, cards: tempArr };
-          const changedArrOfList = [...currentBoardLists];
-          changedArrOfList.splice(indexOfListDragedCard, 1, newList);
-          changedArrOfList.splice(currentBoardLists.indexOf(targetList), 1, newTargetList);
-
-          // update state and send request to serever
-          const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
-            return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDragedCard].id };
-          });
-          arrUpdatedCards.push({ id: newCard.id, position: newCard.position, list_id: targetList.id });
-          dispatch(moveCards(+boardId, arrUpdatedCards, changedArrOfList));
-        }
-        if (targetList.cards.length !== 0) {
-          const newCard = { ...dragCard, position: targetList.cards.length + 1 };
-
-          // Condition for avoiding dublication of cards
-          let changedArrOfCards: ICard[] = [];
-          if (targetList.id !== dragListID) {
-            changedArrOfCards = [...targetList.cards];
-          } else {
-            changedArrOfCards = [...cardsDragStart];
-          }
-
-          changedArrOfCards.push(newCard);
-          const newList = { ...currentBoardLists[indexOfListDragedCard], cards: cardsDragStart };
-          const newTargetList = { ...targetList, cards: changedArrOfCards };
-          const changedArrOfList = [...currentBoardLists];
-          changedArrOfList.splice(indexOfListDragedCard, 1, newList);
-          changedArrOfList.splice(currentBoardLists.indexOf(targetList), 1, newTargetList);
-          // update state and send request
-          const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
-            return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDragedCard].id };
-          });
-          const targetArrUpdatedCards: UpdatedCards[] = changedArrOfCards.map((c) => {
-            return { id: c.id, position: c.position, list_id: targetList.id };
-          });
-          dispatch(moveCards(+boardId, [...arrUpdatedCards, ...targetArrUpdatedCards], changedArrOfList));
-        }
-      }
-    }
-  };
-
   const startDrag = (e: React.DragEvent<HTMLDivElement>, card: ICard, startDragList: Lists): void => {
     setDragElement(e.currentTarget);
     dispatch(setDragCard(card));
@@ -174,7 +69,12 @@ export default function List(props: PropsType): JSX.Element {
 
   const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard, targetList: Lists): void => {
     e.preventDefault();
-    replaceCard(targetList, card);
+    // replaceCard(targetList, card);
+    const { arrUpdatedCards, changedArrOfList } = cardMover(targetList, currentBoardLists, dragListID, dragCard, card);
+    if (boardId !== undefined) {
+      dispatch(moveCards(+boardId, arrUpdatedCards, changedArrOfList));
+    }
+    // useCardMover(+boardId, targetList, card);
     if (dragElement?.classList.contains('slot')) {
       dragElement?.classList.remove('slot');
       dragElement?.classList.add('card');
@@ -215,7 +115,12 @@ export default function List(props: PropsType): JSX.Element {
   const containerDropHandler = (e: React.DragEvent<HTMLDivElement>, targetList: Lists): void => {
     e.preventDefault();
     if (e.currentTarget.classList.contains('slot')) e.currentTarget.classList.add('last');
-    replaceCard(targetList);
+    // replaceCard(targetList);
+    const { arrUpdatedCards, changedArrOfList } = cardMover(targetList, currentBoardLists, dragListID, dragCard);
+    if (boardId !== undefined) {
+      dispatch(moveCards(+boardId, arrUpdatedCards, changedArrOfList));
+    }
+    // useCardMover(+boardId, targetList);
   };
   const containerDragEnterHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     if (e.currentTarget.classList.contains('last')) e.currentTarget.classList.remove('last');

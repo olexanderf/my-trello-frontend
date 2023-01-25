@@ -8,12 +8,12 @@ import './board.scss';
 import withRouter from '../../common/tools/wR';
 import { AppState } from '../../store/store';
 import { editNameBoard, getBoard, createList } from '../../store/modules/board/actions';
-import OneBoard from '../../common/interfaces/OneBoard';
+import SingleBoard from '../../common/interfaces/OneBoard';
 import { boardInputRegex } from '../../common/constants/regExp';
 import Modal from '../Multipurpose/Modal/Modal';
 
 interface PropsType {
-  board: OneBoard;
+  board: SingleBoard;
   getBoard: (id: number) => Promise<void>;
   editNameBoard: (id: number, boardName: string) => Promise<void>;
   createList: (id: number, listName: string, position: number) => Promise<void>;

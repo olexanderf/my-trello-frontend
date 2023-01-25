@@ -54,7 +54,6 @@
     "import/no-named-as-default-member" : "off",
     "no-alert": "error",
     "eol-last": "error",
-    "semi": "error",
     "no-console": "error",
     "comma-dangle": "off",
     "@typescript-eslint/comma-dangle": "off",

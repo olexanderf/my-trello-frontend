@@ -1,7 +1,7 @@
 import { AnyAction, Dispatch } from 'redux';
 import api from '../../../api/request';
 import Lists from '../../../common/interfaces/Lists';
-import OneBoard from '../../../common/interfaces/OneBoard';
+import SingleBoard from '../../../common/interfaces/OneBoard';
 import UpdatedCards from '../../../common/interfaces/UpdatedCards';
 import store from '../../store';
 import { handleResponseError } from '../errorHandler/action';
@@ -9,7 +9,7 @@ import { handleResponseError } from '../errorHandler/action';
 export const getBoard = (id: number) => {
   return async (dispatch: Dispatch): Promise<void> => {
     try {
-      const response = await api.get<string, { board: OneBoard }>(`/board/${id}`);
+      const response = await api.get<string, { board: SingleBoard }>(`/board/${id}`);
       // console.log(response);
       await dispatch({ type: 'FETCH_BOARD', payload: response });
     } catch (e) {

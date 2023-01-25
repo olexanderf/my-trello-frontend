@@ -1,6 +1,6 @@
 import Lists from './Lists';
 
-export default interface OneBoard {
+export default interface SingleBoard {
   title: string;
   custom?: object;
   users?: [];
