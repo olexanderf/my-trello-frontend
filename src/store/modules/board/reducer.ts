@@ -15,7 +15,7 @@ export default function reducer(
     case 'FETCH_BOARD':
       return action.payload;
     case 'UPDATE_BOARD_NAME':
-      return { ...state };
+      return { ...state, title: action.payload };
     case 'CREATE_LIST':
       return { ...state };
     case 'UPDATE_LIST_NAME':

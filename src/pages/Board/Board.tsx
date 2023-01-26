@@ -159,12 +159,16 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
               +
             </button>
           </div>
-          <Modal
-            isVisibleModal={isVisibleModal}
-            toggleModal={this.toggleModal}
-            handleValueModal={this.handleValueModal}
-            handleClickCreateElement={this.handleClickCreateElement}
-          />
+          {isVisibleModal ? (
+            <Modal
+              isVisibleModal={isVisibleModal}
+              toggleModal={this.toggleModal}
+              handleValueModal={this.handleValueModal}
+              handleClickCreateElement={this.handleClickCreateElement}
+            />
+          ) : (
+            ''
+          )}
         </div>
       </div>
     );

@@ -182,12 +182,16 @@ export default function List(props: PropsType): JSX.Element {
           +
         </button>
       </div>
-      <Modal
-        isVisibleModal={isVisibleModal}
-        toggleModal={toggleModal}
-        handleValueModal={setValueOfModal}
-        handleClickCreateElement={handleClickCreateCard}
-      />
+      {isVisibleModal ? (
+        <Modal
+          isVisibleModal={isVisibleModal}
+          toggleModal={toggleModal}
+          handleValueModal={setValueOfModal}
+          handleClickCreateElement={handleClickCreateCard}
+        />
+      ) : (
+        ''
+      )}
     </div>
   );
 }

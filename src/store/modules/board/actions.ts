@@ -23,7 +23,7 @@ export const editNameBoard = (id: number, boardName: string): AppThunk => {
       await api.put(`/board/${id}`, {
         title: boardName,
       });
-      await dispatch({ type: 'UPDATE_BOARD_NAME' });
+      await dispatch({ type: 'UPDATE_BOARD_NAME', payload: boardName });
       // console.log(response);
       dispatch(getBoard(id));
     } catch (e) {
