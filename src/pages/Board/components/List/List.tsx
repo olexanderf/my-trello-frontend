@@ -184,7 +184,6 @@ export default function List(props: PropsType): JSX.Element {
       </div>
       {isVisibleModal ? (
         <Modal
-          isVisibleModal={isVisibleModal}
           toggleModal={toggleModal}
           handleValueModal={setValueOfModal}
           handleClickCreateElement={handleClickCreateCard}

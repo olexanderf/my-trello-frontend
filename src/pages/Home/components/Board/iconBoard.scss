@@ -23,30 +23,33 @@ a {
 .btn-container {
   padding: 20px;
   .add-list {
-    box-sizing: border-box;
-    font-size: 35px;
-    cursor: pointer;
-    padding: 5px 15px;
-    border-radius: 50%;
-    border: none;
-    &:hover {
-      outline: 2px solid rgba(115, 113, 252, 0.651);
-    }
+      box-sizing: border-box;
+      font-size: 35px;
+      cursor: pointer;
+      padding: 5px 15px;
+      border-radius: 50%;
+      border: none;
+      transition: all 0.2s ease-in;
+      &:hover {
+          outline: 2px solid rgba(115, 113, 252, 0.651);
+          transform: rotate(90deg);
+      }
   }
 }
 .btn-delete {
   display: none;
   cursor: pointer;
   border-radius: 50%;
-  background-color: red;
+  background-color:rgb(247, 76, 9);
   border: none;
   width: 30px;
   height: 30px;
-  font-weight: bold;
+  font-size: 25px;
   position: relative;
   top:-75%;
   left: 85%;
+  transition: all 0.2s ease-in;
   &:hover {
-    outline: 2px solid black;
+    transform: rotate(135deg);
   }
 }

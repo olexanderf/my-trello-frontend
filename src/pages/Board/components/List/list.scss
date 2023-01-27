@@ -28,21 +28,7 @@ h2 {
   padding: 10px;
   margin: 8px;
 }
-.btn-container {
-  text-align: right;
-  padding: 5px;
-  .add-list {
-    box-sizing: border-box;
-    font-size: 25px;
-    cursor: pointer;
-    padding: 5px 15px;
-    border-radius: 50%;
-    border: none;
-    &:hover {
-      outline: 2px solid rgba(115, 113, 252, 0.651);
-    }
-  }
-}
+
 .error {
   border: 2px solid red;
 }

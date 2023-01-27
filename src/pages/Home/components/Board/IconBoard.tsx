@@ -26,7 +26,7 @@ export default function IconBoard(props: PropsType): ReactElement {
           handleClickDeleteBoard(id);
         }}
       >
-        X
+        +
       </button>
     </div>
   );

@@ -75,12 +75,7 @@ class Home extends React.Component<PropsType, StateType> {
   render(): ReactElement {
     const { isVisibleModal, boards } = this.state;
     return (
-      <div
-        className="container"
-        onClick={(): void => {
-          if (isVisibleModal) this.toggleModal();
-        }}
-      >
+      <div className="container">
         <h3 className="table-name">Мои Доски</h3>
         <div className="table-board">
           {boards.map((el) => {
@@ -89,7 +84,6 @@ class Home extends React.Component<PropsType, StateType> {
         </div>
         {isVisibleModal ? (
           <Modal
-            isVisibleModal={isVisibleModal}
             toggleModal={this.toggleModal}
             handleValueModal={this.handleValueModal}
             handleClickCreateElement={this.handleClickCreateElement}

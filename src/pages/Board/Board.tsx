@@ -116,12 +116,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
   render(): ReactElement {
     const { lists, editHeader, title, newValueTitle, isVisibleModal } = this.state;
     return (
-      <div
-        className="board-container"
-        onClick={(): void => {
-          if (isVisibleModal) this.toggleModal();
-        }}
-      >
+      <div className="board-container">
         <div
           className="board-title"
           onClick={(): void => {
@@ -161,7 +156,6 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
           </div>
           {isVisibleModal ? (
             <Modal
-              isVisibleModal={isVisibleModal}
               toggleModal={this.toggleModal}
               handleValueModal={this.handleValueModal}
               handleClickCreateElement={this.handleClickCreateElement}
