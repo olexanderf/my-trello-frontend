@@ -165,7 +165,7 @@ export default function List(props: PropsType): JSX.Element {
                 onDragStart={(e): void => startDrag(e, card, list)}
                 onDragEnd={(e): void => dragEndHandler(e)}
               >
-                <Card {...card} />
+                <Card card={card} boardId={boardId !== undefined ? +boardId : 0} />
               </div>
             );
           })}

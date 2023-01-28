@@ -1,12 +1,22 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import ICard from '../../../../common/interfaces/ICard';
 import './card.scss';
 
-export default function Card(props: ICard): JSX.Element {
-  const { title } = props;
+interface PropsType {
+  card: ICard;
+  boardId: number;
+}
+
+export default function Card(props: PropsType): JSX.Element {
+  const { card, boardId } = props;
+  const { title, id } = card;
+  const location = useLocation();
   return (
     <div>
-      <p className="card-text">{title}</p>
+      <Link to={`/board/${boardId}/card/${id}`} state={{ background: location }}>
+        <p className="card-text">{title}</p>
+      </Link>
     </div>
   );
 }

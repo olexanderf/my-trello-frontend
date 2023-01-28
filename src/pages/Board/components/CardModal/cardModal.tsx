@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function CardModal(props): JSX.Element {
+  const navigate = useNavigate();
   return (
     <div>
       <div className="card-modal-container">
@@ -18,6 +20,9 @@ export default function CardModal(props): JSX.Element {
           <button className="card-modal-actions-moving">Перемещение</button>
           <button className="card-modal-actions-copy-archive">Архивация</button>
         </div>
+        <button className="card-modal-btn-close" onClick={(): void => navigate(-1)}>
+          +
+        </button>
       </div>
     </div>
   );
