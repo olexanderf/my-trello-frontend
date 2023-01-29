@@ -12,12 +12,14 @@ import { editNameBoard, getBoard, createList } from '../../store/modules/board/a
 import SingleBoard from '../../common/interfaces/OneBoard';
 import { boardInputRegex } from '../../common/constants/regExp';
 import Modal from '../Multipurpose/Modal/Modal';
+import CardEditModal from '../../common/interfaces/CardEditModal';
 
 interface PropsType {
   board: SingleBoard;
   getBoard: (id: number) => Promise<void>;
   editNameBoard: (id: number, boardName: string) => Promise<void>;
   createList: (id: number, listName: string, position: number) => Promise<void>;
+  cardEditModal: CardEditModal;
 }
 
 interface StateType {
@@ -37,7 +39,7 @@ type Params = {
 class Board extends React.Component<PropsType & RouteComponentProps<Params>, StateType> {
   constructor(props: PropsType & RouteComponentProps<Params>) {
     super(props);
-    const { board } = this.props;
+    const { board, cardEditModal } = this.props;
     this.state = {
       title: board.title,
       lists: board.lists,
@@ -45,7 +47,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
       newValueTitle: board.title,
       isVisibleModal: false,
       modalValue: '',
-      isVisibleCardEditModal: false,
+      isVisibleCardEditModal: cardEditModal.isVisibleCardModalEdit,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleValueModal = this.handleValueModal.bind(this);
@@ -61,8 +63,9 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
   }
 
   componentDidUpdate(): void {
-    const { board } = this.props;
-    const { title, lists } = this.state;
+    const { board, cardEditModal } = this.props;
+    const { isVisibleCardModalEdit } = cardEditModal;
+    const { title, lists, isVisibleCardEditModal } = this.state;
     if (board.title !== title) {
       this.setState({
         title: board.title,
@@ -72,6 +75,11 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     if (board.lists !== lists) {
       this.setState({
         lists: board.lists,
+      });
+    }
+    if (isVisibleCardEditModal !== isVisibleCardModalEdit) {
+      this.setState({
+        isVisibleCardEditModal: isVisibleCardModalEdit,
       });
     }
   }
@@ -116,11 +124,6 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     }
   };
 
-  handleCardEditModal = (): void => {
-    const { isVisibleCardEditModal } = this.state;
-    this.setState({ isVisibleCardEditModal: !isVisibleCardEditModal });
-  };
-
   render(): ReactElement {
     const { lists, editHeader, title, newValueTitle, isVisibleModal, isVisibleCardEditModal } = this.state;
     return (
@@ -148,7 +151,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
           <div className="block-lists">
             {lists
               ? lists.map((list) => {
-                  return <List key={list.id} list={list} toggleCardEditModal={this.handleCardEditModal} />;
+                  return <List key={list.id} list={list} />;
                 })
               : ''}
           </div>
@@ -180,6 +183,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
 
 const mapStateToProps = (store: AppState): object => ({
   board: store.board,
+  cardEditModal: store.cardEditModal,
 });
 
 export default compose(withRouter, connect(mapStateToProps, { getBoard, editNameBoard, createList }))(Board);

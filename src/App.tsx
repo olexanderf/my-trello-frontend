@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Route, Routes, Link, useLocation, Outlet } from 'react-router-dom';
+import { Route, Routes, Link, useLocation } from 'react-router-dom';
 import { ToastContainer, toast, ToastContent } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { AppState } from './store/store';

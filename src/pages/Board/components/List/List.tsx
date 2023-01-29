@@ -1,11 +1,13 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useParams } from 'react-router-dom';
+import { AnyAction } from 'redux';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import cardMover from '../../../../common/tools/cardMover';
 import { createCard, editListName, moveCards } from '../../../../store/modules/board/actions';
+import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
 import { AppDispatch, AppState } from '../../../../store/store';
 import Modal from '../../../Multipurpose/Modal/Modal';
@@ -14,11 +16,10 @@ import './list.scss';
 
 interface PropsType {
   list: Lists;
-  toggleCardEditModal: () => void;
 }
 
 export default function List(props: PropsType): JSX.Element {
-  const { list, toggleCardEditModal } = props;
+  const { list } = props;
   const { title, cards, id, position } = list;
   const { board_id: boardId } = useParams();
   const dispatch: AppDispatch = useDispatch();
@@ -167,7 +168,10 @@ export default function List(props: PropsType): JSX.Element {
                 onDragStart={(e): void => startDrag(e, card, list)}
                 onDragEnd={(e): void => dragEndHandler(e)}
               >
-                <Link to={`/board/${boardId}/card/${card.id}`} onClick={(): void => toggleCardEditModal()}>
+                <Link
+                  to={`/board/${boardId}/card/${card.id}`}
+                  onClick={(): AnyAction => dispatch(toggleCardEditModal(true))}
+                >
                   <Card card={card} state={{ background: location }} />
                 </Link>
               </div>

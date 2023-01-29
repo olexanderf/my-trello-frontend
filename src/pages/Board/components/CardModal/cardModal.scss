@@ -1,6 +1,11 @@
 .card-modal-container {
-  width: 400px;
-  height: 300px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 350px;
   background-color: white;
   border-radius: 5px;
+  z-index: 100;
 }
