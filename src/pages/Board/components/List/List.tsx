@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
@@ -14,13 +14,15 @@ import './list.scss';
 
 interface PropsType {
   list: Lists;
+  toggleCardEditModal: () => void;
 }
 
 export default function List(props: PropsType): JSX.Element {
-  const { list } = props;
+  const { list, toggleCardEditModal } = props;
   const { title, cards, id, position } = list;
   const { board_id: boardId } = useParams();
   const dispatch: AppDispatch = useDispatch();
+  const location = useLocation();
 
   // work with list name change
   const [isValidInput, setValidInput] = useState(true);
@@ -165,7 +167,9 @@ export default function List(props: PropsType): JSX.Element {
                 onDragStart={(e): void => startDrag(e, card, list)}
                 onDragEnd={(e): void => dragEndHandler(e)}
               >
-                <Card card={card} boardId={boardId !== undefined ? +boardId : 0} />
+                <Link to={`/board/${boardId}/card/${card.id}`} onClick={(): void => toggleCardEditModal()}>
+                  <Card card={card} state={{ background: location }} />
+                </Link>
               </div>
             );
           })}

@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './cardModal.scss';
 
 export default function CardModal(props): JSX.Element {
   const navigate = useNavigate();
   return (
-    <div>
+    <div className="grey">
       <div className="card-modal-container">
         <h1 className="card-modal-title">Title</h1>
         <h3 className="card-modal-list-name">List Name</h3>

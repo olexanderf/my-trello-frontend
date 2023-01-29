@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Route, Routes, Link } from 'react-router-dom';
+import { Route, Routes, Link, useLocation, Outlet } from 'react-router-dom';
 import { ToastContainer, toast, ToastContent } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { AppState } from './store/store';
@@ -14,6 +14,8 @@ function App(): ReactElement {
   const errorMessage = useSelector((store: AppState) => store.errorMessage);
   const loaderBar = useSelector((store: AppState) => store.loaderBar);
   const [loaderBarState, setLoaderBarState] = useState(false);
+  const location = useLocation();
+  const background = location.state && location.state.background;
 
   const notify = (message: string): ToastContent =>
     toast.error(`${message}`, {
@@ -45,11 +47,17 @@ function App(): ReactElement {
         <Link to="/board">to Board </Link>
         <Link to="/registration">Registration </Link>
       </div>
-      <Routes>
-        <Route path="/board/:board_id" element={<Board />} />
+      <Routes location={background || location}>
         <Route path="/" element={<Home />} />
-        <Route path="/board/:board_id/card/:card_id/" element={<CardModal />} />
+        <Route path="/board/:board_id" element={<Board />}>
+          <Route path="/board/:board_id/card/:card_id/" element={<CardModal />} />
+        </Route>
       </Routes>
+      {background && (
+        <Routes>
+          <Route path="/board/:board_id/card/:card_id/" element={<CardModal />} />
+        </Routes>
+      )}
       {loaderBarState && <ProgressBar />}
       <div>
         <ToastContainer />

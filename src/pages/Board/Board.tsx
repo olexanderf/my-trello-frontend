@@ -2,6 +2,7 @@
 import React, { ChangeEvent, ReactElement } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { Outlet } from 'react-router-dom';
 import Lists from '../../common/interfaces/Lists';
 import List from './components/List/List';
 import './board.scss';
@@ -26,6 +27,7 @@ interface StateType {
   newValueTitle: string;
   isVisibleModal: boolean;
   modalValue: string;
+  isVisibleCardEditModal: boolean;
 }
 
 type Params = {
@@ -43,6 +45,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
       newValueTitle: board.title,
       isVisibleModal: false,
       modalValue: '',
+      isVisibleCardEditModal: false,
     };
     this.toggleModal = this.toggleModal.bind(this);
     this.handleValueModal = this.handleValueModal.bind(this);
@@ -113,8 +116,13 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     }
   };
 
+  handleCardEditModal = (): void => {
+    const { isVisibleCardEditModal } = this.state;
+    this.setState({ isVisibleCardEditModal: !isVisibleCardEditModal });
+  };
+
   render(): ReactElement {
-    const { lists, editHeader, title, newValueTitle, isVisibleModal } = this.state;
+    const { lists, editHeader, title, newValueTitle, isVisibleModal, isVisibleCardEditModal } = this.state;
     return (
       <div className="board-container">
         <div
@@ -139,8 +147,8 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
         <div className="block-table">
           <div className="block-lists">
             {lists
-              ? lists.map((el) => {
-                  return <List key={el.id} list={el} />;
+              ? lists.map((list) => {
+                  return <List key={list.id} list={list} toggleCardEditModal={this.handleCardEditModal} />;
                 })
               : ''}
           </div>
@@ -163,6 +171,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
           ) : (
             ''
           )}
+          {isVisibleCardEditModal ? <Outlet /> : ''}
         </div>
       </div>
     );
