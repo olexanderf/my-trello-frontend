@@ -63,14 +63,23 @@
   border: none;
   transition: all 0.2s ease-in;
   &:hover {
-    transform: rotate(90deg);
+    background-color: rgba(115, 113, 252, 0.651);
+    transform: rotate(30deg);
   }
 }
 .card-modal-btn-join-member {
+  outline: 2px solid gray;
+  border: none;
   margin-top: 5px;
   padding: 5px;
   height: 30px;
   cursor: pointer;
+  transition: all 0.2s ease-in;
+  &:hover {
+    background-color: rgba(115, 113, 252, 0.651);
+    border-color: gray;
+    box-shadow: none;
+  }
 }
 .card-modal-description {
 }
@@ -84,8 +93,16 @@
   margin: 5px;
 }
 .card-modal-description-btn-edit {
+  outline: 2px solid gray;
+  border: none;
   height: 30px;
   cursor: pointer;
+  transition: all 0.2s ease-in;
+  &:hover {
+    background-color: rgba(115, 113, 252, 0.651);
+    border-color: gray;
+    box-shadow: none;
+  }
 }
 .card-modal-actions-container {
   display: flex;
@@ -97,17 +114,33 @@
 }
 .card-modal-actions-header {
   margin-bottom: 10px;
+  text-transform: uppercase;
 }
 .card-modal-actions-btn {
+  outline: 2px solid gray;
+  border: none;
   height: 30px;
   margin-bottom: 10px;
   width: 120px;
   cursor: pointer;
+  transition: all 0.2s ease-in;
+  &:hover {
+    background-color: rgba(115, 113, 252, 0.651);
+    border-color: gray;
+    box-shadow: none;
+  }
 }
 .card-modal-actions-btn.archive{
-  border: 1px solid rgb(255, 117, 117);
+  outline: 2px solid rgb(255, 117, 117);
+  border: none;
   color: red;
   background-color: rgb(250, 193, 193);
+  transition: all 0.2s ease-in;
+  &:hover {
+    background-color: rgba(115, 113, 252, 0.651);
+    border-color: red;
+    box-shadow: none;
+  }
 }
 .card-modal-btn-close {
   position: absolute;

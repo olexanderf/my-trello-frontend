@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
 import { AppDispatch } from '../../../../store/store';
 import './cardModal.scss';
@@ -8,9 +8,10 @@ import './cardModal.scss';
 export default function CardModal(props): JSX.Element {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
+  const { board_id: boardId } = useParams();
   const onCardModalClose = (): void => {
     dispatch(toggleCardEditModal(false));
-    navigate(-1); // need fix to return on list page, not one step back
+    navigate(`/board/${boardId}`);
   };
   return (
     <div>
@@ -52,7 +53,7 @@ export default function CardModal(props): JSX.Element {
           +
         </button>
       </div>
-      <div className="gray-background-box" />
+      <div className="gray-background-box" onClick={(): void => onCardModalClose()} />
     </div>
   );
 }
