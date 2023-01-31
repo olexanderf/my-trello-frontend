@@ -4,8 +4,126 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 500px;
-  height: 350px;
+  min-height: 350px;
   background-color: white;
   border-radius: 5px;
   z-index: 100;
+  display: flex;
+  justify-content: top;
+  align-items: left;
+  padding-left: 20px;
+  color: gray;
+}
+.card-modal-container-main {
+  display: flex;
+  justify-content: top;
+  align-items: left;
+  flex-direction: column;
+}
+.card-modal-title {
+  margin-bottom: 10px;
+  color: black;
+}
+.card-modal-list-name > span {
+  border-bottom: 2px solid;
+}
+.card-modal-members {
+  display: flex;
+  align-items: left;
+  flex-direction: column;
+}
+.card-modal-users-container {
+  display: flex;
+  align-items: left;
+  flex-direction: row;
+  padding-top: 0;
+  padding-bottom: 10px;
+}
+.card-modal-users-title {
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.card-modal-users-icon {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: yellow;
+  outline: gray 2px solid;
+  cursor: pointer;
+}
+.card-modal-users-icon-invite {
+  @extend .card-modal-users-icon;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgrey;
+  color: black;
+  font-size: 40px;
+  border: none;
+  transition: all 0.2s ease-in;
+  &:hover {
+    transform: rotate(90deg);
+  }
+}
+.card-modal-btn-join-member {
+  margin-top: 5px;
+  padding: 5px;
+  height: 30px;
+  cursor: pointer;
+}
+.card-modal-description {
+}
+.card-modal-description-header-container {
+  display: flex;
+  justify-content: left;
+  align-items: baseline;
+}
+.card-modal-description-header {
+  color: black;
+  margin: 5px;
+}
+.card-modal-description-btn-edit {
+  height: 30px;
+  cursor: pointer;
+}
+.card-modal-actions-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: top;
+  align-items: center;
+  padding-top: 70px;
+  padding-right: 20px;
+}
+.card-modal-actions-header {
+  margin-bottom: 10px;
+}
+.card-modal-actions-btn {
+  height: 30px;
+  margin-bottom: 10px;
+  width: 120px;
+  cursor: pointer;
+}
+.card-modal-actions-btn.archive{
+  border: 1px solid rgb(255, 117, 117);
+  color: red;
+  background-color: rgb(250, 193, 193);
+}
+.card-modal-btn-close {
+  position: absolute;
+  font-size: 25px;
+  width: 30px;
+  height: 30px;
+  top: 10px;
+  left: 92%;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in;
+  transform: rotate(45deg);
+  background-color: transparent;
+  &:hover {
+    transform: rotate(135deg);
+    background-color: rgb(247, 76, 9);
+  }
 }

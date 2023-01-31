@@ -48,7 +48,7 @@ export default function Modal(props: PropsType): ReactElement {
           </button>
         </div>
       </div>
-      <div className="grey" />
+      <div className="gray-background-box" />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { AnyAction } from 'redux';
@@ -21,14 +21,20 @@ interface PropsType {
 export default function List(props: PropsType): JSX.Element {
   const { list } = props;
   const { title, cards, id, position } = list;
-  const { board_id: boardId } = useParams();
+  const { board_id: boardId, card_id: cardId } = useParams();
   const dispatch: AppDispatch = useDispatch();
   const location = useLocation();
+  const isVisibleCardModal = useSelector((state: AppState) => state.cardEditModal.isVisibleCardModalEdit);
 
   // work with list name change
   const [isValidInput, setValidInput] = useState(true);
   const [isEditListName, setEditListName] = useState(false);
   const [valueOfListName, setValueOfListName] = useState(title);
+
+  // show card modal edit after reload page
+  useEffect(() => {
+    if (cardId !== undefined && !isVisibleCardModal) dispatch(toggleCardEditModal(true));
+  }, []);
 
   const changeListName = (e: ChangeEvent<HTMLInputElement>): void => {
     setValueOfListName(e.target.value);
