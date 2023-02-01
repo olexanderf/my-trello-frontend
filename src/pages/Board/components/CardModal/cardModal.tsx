@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import ICard from '../../../../common/interfaces/ICard';
@@ -12,21 +12,31 @@ export default function CardModal(): JSX.Element {
   const dispatch: AppDispatch = useDispatch();
   const { board_id: boardId, card_id: cardId } = useParams();
   const lists = useSelector((state: AppState) => state.board.lists);
-  const [currentList, setCurrentList]: Lists = useState({ id: 0, title: 'demo', position: 0, cards: [] });
-  const [cuurentCard, setCurrentCard]: ICard = useState({
+  const [currentList, setCurrentList] = useState<Lists>({ id: 0, title: 'demo', position: 0, cards: [] });
+  const [currentCard, setCurrentCard] = useState<ICard>({
     id: 0,
     title: 'demo',
     list_id: 0,
     position: 0,
     description: 'demo descript',
   });
+  const [isEditCardTitle, setEditCardTitle] = useState(false);
+  const [valueOfCardTitle, setValueOfCardTitle] = useState(currentCard.title);
 
   const loadCardData = (arrLists: Lists[], currentCardId: number): void => {
-    const indexList = arrLists.findIndex((l) => l.cards.find((c: ICard) => c.id === currentCardId));
-    const indexCard = arrLists[indexList].cards.findIndex((c: ICard) => c.id === currentCardId);
+    let cardIndex = 0;
+    const indexList = arrLists.findIndex((l) =>
+      l.cards.find((c: ICard, index) => {
+        if (c.id === currentCardId) {
+          cardIndex = index;
+          return c;
+        }
+        return undefined;
+      })
+    );
     if (arrLists !== undefined) {
       setCurrentList(arrLists[indexList]);
-      setCurrentCard(arrLists[indexList].cards[indexCard]);
+      setCurrentCard(arrLists[indexList].cards[cardIndex]);
     }
   };
 
@@ -38,11 +48,19 @@ export default function CardModal(): JSX.Element {
     dispatch(toggleCardEditModal(false));
     navigate(`/board/${boardId}`);
   };
+
+  const changeCardTitle = (e: ChangeEvent<HTMLInputElement>): void => {
+    setValueOfCardTitle(e.target.value);
+  };
   return (
     <div>
       <div className="card-modal-container">
         <div className="card-modal-container-main">
-          <h1 className="card-modal-title">{cuurentCard.title}</h1>
+          {isEditCardTitle ? (
+            <input type="text" value={currentCard.title} onChange={changeCardTitle} />
+          ) : (
+            <h1 className="card-modal-title">{currentCard.title}</h1>
+          )}
           <span className="card-modal-list-name">
             В колонке: <span>{currentList.title}</span>
           </span>
@@ -61,7 +79,7 @@ export default function CardModal(): JSX.Element {
               <h4 className="card-modal-description-header">Описание</h4>
               <button className="card-modal-description-btn-edit">Изменить</button>
             </div>
-            <p className="card-modal-desctiption-text">{cuurentCard.description}</p>
+            <p className="card-modal-desctiption-text">{currentCard.description}</p>
           </div>
         </div>
         <div className="card-modal-actions-container">

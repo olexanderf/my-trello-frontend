@@ -3,7 +3,7 @@
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500px;
+  width: 550px;
   min-height: 350px;
   background-color: white;
   border-radius: 5px;
@@ -19,6 +19,10 @@
   justify-content: top;
   align-items: left;
   flex-direction: column;
+  gap: 10px;
+  word-wrap: break-word;
+  overflow: hidden;
+  min-width: 390px;
 }
 .card-modal-title {
   margin-bottom: 10px;
@@ -52,6 +56,10 @@
   outline: gray 2px solid;
   cursor: pointer;
 }
+.card-modal-users-icon:first-child {
+  margin-left: 5px;
+}
+
 .card-modal-users-icon.invite {
   display: flex;
   justify-content: center;
@@ -85,7 +93,6 @@
 .card-modal-description-header-container {
   display: flex;
   justify-content: left;
-  align-items: baseline;
 }
 .card-modal-description-header {
   color: black;
@@ -109,6 +116,7 @@
   justify-content: top;
   align-items: center;
   padding: 70px 20px 0 20px;
+  margin-left:auto;
 }
 .card-modal-actions-header {
   margin-bottom: 10px;
