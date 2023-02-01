@@ -52,8 +52,7 @@
   outline: gray 2px solid;
   cursor: pointer;
 }
-.card-modal-users-icon-invite {
-  @extend .card-modal-users-icon;
+.card-modal-users-icon.invite {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -109,8 +108,7 @@
   flex-direction: column;
   justify-content: top;
   align-items: center;
-  padding-top: 70px;
-  padding-right: 20px;
+  padding: 70px 20px 0 20px;
 }
 .card-modal-actions-header {
   margin-bottom: 10px;
