@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
@@ -21,7 +22,8 @@ export default function CardModal(): JSX.Element {
     description: 'demo descript',
   });
   const [isEditCardTitle, setEditCardTitle] = useState(false);
-  const [valueOfCardTitle, setValueOfCardTitle] = useState(currentCard.title);
+  const [valueOfCardTitle, setValueOfCardTitle] = useState('');
+  const [isValidInput, setValidInput] = useState(true);
 
   const loadCardData = (arrLists: Lists[], currentCardId: number): void => {
     let cardIndex = 0;
@@ -37,6 +39,7 @@ export default function CardModal(): JSX.Element {
     if (arrLists !== undefined) {
       setCurrentList(arrLists[indexList]);
       setCurrentCard(arrLists[indexList].cards[cardIndex]);
+      setValueOfCardTitle(currentCard.title);
     }
   };
 
@@ -52,12 +55,50 @@ export default function CardModal(): JSX.Element {
   const changeCardTitle = (e: ChangeEvent<HTMLInputElement>): void => {
     setValueOfCardTitle(e.target.value);
   };
+
+  const updateCardTitle = (): void => {
+    if (valueOfCardTitle.match(boardInputRegex) && boardId && cardId && valueOfCardTitle !== currentCard.title) {
+      setValidInput(true);
+      // dispatch();
+      setEditCardTitle(false);
+    }
+    if (valueOfCardTitle.match(boardInputRegex) && valueOfCardTitle === currentCard.title) {
+      setValidInput(true);
+      setEditCardTitle(false);
+    }
+    if (!valueOfCardTitle.match(boardInputRegex)) setValidInput(false);
+  };
   return (
     <div>
       <div className="card-modal-container">
-        <div className="card-modal-container-main">
+        <div
+          className="card-modal-container-main"
+          onClick={(): void => {
+            setEditCardTitle(true);
+          }}
+        >
           {isEditCardTitle ? (
-            <input type="text" value={currentCard.title} onChange={changeCardTitle} />
+            <input
+              type="text"
+              className={isValidInput ? 'card-modal-input' : 'card-modal-input error'}
+              value={valueOfCardTitle}
+              onClick={(e): void => e.stopPropagation()}
+              onChange={changeCardTitle}
+              onBlur={(): void => {
+                updateCardTitle();
+                setEditCardTitle(false);
+              }}
+              onKeyDown={(e: React.KeyboardEvent): void => {
+                if (e.key === 'Enter') {
+                  updateCardTitle();
+                  setEditCardTitle(false);
+                }
+                if (e.key === 'Escape') {
+                  setValueOfCardTitle(currentCard.title);
+                  setEditCardTitle(false);
+                }
+              }}
+            />
           ) : (
             <h1 className="card-modal-title">{currentCard.title}</h1>
           )}

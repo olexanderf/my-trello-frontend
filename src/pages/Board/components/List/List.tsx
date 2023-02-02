@@ -41,11 +41,16 @@ export default function List(props: PropsType): JSX.Element {
   };
 
   const updateListName = (): void => {
-    if (valueOfListName.match(boardInputRegex) && boardId !== undefined) {
+    if (valueOfListName.match(boardInputRegex) && boardId !== undefined && valueOfListName !== title) {
       setValidInput(true);
       dispatch(editListName(+boardId, valueOfListName, id, position));
       setEditListName(false);
-    } else setValidInput(false);
+    }
+    if (valueOfListName.match(boardInputRegex) && valueOfListName === title) {
+      setValidInput(true);
+      setEditListName(false);
+    }
+    if (!valueOfListName.match(boardInputRegex)) setValidInput(false);
   };
 
   // work with modal window
@@ -147,11 +152,20 @@ export default function List(props: PropsType): JSX.Element {
             className={isValidInput ? 'list-name-input' : 'list-name-input error'}
             value={valueOfListName}
             onChange={changeListName}
-            onBlur={updateListName}
+            onBlur={(): void => {
+              updateListName();
+              setEditListName(false);
+            }}
             onClick={(e): void => e.stopPropagation()}
             onKeyDown={(e: React.KeyboardEvent): void => {
-              if (e.key === 'Enter') updateListName();
-              if (e.key === 'Escape') setValueOfListName(title);
+              if (e.key === 'Enter') {
+                updateListName();
+                setEditListName(false);
+              }
+              if (e.key === 'Escape') {
+                setValueOfListName(title);
+                setEditListName(false);
+              }
             }}
           />
         ) : (

@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
+$main-font: 'Comfortaa', cursive;
+
 .card-modal-container {
   position: absolute;
   top: 40%;
@@ -165,4 +169,12 @@
     transform: rotate(135deg);
     background-color: rgb(247, 76, 9);
   }
+}
+.card-modal-input {
+  font-family: $main-font;
+  border-radius: 5px;
+  font-size: 30px;
+  margin-top: 18px;
+  margin-bottom: 15px;
+  font-weight: bold;
 }
