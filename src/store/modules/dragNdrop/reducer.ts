@@ -6,7 +6,7 @@ interface DragNDropItems {
   card: ICard | null;
   dragListID: number | null;
 }
-const initialState = {
+const initialState: DragNDropItems = {
   card: null,
   dragListID: null,
 };

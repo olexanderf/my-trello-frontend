@@ -4,7 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
-import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
+import {
+  setCardModal,
+  setCurrentList,
+  toggleCardEditModal,
+  updateCardName,
+} from '../../../../store/modules/cardEditModal/action';
 import { AppDispatch, AppState } from '../../../../store/store';
 import './cardModal.scss';
 
@@ -13,14 +18,8 @@ export default function CardModal(): JSX.Element {
   const dispatch: AppDispatch = useDispatch();
   const { board_id: boardId, card_id: cardId } = useParams();
   const lists = useSelector((state: AppState) => state.board.lists);
-  const [currentList, setCurrentList] = useState<Lists>({ id: 0, title: 'demo', position: 0, cards: [] });
-  const [currentCard, setCurrentCard] = useState<ICard>({
-    id: 0,
-    title: 'demo',
-    list_id: 0,
-    position: 0,
-    description: 'demo descript',
-  });
+  const currentList = useSelector((state: AppState) => state.cardEditModal.currentList);
+  const currentCard = useSelector((state: AppState) => state.cardEditModal.cardOnModal);
   const [isEditCardTitle, setEditCardTitle] = useState(false);
   const [valueOfCardTitle, setValueOfCardTitle] = useState('');
   const [isValidInput, setValidInput] = useState(true);
@@ -37,15 +36,18 @@ export default function CardModal(): JSX.Element {
       })
     );
     if (arrLists !== undefined) {
-      setCurrentList(arrLists[indexList]);
-      setCurrentCard(arrLists[indexList].cards[cardIndex]);
-      setValueOfCardTitle(currentCard.title);
+      dispatch(setCurrentList(arrLists[indexList]));
+      dispatch(setCardModal(arrLists[indexList].cards[cardIndex]));
     }
   };
 
   useEffect(() => {
     if (cardId !== undefined) loadCardData(lists, +cardId);
   }, []);
+
+  useEffect(() => {
+    setValueOfCardTitle(currentCard.title);
+  }, [currentCard.title]);
 
   const onCardModalClose = (): void => {
     dispatch(toggleCardEditModal(false));
@@ -59,7 +61,7 @@ export default function CardModal(): JSX.Element {
   const updateCardTitle = (): void => {
     if (valueOfCardTitle.match(boardInputRegex) && boardId && cardId && valueOfCardTitle !== currentCard.title) {
       setValidInput(true);
-      // dispatch();
+      dispatch(updateCardName(+boardId, +cardId, currentList.id, valueOfCardTitle));
       setEditCardTitle(false);
     }
     if (valueOfCardTitle.match(boardInputRegex) && valueOfCardTitle === currentCard.title) {
