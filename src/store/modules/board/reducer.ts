@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/default-param-last */
-import { PayloadAction } from '@reduxjs/toolkit';
+import { AnyAction } from '@reduxjs/toolkit';
 import SingleBoard from '../../../common/interfaces/OneBoard';
 
 const initialState: SingleBoard = {
@@ -7,10 +7,7 @@ const initialState: SingleBoard = {
   lists: [],
 };
 
-export default function reducer(
-  state = initialState,
-  action: { type: string; payload: PayloadAction<SingleBoard> }
-): SingleBoard {
+export default function reducer(state = initialState, action: AnyAction): SingleBoard {
   switch (action.type) {
     case 'FETCH_BOARD':
       return action.payload;

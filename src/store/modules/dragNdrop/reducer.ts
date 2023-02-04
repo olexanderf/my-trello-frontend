@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/comma-dangle */
 /* eslint-disable @typescript-eslint/default-param-last */
+import { AnyAction } from '@reduxjs/toolkit';
 import ICard from '../../../common/interfaces/ICard';
 
 interface DragNDropItems {
@@ -11,10 +12,7 @@ const initialState: DragNDropItems = {
   dragListID: null,
 };
 
-export default function reducer(
-  state = initialState,
-  action: { type: string; payload?: DragNDropItems }
-): DragNDropItems | null {
+export default function reducer(state = initialState, action: AnyAction): DragNDropItems | null {
   switch (action.type) {
     case 'SET_DRAG_CARD':
       return { ...state, card: action.payload };

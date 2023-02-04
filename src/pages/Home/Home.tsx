@@ -10,9 +10,9 @@ import { boardInputRegex } from '../../common/constants/regExp';
 
 type PropsType = {
   boards: Board[];
-  getBoards: () => Promise<void>;
-  createBoard: (title: string) => Promise<void>;
-  deleteBoard: (id: number) => Promise<void>;
+  getBoards: () => void;
+  createBoard: (title: string) => void;
+  deleteBoard: (id: number) => void;
 };
 type StateType = {
   boards: Board[];
@@ -106,7 +106,7 @@ class Home extends React.Component<PropsType, StateType> {
   }
 }
 
-const mapStateToProps = (store: AppState): object => ({
+const mapStateToProps = (store: AppState): { boards: Board[] } => ({
   boards: store.boards,
 });
 

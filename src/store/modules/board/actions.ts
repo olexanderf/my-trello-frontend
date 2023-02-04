@@ -1,4 +1,4 @@
-import { AnyAction } from 'redux';
+import { PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, TypedDispatch } from '../../store';
 import api from '../../../api/request';
 import Lists from '../../../common/interfaces/Lists';
@@ -83,7 +83,7 @@ export const createCard = (
     }
   };
 };
-export const replaceCardInList = (lists: Lists[]): AnyAction => {
+export const replaceCardInList = (lists: Lists[]): PayloadAction<Lists[]> => {
   return { type: 'REPLACE_CARD_IN_LIST', payload: lists };
 };
 

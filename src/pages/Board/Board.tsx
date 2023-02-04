@@ -181,7 +181,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
   }
 }
 
-const mapStateToProps = (store: AppState): object => ({
+const mapStateToProps = (store: AppState): { board: SingleBoard; cardEditModal: CardEditModal } => ({
   board: store.board,
   cardEditModal: store.cardEditModal,
 });

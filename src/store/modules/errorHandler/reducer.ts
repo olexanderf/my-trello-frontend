@@ -1,5 +1,7 @@
+import { AnyAction } from '@reduxjs/toolkit';
+
 /* eslint-disable @typescript-eslint/default-param-last */
-export default function reducer(state = {}, action: { type: string; payload: object }): object | string {
+export default function reducer(state = {}, action: AnyAction): object | string {
   switch (action.type) {
     case 'RESPONSE_ERROR':
       return action.payload;

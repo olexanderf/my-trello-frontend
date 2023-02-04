@@ -1,4 +1,4 @@
-import { AnyAction } from 'redux';
+import { PayloadAction } from '@reduxjs/toolkit';
 import api from '../../../api/request';
 import ICard from '../../../common/interfaces/ICard';
 import Lists from '../../../common/interfaces/Lists';
@@ -6,16 +6,16 @@ import { AppThunk, TypedDispatch } from '../../store';
 import { getBoard } from '../board/actions';
 import { handleResponseError } from '../errorHandler/action';
 
-export const toggleCardEditModal = (isVisibleCardModalEdit: boolean): AnyAction => {
+export const toggleCardEditModal = (isVisibleCardModalEdit: boolean): PayloadAction<boolean> => {
   return { type: 'TOGGLE_CARD_EDIT_MODAL', payload: isVisibleCardModalEdit };
 };
-export const setCurrentList = (list: Lists): AnyAction => {
+export const setCurrentList = (list: Lists): PayloadAction<Lists> => {
   return { type: 'SET_LIST_CARD_MODAL', payload: list };
 };
-export const setCardModal = (card: ICard): AnyAction => {
+export const setCardModal = (card: ICard): PayloadAction<ICard> => {
   return { type: 'SET_CARD_MODAL', payload: card };
 };
-export const updateCardTitle = (title: string): AnyAction => {
+export const updateCardTitle = (title: string): PayloadAction<string> => {
   return { type: 'UPDATE_CARD_TITLE', payload: title };
 };
 
