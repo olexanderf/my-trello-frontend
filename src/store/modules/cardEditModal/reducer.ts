@@ -22,8 +22,11 @@ export default function reducer(state = initialState, action: AnyAction): ICardE
       return { ...state, cardOnModal: action.payload };
     case 'SET_LIST_CARD_MODAL':
       return { ...state, currentList: action.payload };
-    case 'UPDATE_CARD_TITLE':
-      return { ...state, cardOnModal: { ...state.cardOnModal, title: action.payload } };
+    case 'UPDATE_CARD_FIELDS':
+      return {
+        ...state,
+        cardOnModal: { ...state.cardOnModal, title: action.payload.title, description: action.payload.description },
+      };
     default:
       return state;
   }

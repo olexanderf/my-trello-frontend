@@ -1,4 +1,4 @@
-import { PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, AnyAction } from '@reduxjs/toolkit';
 import api from '../../../api/request';
 import ICard from '../../../common/interfaces/ICard';
 import Lists from '../../../common/interfaces/Lists';
@@ -15,18 +15,25 @@ export const setCurrentList = (list: Lists): PayloadAction<Lists> => {
 export const setCardModal = (card: ICard): PayloadAction<ICard> => {
   return { type: 'SET_CARD_MODAL', payload: card };
 };
-export const updateCardTitle = (title: string): PayloadAction<string> => {
-  return { type: 'UPDATE_CARD_TITLE', payload: title };
+export const updateCardFields = (title: string, description?: string): AnyAction => {
+  return { type: 'UPDATE_CARD_FIELDS', payload: { title, description } };
 };
 
-export const updateCardName = (board_id: number, card_id: number, list_id: number, title: string): AppThunk => {
+export const updateCard = (
+  board_id: number,
+  card_id: number,
+  list_id: number,
+  title: string,
+  description?: string
+): AppThunk => {
   return async (dispatch: TypedDispatch): Promise<void> => {
     try {
       await api.put(`/board/${board_id}/card/${card_id}`, {
         title,
+        description,
         list_id,
       });
-      dispatch(updateCardTitle(title));
+      dispatch(updateCardFields(title, description));
       dispatch(getBoard(board_id));
     } catch (e) {
       dispatch(handleResponseError(e));

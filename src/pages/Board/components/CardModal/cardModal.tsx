@@ -8,9 +8,10 @@ import {
   setCardModal,
   setCurrentList,
   toggleCardEditModal,
-  updateCardName,
+  updateCard,
 } from '../../../../store/modules/cardEditModal/action';
 import { AppDispatch, AppState } from '../../../../store/store';
+import CardCopyMoveModal from '../CardCopyMoveModal/cardCopyMoveModal';
 import './cardModal.scss';
 
 export default function CardModal(): JSX.Element {
@@ -23,6 +24,9 @@ export default function CardModal(): JSX.Element {
   const [isEditCardTitle, setEditCardTitle] = useState(false);
   const [valueOfCardTitle, setValueOfCardTitle] = useState('');
   const [isValidInput, setValidInput] = useState(true);
+  const [isEditCardDescription, setEditDescription] = useState(false);
+  const [valueOfDescription, setValueOfDescription] = useState('');
+  const [isVisibleCopyMoveModa, setVisibleCopyMoveModal] = useState(false);
 
   const loadCardData = (arrLists: Lists[], currentCardId: number): void => {
     let cardIndex = 0;
@@ -49,6 +53,11 @@ export default function CardModal(): JSX.Element {
     setValueOfCardTitle(currentCard.title);
   }, [currentCard.title]);
 
+  useEffect(() => {
+    if (currentCard.description !== undefined) setValueOfDescription(currentCard.description);
+    else setValueOfDescription('');
+  }, [currentCard.description]);
+
   const onCardModalClose = (): void => {
     dispatch(toggleCardEditModal(false));
     navigate(`/board/${boardId}`);
@@ -58,10 +67,14 @@ export default function CardModal(): JSX.Element {
     setValueOfCardTitle(e.target.value);
   };
 
-  const updateCardTitle = (): void => {
+  const changeDiscriptionValue = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+    setValueOfDescription(e.target.value);
+  };
+
+  const updateCardFields = (): void => {
     if (valueOfCardTitle.match(boardInputRegex) && boardId && cardId && valueOfCardTitle !== currentCard.title) {
       setValidInput(true);
-      dispatch(updateCardName(+boardId, +cardId, currentList.id, valueOfCardTitle));
+      dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle));
       setEditCardTitle(false);
     }
     if (valueOfCardTitle.match(boardInputRegex) && valueOfCardTitle === currentCard.title) {
@@ -69,16 +82,49 @@ export default function CardModal(): JSX.Element {
       setEditCardTitle(false);
     }
     if (!valueOfCardTitle.match(boardInputRegex)) setValidInput(false);
+
+    if (
+      valueOfCardTitle.match(boardInputRegex) &&
+      boardId &&
+      cardId &&
+      valueOfDescription !== currentCard.description
+    ) {
+      if (valueOfDescription === '') {
+        dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle, null));
+      } else dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle, valueOfDescription));
+      setEditCardTitle(false);
+    }
+    if (valueOfDescription === currentCard.description) {
+      setEditCardTitle(false);
+    }
   };
+
+  const endEditTitle = (e: React.KeyboardEvent): void => {
+    if (e.key === 'Enter') {
+      updateCardFields();
+      setEditCardTitle(false);
+    }
+    if (e.key === 'Escape') {
+      setValueOfCardTitle(currentCard.title);
+      setEditCardTitle(false);
+    }
+  };
+
+  const endEditDescription = (e: React.KeyboardEvent): void => {
+    if (e.key === 'Enter') {
+      updateCardFields();
+      setEditCardTitle(false);
+    }
+    if (e.key === 'Escape' && currentCard.description !== undefined) {
+      setValueOfDescription(currentCard.description);
+      setEditCardTitle(false);
+    }
+  };
+
   return (
     <div>
       <div className="card-modal-container">
-        <div
-          className="card-modal-container-main"
-          onClick={(): void => {
-            setEditCardTitle(true);
-          }}
-        >
+        <div className="card-modal-container-main">
           {isEditCardTitle ? (
             <input
               type="text"
@@ -87,22 +133,25 @@ export default function CardModal(): JSX.Element {
               onClick={(e): void => e.stopPropagation()}
               onChange={changeCardTitle}
               onBlur={(): void => {
-                updateCardTitle();
-                setEditCardTitle(false);
+                if (valueOfCardTitle.match(boardInputRegex)) {
+                  updateCardFields();
+                  setEditCardTitle(false);
+                } else setValidInput(false);
               }}
               onKeyDown={(e: React.KeyboardEvent): void => {
-                if (e.key === 'Enter') {
-                  updateCardTitle();
-                  setEditCardTitle(false);
-                }
-                if (e.key === 'Escape') {
-                  setValueOfCardTitle(currentCard.title);
-                  setEditCardTitle(false);
-                }
+                endEditTitle(e);
               }}
             />
           ) : (
-            <h1 className="card-modal-title">{currentCard.title}</h1>
+            <h1
+              className="card-modal-title"
+              onClick={(e: React.MouseEvent): void => {
+                setEditCardTitle(true);
+                e.stopPropagation();
+              }}
+            >
+              {currentCard.title}
+            </h1>
           )}
           <span className="card-modal-list-name">
             В колонке: <span>{currentList.title}</span>
@@ -120,21 +169,58 @@ export default function CardModal(): JSX.Element {
           <div className="card-modal-description">
             <div className="card-modal-description-header-container">
               <h4 className="card-modal-description-header">Описание</h4>
-              <button className="card-modal-description-btn-edit">Изменить</button>
+              <button
+                className="card-modal-description-btn-edit"
+                onClick={(e: React.MouseEvent): void => {
+                  setEditDescription(true);
+                  e.stopPropagation();
+                }}
+              >
+                Изменить
+              </button>
             </div>
-            <p className="card-modal-desctiption-text">{currentCard.description}</p>
+            {isEditCardDescription ? (
+              <textarea
+                className="card-modal-description-edit"
+                value={valueOfDescription}
+                onChange={changeDiscriptionValue}
+                onClick={(e: React.MouseEvent): void => {
+                  e.stopPropagation();
+                }}
+                onBlur={(): void => {
+                  updateCardFields();
+                  setEditDescription(false);
+                }}
+                onKeyDown={(e: React.KeyboardEvent): void => {
+                  endEditDescription(e);
+                }}
+              />
+            ) : (
+              <p className="card-modal-desctiption-text">{currentCard.description}</p>
+            )}
           </div>
         </div>
         <div className="card-modal-actions-container">
           <h4 className="card-modal-actions-header">Действия</h4>
-          <button className="card-modal-actions-btn">Копировать</button>
-          <button className="card-modal-actions-btn">Перемещение</button>
+          <button
+            className="card-modal-actions-btn"
+            onClick={(): void => setVisibleCopyMoveModal(!isVisibleCopyMoveModa)}
+          >
+            Копировать
+          </button>
+          <button
+            className="card-modal-actions-btn"
+            onClick={(): void => setVisibleCopyMoveModal(!isVisibleCopyMoveModa)}
+          >
+            Перемещение
+          </button>
           <button className="card-modal-actions-btn archive">Архивация</button>
         </div>
         <button className="card-modal-btn-close" onClick={(): void => onCardModalClose()}>
           +
         </button>
       </div>
+      {isVisibleCopyMoveModa ? <CardCopyMoveModal /> : ''}
       <div className="gray-background-box" onClick={(): void => onCardModalClose()} />
     </div>
   );

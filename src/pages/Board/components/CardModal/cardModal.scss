@@ -92,8 +92,6 @@ $main-font: 'Comfortaa', cursive;
     box-shadow: none;
   }
 }
-.card-modal-description {
-}
 .card-modal-description-header-container {
   display: flex;
   justify-content: left;
@@ -177,4 +175,17 @@ $main-font: 'Comfortaa', cursive;
   margin-top: 18px;
   margin-bottom: 15px;
   font-weight: bold;
+}
+.card-modal-description-edit {
+  font-family: $main-font;
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  resize: vertical;
+  width: 95%;
+  max-width: 95%; 
+  height: 100px;
+  max-height: 300px;
+  border-radius: 5px;
+  border: 2px solid;
 }
