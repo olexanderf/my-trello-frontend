@@ -15,7 +15,7 @@ export const setCurrentList = (list: Lists): PayloadAction<Lists> => {
 export const setCardModal = (card: ICard): PayloadAction<ICard> => {
   return { type: 'SET_CARD_MODAL', payload: card };
 };
-export const updateCardFields = (title: string, description?: string): AnyAction => {
+export const updateCardFields = (title: string, description?: string | null): AnyAction => {
   return { type: 'UPDATE_CARD_FIELDS', payload: { title, description } };
 };
 
@@ -24,7 +24,7 @@ export const updateCard = (
   card_id: number,
   list_id: number,
   title: string,
-  description?: string
+  description?: string | null
 ): AppThunk => {
   return async (dispatch: TypedDispatch): Promise<void> => {
     try {

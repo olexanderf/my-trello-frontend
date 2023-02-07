@@ -45,6 +45,19 @@ export default function CardModal(): JSX.Element {
     }
   };
 
+  // const createUrls = (text: string): string => {
+  //   const words = text.split(' ');
+  //   const nw = words.map((t) => {
+  //     if (t.match(urlRgx))
+  //       return (
+  //         <>
+  //           `<a href={t}>${t}</a>`;
+  //         </>
+  //       );
+  //   });
+  //   return nw.join(' ');
+  // };
+
   useEffect(() => {
     if (cardId !== undefined) loadCardData(lists, +cardId);
   }, []);
