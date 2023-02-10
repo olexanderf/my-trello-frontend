@@ -5,8 +5,9 @@ import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import {
+  setBoardOnModal,
   setCardModal,
-  setCurrentList,
+  setListOnModal,
   toggleCardEditModal,
   updateCard,
 } from '../../../../store/modules/cardEditModal/action';
@@ -18,8 +19,8 @@ export default function CardModal(): JSX.Element {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const { board_id: boardId, card_id: cardId } = useParams();
-  const lists = useSelector((state: AppState) => state.board.lists);
-  const currentList = useSelector((state: AppState) => state.cardEditModal.currentList);
+  const board = useSelector((state: AppState) => state.board);
+  const currentList = useSelector((state: AppState) => state.cardEditModal.listOnModal);
   const currentCard = useSelector((state: AppState) => state.cardEditModal.cardOnModal);
   const [isEditCardTitle, setEditCardTitle] = useState(false);
   const [valueOfCardTitle, setValueOfCardTitle] = useState('');
@@ -40,7 +41,7 @@ export default function CardModal(): JSX.Element {
       })
     );
     if (arrLists !== undefined) {
-      dispatch(setCurrentList(arrLists[indexList]));
+      dispatch(setListOnModal(arrLists[indexList]));
       dispatch(setCardModal(arrLists[indexList].cards[cardIndex]));
     }
   };
@@ -59,7 +60,8 @@ export default function CardModal(): JSX.Element {
   // };
 
   useEffect(() => {
-    if (cardId !== undefined) loadCardData(lists, +cardId);
+    if (cardId !== undefined) loadCardData(board.lists, +cardId);
+    dispatch(setBoardOnModal(board));
   }, []);
 
   useEffect(() => {
@@ -102,9 +104,7 @@ export default function CardModal(): JSX.Element {
       cardId &&
       valueOfDescription !== currentCard.description
     ) {
-      if (valueOfDescription === '') {
-        dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle, null));
-      } else dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle, valueOfDescription));
+      dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle, valueOfDescription));
       setEditCardTitle(false);
     }
     if (valueOfDescription === currentCard.description) {

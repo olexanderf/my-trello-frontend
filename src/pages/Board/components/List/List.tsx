@@ -7,6 +7,7 @@ import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import cardMover from '../../../../common/tools/cardMover';
 import { createCard, editListName, moveCards } from '../../../../store/modules/board/actions';
+import { getBoards } from '../../../../store/modules/boards/actions';
 import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
 import { AppDispatch, AppState } from '../../../../store/store';
@@ -33,6 +34,7 @@ export default function List(props: PropsType): JSX.Element {
 
   // show card modal edit after reload page
   useEffect(() => {
+    dispatch(getBoards());
     if (cardId !== undefined && !isVisibleCardModal) dispatch(toggleCardEditModal(true));
   }, []);
 

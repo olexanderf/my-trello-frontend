@@ -5,7 +5,8 @@ import ICardEditModal from '../../../common/interfaces/CardEditModal';
 
 const initialState: ICardEditModal = {
   isVisibleCardModalEdit: false,
-  currentList: { id: 0, title: 'demo', position: 0, cards: [] },
+  boardOnModal: { title: 'Demo title', lists: [] },
+  listOnModal: { id: 0, title: 'demo', position: 0, cards: [] },
   cardOnModal: {
     id: 0,
     title: 'demo',
@@ -20,8 +21,10 @@ export default function reducer(state = initialState, action: AnyAction): ICardE
       return { ...state, isVisibleCardModalEdit: action.payload };
     case 'SET_CARD_MODAL':
       return { ...state, cardOnModal: action.payload };
+    case 'SET_BOARD_MODAL':
+      return { ...state, boardOnModal: action.payload };
     case 'SET_LIST_CARD_MODAL':
-      return { ...state, currentList: action.payload };
+      return { ...state, listOnModal: action.payload };
     case 'UPDATE_CARD_FIELDS':
       return {
         ...state,
