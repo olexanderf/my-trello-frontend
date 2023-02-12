@@ -44,7 +44,6 @@ function App(): ReactElement {
     <div className="App">
       <div>
         <Link to="/">Home </Link>
-        <Link to="/board">to Board </Link>
         <Link to="/registration">Registration </Link>
       </div>
       <Routes location={background || location}>

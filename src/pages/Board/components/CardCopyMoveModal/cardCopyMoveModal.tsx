@@ -62,17 +62,14 @@ export default function CardCopyMoveModal(): JSX.Element {
           value={selectedList}
           onChange={listValueHandler}
         >
-          {currentBoard.lists ? (
+          {currentBoard.lists &&
             currentBoard.lists.map((l) => {
               return (
                 <option key={l.id} value={l.position}>
                   {l.title}
                 </option>
               );
-            })
-          ) : (
-            <option value={1}>{1}</option>
-          )}
+            })}
         </select>
         <label htmlFor="position-select">Позиция:</label>
         <select
@@ -93,12 +90,10 @@ export default function CardCopyMoveModal(): JSX.Element {
           ) : (
             <option value={1}>{1}</option>
           )}
-          {currentBoard.lists[selectedList] ? (
+          {currentBoard.lists[selectedList] && (
             <option value={currentBoard.lists[selectedList].cards.length + 1}>
               {currentBoard.lists[selectedList].cards.length + 1}
             </option>
-          ) : (
-            ''
           )}
         </select>
         <br />

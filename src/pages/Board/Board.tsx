@@ -1,18 +1,17 @@
-/* eslint-disable @typescript-eslint/indent */
-import React, { ChangeEvent, ReactElement } from 'react';
+import React, { ChangeEvent, ComponentType, ReactElement } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Outlet } from 'react-router-dom';
 import Lists from '../../common/interfaces/Lists';
 import List from './components/List/List';
 import './board.scss';
-import withRouter from '../../common/tools/wR';
 import { AppState } from '../../store/store';
 import { editNameBoard, getBoard, createList } from '../../store/modules/board/actions';
 import SingleBoard from '../../common/interfaces/OneBoard';
 import { boardInputRegex } from '../../common/constants/regExp';
 import Modal from '../Multipurpose/Modal/Modal';
 import CardEditModal from '../../common/interfaces/CardEditModal';
+import withRouter from '../../common/tools/withRouter';
 
 interface PropsType {
   board: SingleBoard;
@@ -149,11 +148,10 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
         </div>
         <div className="block-table">
           <div className="block-lists">
-            {lists
-              ? lists.map((list) => {
-                  return <List key={list.id} list={list} />;
-                })
-              : ''}
+            {lists &&
+              lists.map((list) => {
+                return <List key={list.id} list={list} />;
+              })}
           </div>
           <div className="btn-container">
             <button
@@ -165,16 +163,14 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
               +
             </button>
           </div>
-          {isVisibleModal ? (
+          {isVisibleModal && (
             <Modal
               toggleModal={this.toggleModal}
               handleValueModal={this.handleValueModal}
               handleClickCreateElement={this.handleClickCreateElement}
             />
-          ) : (
-            ''
           )}
-          {isVisibleCardEditModal ? <Outlet /> : ''}
+          {isVisibleCardEditModal && <Outlet />}
         </div>
       </div>
     );
@@ -186,4 +182,7 @@ const mapStateToProps = (store: AppState): { board: SingleBoard; cardEditModal: 
   cardEditModal: store.cardEditModal,
 });
 
-export default compose(withRouter, connect(mapStateToProps, { getBoard, editNameBoard, createList }))(Board);
+export default compose<ComponentType>(
+  withRouter,
+  connect(mapStateToProps, { getBoard, editNameBoard, createList })
+)(Board);
