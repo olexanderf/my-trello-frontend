@@ -5,7 +5,12 @@ import { fetchBoardDate } from '../../../../store/modules/cardEditModal/action';
 import { AppDispatch, AppState } from '../../../../store/store';
 import './cardCopyMoveModal.scss';
 
-export default function CardCopyMoveModal(): JSX.Element {
+interface PropsType {
+  isCopy: boolean;
+}
+
+export default function CardCopyMoveModal(props: PropsType): JSX.Element {
+  const { isCopy } = props;
   const { board_id: boardId } = useParams();
   const boards = useSelector((state: AppState) => state.boards);
   const currentBoard = useSelector((state: AppState) => state.cardEditModal.boardOnModal);
@@ -13,7 +18,7 @@ export default function CardCopyMoveModal(): JSX.Element {
   const currentCard = useSelector((state: AppState) => state.cardEditModal.cardOnModal);
   const dispatch: AppDispatch = useDispatch();
   const [indexOfBoard, setIndexOfBoard] = useState(0);
-  const [selectedList, setSelectedList] = useState(currentList.position);
+  const [selectedList, setSelectedList] = useState(currentList.position - 1);
   const [selectedCardPosition, setSelectedCardPosition] = useState(currentCard.position);
 
   useEffect(() => {
@@ -36,7 +41,7 @@ export default function CardCopyMoveModal(): JSX.Element {
 
   return (
     <div className="card-copy-move-modal-container">
-      <h3 className="card-copy-move-modal-name">Copy/Move</h3>
+      <h3 className="card-copy-move-modal-name">{isCopy ? 'Копировать' : 'Переместить'}</h3>
       <form action="" id="copy-move-card">
         <label htmlFor="board-select">Доска:</label>
         <select
@@ -46,13 +51,14 @@ export default function CardCopyMoveModal(): JSX.Element {
           value={indexOfBoard}
           onChange={boardValueHandler}
         >
-          {boards.map((b, index) => {
-            return (
-              <option key={b.id} value={index}>
-                {b.title}
-              </option>
-            );
-          })}
+          {boards &&
+            boards.map((b, index) => {
+              return (
+                <option key={b.id} value={index}>
+                  {b.title}
+                </option>
+              );
+            })}
         </select>
         <label htmlFor="list-select">Список:</label>
         <select
@@ -63,9 +69,9 @@ export default function CardCopyMoveModal(): JSX.Element {
           onChange={listValueHandler}
         >
           {currentBoard.lists &&
-            currentBoard.lists.map((l) => {
+            currentBoard.lists.map((l, index) => {
               return (
-                <option key={l.id} value={l.position}>
+                <option key={l.id} value={index}>
                   {l.title}
                 </option>
               );
@@ -98,7 +104,7 @@ export default function CardCopyMoveModal(): JSX.Element {
         </select>
         <br />
         <button className="card-copy-move-modal-btn" onClick={(e): void => e.preventDefault()}>
-          Копировать/Переместить
+          {isCopy ? 'Копировать' : 'Переместить'}
         </button>
       </form>
     </div>

@@ -175,30 +175,31 @@ export default function List(props: PropsType): JSX.Element {
         )}
       </div>
       <div className="list-item-container">
-        {cards
-          .sort((a, b) => a.position - b.position)
-          .map((card: ICard) => {
-            return (
-              <div
-                key={card.id}
-                draggable
-                className="card"
-                onDragOver={(e): void => dropOverHandler(e)}
-                onDrop={(e): void => dropHandler(e, card, list)}
-                onDragEnter={(e): void => dragEnterHandler(e)}
-                onDragLeave={(e): void => dragLeaveHandler(e)}
-                onDragStart={(e): void => startDrag(e, card, list)}
-                onDragEnd={(e): void => dragEndHandler(e)}
-              >
-                <Link
-                  to={`/board/${boardId}/card/${card.id}`}
-                  onClick={(): AnyAction => dispatch(toggleCardEditModal(true))}
+        {cards &&
+          cards
+            .sort((a, b) => a.position - b.position)
+            .map((card: ICard) => {
+              return (
+                <div
+                  key={card.id}
+                  draggable
+                  className="card"
+                  onDragOver={(e): void => dropOverHandler(e)}
+                  onDrop={(e): void => dropHandler(e, card, list)}
+                  onDragEnter={(e): void => dragEnterHandler(e)}
+                  onDragLeave={(e): void => dragLeaveHandler(e)}
+                  onDragStart={(e): void => startDrag(e, card, list)}
+                  onDragEnd={(e): void => dragEndHandler(e)}
                 >
-                  <Card card={card} state={{ background: location }} />
-                </Link>
-              </div>
-            );
-          })}
+                  <Link
+                    to={`/board/${boardId}/card/${card.id}`}
+                    onClick={(): AnyAction => dispatch(toggleCardEditModal(true))}
+                  >
+                    <Card card={card} state={{ background: location }} />
+                  </Link>
+                </div>
+              );
+            })}
         <div
           className="slot last"
           onDragOver={(e): void => dropOverHandler(e)}
@@ -212,14 +213,12 @@ export default function List(props: PropsType): JSX.Element {
           +
         </button>
       </div>
-      {isVisibleModal ? (
+      {isVisibleModal && (
         <Modal
           toggleModal={toggleModal}
           handleValueModal={setValueOfModal}
           handleClickCreateElement={handleClickCreateCard}
         />
-      ) : (
-        ''
       )}
     </div>
   );

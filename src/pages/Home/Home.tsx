@@ -78,18 +78,17 @@ class Home extends React.Component<PropsType, StateType> {
       <div className="container">
         <h3 className="table-name">Мои Доски</h3>
         <div className="table-board">
-          {boards.map((el) => {
-            return <IconBoard key={el.id} board={el} handleClickDeleteBoard={this.handleClickDeleteBoard} />;
-          })}
+          {boards &&
+            boards.map((el) => {
+              return <IconBoard key={el.id} board={el} handleClickDeleteBoard={this.handleClickDeleteBoard} />;
+            })}
         </div>
-        {isVisibleModal ? (
+        {isVisibleModal && (
           <Modal
             toggleModal={this.toggleModal}
             handleValueModal={this.handleValueModal}
             handleClickCreateElement={this.handleClickCreateElement}
           />
-        ) : (
-          ''
         )}
         <div className="btn-container">
           <button

@@ -28,6 +28,7 @@ export default function CardModal(): JSX.Element {
   const [isEditCardDescription, setEditDescription] = useState(false);
   const [valueOfDescription, setValueOfDescription] = useState('');
   const [isVisibleCopyMoveModa, setVisibleCopyMoveModal] = useState(false);
+  const [isCopyCard, setCopyCard] = useState(false);
 
   const loadCardData = (arrLists: Lists[], currentCardId: number): void => {
     let cardIndex = 0;
@@ -217,13 +218,19 @@ export default function CardModal(): JSX.Element {
           <h4 className="card-modal-actions-header">Действия</h4>
           <button
             className="card-modal-actions-btn"
-            onClick={(): void => setVisibleCopyMoveModal(!isVisibleCopyMoveModa)}
+            onClick={(): void => {
+              setCopyCard(true);
+              setVisibleCopyMoveModal(!isVisibleCopyMoveModa);
+            }}
           >
             Копировать
           </button>
           <button
             className="card-modal-actions-btn"
-            onClick={(): void => setVisibleCopyMoveModal(!isVisibleCopyMoveModa)}
+            onClick={(): void => {
+              setCopyCard(false);
+              setVisibleCopyMoveModal(!isVisibleCopyMoveModa);
+            }}
           >
             Перемещение
           </button>
@@ -233,7 +240,7 @@ export default function CardModal(): JSX.Element {
           +
         </button>
       </div>
-      {isVisibleCopyMoveModa ? <CardCopyMoveModal /> : ''}
+      {isVisibleCopyMoveModa ? <CardCopyMoveModal isCopy={isCopyCard} /> : ''}
       <div className="gray-background-box" onClick={(): void => onCardModalClose()} />
     </div>
   );
