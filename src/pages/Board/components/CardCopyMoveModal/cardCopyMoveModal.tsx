@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { createCard } from '../../../../store/modules/board/actions';
 import { fetchBoardDate } from '../../../../store/modules/cardEditModal/action';
 import { AppDispatch, AppState } from '../../../../store/store';
 import './cardCopyMoveModal.scss';
@@ -18,7 +19,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
   const currentCard = useSelector((state: AppState) => state.cardEditModal.cardOnModal);
   const dispatch: AppDispatch = useDispatch();
   const [indexOfBoard, setIndexOfBoard] = useState(0);
-  const [selectedList, setSelectedList] = useState(currentList.position - 1);
+  const [indexOfSelectedList, setIndexOfSelectedList] = useState(currentList.position - 1);
   const [selectedCardPosition, setSelectedCardPosition] = useState(currentCard.position);
 
   useEffect(() => {
@@ -33,16 +34,38 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
   };
 
   const listValueHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setSelectedList(+e.target.value);
+    setIndexOfSelectedList(+e.target.value);
   };
   const cardPositionHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setSelectedCardPosition(+e.target.value);
+  };
+  const copyCard = (targetBoardId: number, targetListId: number): void => {
+    dispatch(
+      createCard(
+        targetBoardId,
+        currentCard.title,
+        targetListId,
+        selectedCardPosition,
+        currentCard?.description,
+        currentCard?.custom
+      )
+    );
+  };
+  const submitForm = (): void => {
+    if (isCopy) copyCard(boards[indexOfBoard].id, currentBoard.lists[indexOfSelectedList].id);
   };
 
   return (
     <div className="card-copy-move-modal-container">
       <h3 className="card-copy-move-modal-name">{isCopy ? 'Копировать' : 'Переместить'}</h3>
-      <form action="" id="copy-move-card">
+      <form
+        action=""
+        id="copy-move-card"
+        onSubmit={(e): void => {
+          e.preventDefault();
+          submitForm();
+        }}
+      >
         <label htmlFor="board-select">Доска:</label>
         <select
           name="board-select"
@@ -65,7 +88,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           name="list-select"
           id="list-select"
           form="copy-move-card"
-          value={selectedList}
+          value={indexOfSelectedList}
           onChange={listValueHandler}
         >
           {currentBoard.lists &&
@@ -85,8 +108,8 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           value={selectedCardPosition}
           onChange={cardPositionHandler}
         >
-          {currentBoard.lists[selectedList] ? (
-            currentBoard.lists[selectedList].cards.map((c) => {
+          {currentBoard.lists[indexOfSelectedList] ? (
+            currentBoard.lists[indexOfSelectedList].cards.map((c) => {
               return (
                 <option key={c.id} value={c.position}>
                   {c.position}
@@ -96,14 +119,14 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           ) : (
             <option value={1}>{1}</option>
           )}
-          {currentBoard.lists[selectedList] && (
-            <option value={currentBoard.lists[selectedList].cards.length + 1}>
-              {currentBoard.lists[selectedList].cards.length + 1}
+          {currentBoard.lists[indexOfSelectedList] && (
+            <option value={currentBoard.lists[indexOfSelectedList].cards.length + 1}>
+              {currentBoard.lists[indexOfSelectedList].cards.length + 1}
             </option>
           )}
         </select>
         <br />
-        <button className="card-copy-move-modal-btn" onClick={(e): void => e.preventDefault()}>
+        <button className="card-copy-move-modal-btn" type="submit">
           {isCopy ? 'Копировать' : 'Переместить'}
         </button>
       </form>
