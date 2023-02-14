@@ -2,7 +2,7 @@ import ICard from '../interfaces/ICard';
 import Lists from '../interfaces/Lists';
 import UpdatedCards from '../interfaces/UpdatedCards';
 
-export default function cardMover(
+export default function dragCardMover(
   targetList: Lists,
   currentBoardLists: Lists[],
   dragListId: number,

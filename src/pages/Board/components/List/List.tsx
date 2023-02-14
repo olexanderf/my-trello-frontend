@@ -5,7 +5,7 @@ import { AnyAction } from 'redux';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
-import cardMover from '../../../../common/tools/cardMover';
+import dragCardMover from '../../../../common/tools/dragCardMover';
 import { createCard, editListName, moveCards } from '../../../../store/modules/board/actions';
 import { getBoards } from '../../../../store/modules/boards/actions';
 import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
@@ -84,7 +84,13 @@ export default function List(props: PropsType): JSX.Element {
 
   const dropHandler = (e: React.DragEvent<HTMLDivElement>, card: ICard, targetList: Lists): void => {
     e.preventDefault();
-    const { arrUpdatedCards, changedArrOfList } = cardMover(targetList, currentBoardLists, dragListID, dragCard, card);
+    const { arrUpdatedCards, changedArrOfList } = dragCardMover(
+      targetList,
+      currentBoardLists,
+      dragListID,
+      dragCard,
+      card
+    );
     if (boardId !== undefined) {
       dispatch(moveCards(+boardId, arrUpdatedCards, changedArrOfList));
     }
@@ -128,7 +134,7 @@ export default function List(props: PropsType): JSX.Element {
   const containerDropHandler = (e: React.DragEvent<HTMLDivElement>, targetList: Lists): void => {
     e.preventDefault();
     if (e.currentTarget.classList.contains('slot')) e.currentTarget.classList.add('last');
-    const { arrUpdatedCards, changedArrOfList } = cardMover(targetList, currentBoardLists, dragListID, dragCard);
+    const { arrUpdatedCards, changedArrOfList } = dragCardMover(targetList, currentBoardLists, dragListID, dragCard);
     if (boardId !== undefined) {
       dispatch(moveCards(+boardId, arrUpdatedCards, changedArrOfList));
     }
