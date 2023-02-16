@@ -12,7 +12,7 @@ const initialState: ICardEditModal = {
     title: 'demo',
     list_id: 0,
     position: 0,
-    description: 'demo descript',
+    description: 'demo description',
   },
 };
 export default function reducer(state = initialState, action: AnyAction): ICardEditModal {
@@ -29,6 +29,11 @@ export default function reducer(state = initialState, action: AnyAction): ICardE
       return {
         ...state,
         cardOnModal: { ...state.cardOnModal, title: action.payload.title, description: action.payload.description },
+      };
+    case 'DEFAULT_CARD':
+      return {
+        ...state,
+        cardOnModal: initialState.cardOnModal,
       };
     default:
       return state;

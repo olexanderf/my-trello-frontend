@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import UpdatedCards from '../../../../common/interfaces/UpdatedCards';
 import { createCard, moveCards } from '../../../../store/modules/board/actions';
-import { fetchBoardDate as fetchBoardData } from '../../../../store/modules/cardEditModal/action';
+import { fetchBoardDate as fetchBoardData, toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
 import { AppDispatch, AppState } from '../../../../store/store';
 import './cardCopyMoveModal.scss';
 
@@ -19,28 +19,30 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
   const currentList = useSelector((state: AppState) => state.cardEditModal.listOnModal);
   const currentCard = useSelector((state: AppState) => state.cardEditModal.cardOnModal);
   const dispatch: AppDispatch = useDispatch();
-  const [indexOfBoard, setIndexOfBoard] = useState(0);
-  const [indexOfSelectedList, setIndexOfSelectedList] = useState(currentList.position - 1);
-  const [selectedCardPosition, setSelectedCardPosition] = useState(currentCard.position);
+  const [options, setOptions] = useState({
+    indexOfBoard: 0,
+    indexOfSelectedList: currentList.position - 1,
+    selectedCardPosition: currentCard.position,
+  });
 
   useEffect(() => {
-    if (boardId !== undefined) setIndexOfBoard(boards.findIndex((b) => b.id === +boardId));
+    if (boardId !== undefined) setOptions({ ...options, indexOfBoard: boards.findIndex((b) => b.id === +boardId) });
   }, []);
 
   const boardValueHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setIndexOfBoard(+e.target.value);
+    setOptions({ ...options, indexOfBoard: +e.target.value });
     if (boardId) {
       dispatch(fetchBoardData(boards[+e.target.value].id));
     }
   };
 
   const listValueHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setIndexOfSelectedList(+e.target.value);
+    setOptions({ ...options, indexOfSelectedList: +e.target.value });
   };
   const cardPositionHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setSelectedCardPosition(+e.target.value);
+    setOptions({ ...options, selectedCardPosition: +e.target.value });
   };
-  const copyCard = (targetBoardId: number, targetListId: number, position: number): void => {
+  const createCopyCard = (targetBoardId: number, targetListId: number, position: number): void => {
     dispatch(
       createCard(
         targetBoardId,
@@ -52,30 +54,42 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
       )
     );
   };
-  const submitForm = (): void => {
-    if (isCopy) {
-      if (
-        selectedCardPosition > currentBoard.lists[indexOfSelectedList].cards.length ||
-        (selectedCardPosition === 1 && currentBoard.lists[indexOfSelectedList].cards.length === 0)
-      ) {
-        copyCard(boards[indexOfBoard].id, currentBoard.lists[indexOfSelectedList].id, selectedCardPosition);
-      } else {
-        copyCard(boards[indexOfBoard].id, currentBoard.lists[indexOfSelectedList].id, selectedCardPosition);
-        const cardsArr = currentBoard.lists[indexOfSelectedList].cards.map((c) => {
-          if (selectedCardPosition === 1) return { ...c, position: c.position + 1 };
-          if (selectedCardPosition >= c.position && selectedCardPosition > 1) {
-            return { ...c, position: c.position + 1 };
-          }
-          return { ...c };
-        });
-        const newList = { ...currentBoard.lists[indexOfSelectedList], cards: cardsArr };
-        const updatedListsArr = [...currentBoard.lists];
-        updatedListsArr.splice(indexOfSelectedList, 1, newList);
-        const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
-          return { id: c.id, position: c.position, list_id: currentBoard.lists[indexOfSelectedList].id };
-        });
-        dispatch(moveCards(boards[indexOfBoard].id, arrUpdatedCards, updatedListsArr));
+  const copyCard = (): void => {
+    if (currentBoard.lists[options.indexOfSelectedList].cards.length === 0) {
+      createCopyCard(boards[options.indexOfBoard].id, currentBoard.lists[options.indexOfSelectedList].id, 1);
+    } else {
+      createCopyCard(
+        boards[options.indexOfBoard].id,
+        currentBoard.lists[options.indexOfSelectedList].id,
+        options.selectedCardPosition
+      );
+      const cardsArr = currentBoard.lists[options.indexOfSelectedList].cards.map((c, index) => {
+        if (c.position >= options.selectedCardPosition) return { ...c, position: c.position + 1 };
+        return { ...c, position: index + 1 };
+      });
+      const newList = { ...currentBoard.lists[options.indexOfSelectedList], cards: cardsArr };
+      const updatedListsArr = [...currentBoard.lists];
+      updatedListsArr.splice(options.indexOfSelectedList, 1, newList);
+      const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
+        return { id: c.id, position: c.position, list_id: currentBoard.lists[options.indexOfSelectedList].id };
+      });
+      dispatch(moveCards(boards[options.indexOfBoard].id, arrUpdatedCards, updatedListsArr));
+      dispatch(toggleCardEditModal(false));
+    }
+  };
+  const replaceCard = (): void => {
+    // if (currentList.position !== options.indexOfSelectedList + 1) {
+    // }
+  };
+  const onSubmitForm = (): void => {
+    if (
+      currentList.position !== options.indexOfSelectedList + 1 ||
+      currentCard.position !== options.selectedCardPosition
+    ) {
+      if (isCopy) {
+        copyCard();
       }
+      replaceCard();
     }
   };
 
@@ -86,8 +100,8 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         action=""
         id="copy-move-card"
         onSubmit={(e): void => {
+          onSubmitForm();
           e.preventDefault();
-          submitForm();
         }}
       >
         <label htmlFor="board-select">Доска:</label>
@@ -95,7 +109,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           name="board-select"
           id="board-select"
           form="copy-move-card"
-          value={indexOfBoard}
+          value={options.indexOfBoard}
           onChange={(e): void => boardValueHandler(e)}
         >
           {boards &&
@@ -112,7 +126,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           name="list-select"
           id="list-select"
           form="copy-move-card"
-          value={indexOfSelectedList}
+          value={options.indexOfSelectedList}
           onChange={(e): void => listValueHandler(e)}
         >
           {currentBoard.lists &&
@@ -129,11 +143,11 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           name="position-select"
           id="position-select"
           form="copy-move-card"
-          value={selectedCardPosition}
+          value={options.selectedCardPosition}
           onChange={(e): void => cardPositionHandler(e)}
         >
-          {currentBoard.lists[indexOfSelectedList] ? (
-            currentBoard.lists[indexOfSelectedList].cards.map((c) => {
+          {currentBoard.lists[options.indexOfSelectedList] ? (
+            currentBoard.lists[options.indexOfSelectedList].cards.map((c) => {
               return (
                 <option key={c.id} value={c.position}>
                   {c.position}
@@ -143,9 +157,9 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           ) : (
             <option value={1}>{1}</option>
           )}
-          {currentBoard.lists[indexOfSelectedList] && (
-            <option value={currentBoard.lists[indexOfSelectedList].cards.length + 1}>
-              {currentBoard.lists[indexOfSelectedList].cards.length + 1}
+          {currentBoard.lists[options.indexOfSelectedList] && (
+            <option value={currentBoard.lists[options.indexOfSelectedList].cards.length + 1}>
+              {currentBoard.lists[options.indexOfSelectedList].cards.length + 1}
             </option>
           )}
         </select>

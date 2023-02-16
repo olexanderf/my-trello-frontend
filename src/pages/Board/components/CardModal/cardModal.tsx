@@ -5,6 +5,7 @@ import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import {
+  deleteCardAction,
   setBoardOnModal,
   setCardModal,
   setListOnModal,
@@ -27,7 +28,7 @@ export default function CardModal(): JSX.Element {
   const [isValidInput, setValidInput] = useState(true);
   const [isEditCardDescription, setEditDescription] = useState(false);
   const [valueOfDescription, setValueOfDescription] = useState('');
-  const [isVisibleCopyMoveModa, setVisibleCopyMoveModal] = useState(false);
+  const [isVisibleCopyMoveModal, setVisibleCopyMoveModal] = useState(false);
   const [isCopyCard, setCopyCard] = useState(false);
 
   const loadCardData = (arrLists: Lists[], currentCardId: number): void => {
@@ -83,7 +84,7 @@ export default function CardModal(): JSX.Element {
     setValueOfCardTitle(e.target.value);
   };
 
-  const changeDiscriptionValue = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+  const changeDescriptionValue = (e: ChangeEvent<HTMLTextAreaElement>): void => {
     setValueOfDescription(e.target.value);
   };
 
@@ -133,6 +134,10 @@ export default function CardModal(): JSX.Element {
       setValueOfDescription(currentCard.description);
       setEditCardTitle(false);
     }
+  };
+
+  const cardBtnArchiveHandler = (): void => {
+    if (boardId && cardId) dispatch(deleteCardAction(+boardId, +cardId));
   };
 
   return (
@@ -197,7 +202,7 @@ export default function CardModal(): JSX.Element {
               <textarea
                 className="card-modal-description-edit"
                 value={valueOfDescription}
-                onChange={changeDiscriptionValue}
+                onChange={changeDescriptionValue}
                 onClick={(e: React.MouseEvent): void => {
                   e.stopPropagation();
                 }}
@@ -220,7 +225,7 @@ export default function CardModal(): JSX.Element {
             className="card-modal-actions-btn"
             onClick={(): void => {
               setCopyCard(true);
-              setVisibleCopyMoveModal(!isVisibleCopyMoveModa);
+              setVisibleCopyMoveModal(!isVisibleCopyMoveModal);
             }}
           >
             Копировать
@@ -229,18 +234,26 @@ export default function CardModal(): JSX.Element {
             className="card-modal-actions-btn"
             onClick={(): void => {
               setCopyCard(false);
-              setVisibleCopyMoveModal(!isVisibleCopyMoveModa);
+              setVisibleCopyMoveModal(!isVisibleCopyMoveModal);
             }}
           >
             Перемещение
           </button>
-          <button className="card-modal-actions-btn archive">Архивация</button>
+          <button
+            className="card-modal-actions-btn archive"
+            onClick={(): void => {
+              cardBtnArchiveHandler();
+              setVisibleCopyMoveModal(false);
+            }}
+          >
+            Архивация
+          </button>
         </div>
         <button className="card-modal-btn-close" onClick={(): void => onCardModalClose()}>
           +
         </button>
       </div>
-      {isVisibleCopyMoveModa ? <CardCopyMoveModal isCopy={isCopyCard} /> : ''}
+      {isVisibleCopyMoveModal ? <CardCopyMoveModal isCopy={isCopyCard} /> : ''}
       <div className="gray-background-box" onClick={(): void => onCardModalClose()} />
     </div>
   );

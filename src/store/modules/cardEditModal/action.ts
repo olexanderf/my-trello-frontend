@@ -22,6 +22,9 @@ export const setCardModal = (card: ICard): PayloadAction<ICard> => {
 export const updateCardFields = (title: string, description?: string): AnyAction => {
   return { type: 'UPDATE_CARD_FIELDS', payload: { title, description } };
 };
+export const setDefaultCard = (): AnyAction => {
+  return { type: 'DEFAULT_CARD' };
+};
 
 export const fetchBoardDate = (id: number): AppThunk => {
   return async (dispatch: TypedDispatch): Promise<void> => {
@@ -48,6 +51,17 @@ export const updateCard = (
         list_id,
       });
       dispatch(updateCardFields(title, description));
+      dispatch(getBoard(board_id));
+    } catch (e) {
+      dispatch(handleResponseError(e));
+    }
+  };
+};
+export const deleteCardAction = (board_id: number, card_id: number): AppThunk => {
+  return async (dispatch: TypedDispatch): Promise<void> => {
+    try {
+      await api.delete(`/board/${board_id}/card/${card_id}`);
+      dispatch(setDefaultCard);
       dispatch(getBoard(board_id));
     } catch (e) {
       dispatch(handleResponseError(e));
