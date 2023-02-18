@@ -4,7 +4,6 @@
 import React, { ReactElement } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
-/** Use `React Router hooks` instead */
 export default function withRouter<Props extends RouteComponentProps>(
   Component: React.ComponentType<Props>
 ): React.ComponentType<Props> {

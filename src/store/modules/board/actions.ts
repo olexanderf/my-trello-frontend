@@ -87,12 +87,12 @@ export const replaceCardInList = (lists: Lists[]): PayloadAction<Lists[]> => {
   return { type: 'REPLACE_CARD_IN_LIST', payload: lists };
 };
 
-export const moveCards = (boadrd_id: number, arrUpdatedCards: UpdatedCards[], lists: Lists[]): AppThunk => {
+export const moveCards = (board_id: number, arrUpdatedCards: UpdatedCards[], lists: Lists[]): AppThunk => {
   return async (dispatch: TypedDispatch): Promise<void> => {
     dispatch(replaceCardInList(lists));
     try {
-      await api.put(`/board/${boadrd_id}/card`, arrUpdatedCards);
-      dispatch(getBoard(boadrd_id));
+      await api.put(`/board/${board_id}/card`, arrUpdatedCards);
+      dispatch(getBoard(board_id));
     } catch (e) {
       dispatch(handleResponseError(e));
     }

@@ -1,10 +1,10 @@
 import { PayloadAction, AnyAction } from '@reduxjs/toolkit';
+import { getBoard } from '../board/actions';
 import api from '../../../api/request';
 import ICard from '../../../common/interfaces/ICard';
 import Lists from '../../../common/interfaces/Lists';
 import SingleBoard from '../../../common/interfaces/OneBoard';
 import { AppThunk, TypedDispatch } from '../../store';
-import { getBoard } from '../board/actions';
 import { handleResponseError } from '../errorHandler/action';
 
 export const toggleCardEditModal = (isVisibleCardModalEdit: boolean): PayloadAction<boolean> => {

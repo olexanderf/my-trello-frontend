@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
+import UpdatedCards from '../../../../common/interfaces/UpdatedCards';
+import { moveCards } from '../../../../store/modules/board/actions';
 import {
   deleteCardAction,
   setBoardOnModal,
@@ -136,8 +138,25 @@ export default function CardModal(): JSX.Element {
     }
   };
 
-  const cardBtnArchiveHandler = (): void => {
-    if (boardId && cardId) dispatch(deleteCardAction(+boardId, +cardId));
+  const updateCardPositions = (currentBoardId: number, deleteCardId: number): void => {
+    let cardsArr = currentList.cards.filter((c) => c.id !== deleteCardId);
+    cardsArr = cardsArr.map((c: ICard, index) => {
+      return { ...c, position: index + 1 };
+    });
+    const newList = { ...currentList, cards: cardsArr };
+    const updatedListsArr = [...board.lists];
+    updatedListsArr.splice(currentList.position - 1, 1, newList);
+    const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
+      return { id: c.id, position: c.position, list_id: currentList.id };
+    });
+    dispatch(moveCards(currentBoardId, arrUpdatedCards, updatedListsArr));
+  };
+
+  const cardBtnArchiveHandler = async (): Promise<void> => {
+    if (boardId && cardId) {
+      await updateCardPositions(+boardId, +cardId);
+      await dispatch(deleteCardAction(+boardId, +cardId));
+    }
   };
 
   return (
@@ -182,7 +201,7 @@ export default function CardModal(): JSX.Element {
               <div className="card-modal-users-icon" />
               <div className="card-modal-users-icon" />
               <button className="card-modal-users-icon invite">+</button>
-              <button className="card-modal-btn-join-member">Присоедениться</button>
+              <button className="card-modal-btn-join-member">Присоединиться</button>
             </div>
           </div>
           <div className="card-modal-description">
@@ -215,7 +234,7 @@ export default function CardModal(): JSX.Element {
                 }}
               />
             ) : (
-              <p className="card-modal-desctiption-text">{currentCard.description}</p>
+              <p className="card-modal-description-text">{currentCard.description}</p>
             )}
           </div>
         </div>
@@ -243,7 +262,7 @@ export default function CardModal(): JSX.Element {
             className="card-modal-actions-btn archive"
             onClick={(): void => {
               cardBtnArchiveHandler();
-              setVisibleCopyMoveModal(false);
+              onCardModalClose();
             }}
           >
             Архивация
