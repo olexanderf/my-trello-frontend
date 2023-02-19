@@ -154,7 +154,7 @@ export default function CardModal(): JSX.Element {
 
   const cardBtnArchiveHandler = async (): Promise<void> => {
     if (boardId && cardId) {
-      await updateCardPositions(+boardId, +cardId);
+      if (currentCard.position !== currentList.cards.length) await updateCardPositions(+boardId, +cardId);
       await dispatch(deleteCardAction(+boardId, +cardId));
     }
   };
