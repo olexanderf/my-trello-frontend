@@ -57,7 +57,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         currentBoard.lists[options.indexOfSelectedList].id,
         newCardPosition
       );
-      navigate(`/board/${boardId}`);
+      navigate(`/board/${boards[options.indexOfBoard].id}`);
     } else {
       const cardsArr = currentBoard.lists[options.indexOfSelectedList].cards.map((c, index) => {
         if (c.position >= newCardPosition) return { ...c, position: c.position + 1 };
@@ -76,22 +76,28 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         currentBoard.lists[options.indexOfSelectedList].id,
         newCardPosition
       );
-      await navigate(`/board/${boardId}`);
+      await navigate(`/board/${boards[options.indexOfBoard].id}`);
     }
   };
-  const replaceCard = (): void => {
+  const replaceCard = (newCardPosition: number): void => {
     // check if selected board same that we choose on modal
-    // if (boardId && +boardId === boards[options.indexOfBoard].id) {
-    //   // check if selected list same that we choose on modal
-    //   if (currentList.id === currentBoard.lists[options.indexOfSelectedList].id) {
-    //     const cardsArr = currentBoard.lists[options.indexOfSelectedList].cards.map((c, index) => {
-    //       if (c.id === currentCard.id) return { ...c, position: options.selectedCardPosition };
-    //       if (c.position >= options.selectedCardPosition && c.id !== currentCard.id)
-    //         return { ...c, position: c.position + 1 };
-    //       return { ...c, position: index + 1 };
-    //     });
-    //   }
-    // }
+    if (boardId && +boardId === boards[options.indexOfBoard].id) {
+      // check if selected list same that we choose on modal
+      if (currentList.id === currentBoard.lists[options.indexOfSelectedList].id) {
+        const cardsArr = currentBoard.lists[options.indexOfSelectedList].cards.map((c, index) => {
+          if (c.id === currentCard.id) return { ...c, position: newCardPosition };
+          if (c.position >= newCardPosition && c.id !== currentCard.id) return { ...c, position: c.position + 1 };
+          return { ...c, position: index + 1 };
+        });
+        const newList = { ...currentBoard.lists[options.indexOfSelectedList], cards: cardsArr };
+        const updatedListsArr = [...currentBoard.lists];
+        updatedListsArr.splice(options.indexOfSelectedList, 1, newList);
+        const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
+          return { id: c.id, position: c.position, list_id: currentBoard.lists[options.indexOfSelectedList].id };
+        });
+        dispatch(moveCards(boards[options.indexOfBoard].id, arrUpdatedCards, updatedListsArr));
+      }
+    }
     // if (currentList.position !== options.indexOfSelectedList + 1) {
     // }
   };
@@ -104,7 +110,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
     ) {
       if (isCopy) {
         copyCard(newCardPosition);
-      } else replaceCard();
+      } else replaceCard(newCardPosition);
     }
   };
 
@@ -166,7 +172,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           ) : (
             <option value={1}>{1}</option>
           )}
-          {currentBoard.lists[options.indexOfSelectedList] && (
+          {currentBoard.lists[options.indexOfSelectedList] && isCopy && (
             <option value={currentBoard.lists[options.indexOfSelectedList].cards.length + 1}>
               {currentBoard.lists[options.indexOfSelectedList].cards.length + 1}
             </option>
