@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import ICard from '../../../../common/interfaces/ICard';
 import UpdatedCards from '../../../../common/interfaces/UpdatedCards';
 import { createCard, moveCards } from '../../../../store/modules/board/actions';
 import { fetchBoardDate as fetchBoardData } from '../../../../store/modules/cardEditModal/action';
@@ -79,14 +80,16 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
       await navigate(`/board/${boards[options.indexOfBoard].id}`);
     }
   };
-  const replaceCard = (newCardPosition: number): void => {
+  const replaceCard = async (newCardPosition: number): Promise<void> => {
     // check if selected board same that we choose on modal
     if (boardId && +boardId === boards[options.indexOfBoard].id) {
       // check if selected list same that we choose on modal
       if (currentList.id === currentBoard.lists[options.indexOfSelectedList].id) {
-        const cardsArr = currentBoard.lists[options.indexOfSelectedList].cards.map((c, index) => {
-          if (c.id === currentCard.id) return { ...c, position: newCardPosition };
-          if (c.position >= newCardPosition && c.id !== currentCard.id) return { ...c, position: c.position + 1 };
+        const newCard: ICard = { ...currentCard };
+        let cardsArr = [...currentBoard.lists[options.indexOfSelectedList].cards];
+        cardsArr.splice(currentCard.position - 1, 1);
+        cardsArr.splice(newCardPosition - 1, 0, newCard);
+        cardsArr = cardsArr.map((c, index) => {
           return { ...c, position: index + 1 };
         });
         const newList = { ...currentBoard.lists[options.indexOfSelectedList], cards: cardsArr };
@@ -95,7 +98,8 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
           return { id: c.id, position: c.position, list_id: currentBoard.lists[options.indexOfSelectedList].id };
         });
-        dispatch(moveCards(boards[options.indexOfBoard].id, arrUpdatedCards, updatedListsArr));
+        await dispatch(moveCards(boards[options.indexOfBoard].id, arrUpdatedCards, updatedListsArr));
+        await navigate(`/board/${boards[options.indexOfBoard].id}`);
       }
     }
     // if (currentList.position !== options.indexOfSelectedList + 1) {
