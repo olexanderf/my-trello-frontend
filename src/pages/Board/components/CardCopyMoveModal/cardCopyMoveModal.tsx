@@ -23,14 +23,22 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
   const cardOnModal = useSelector((state: AppState) => state.cardEditModal.cardOnModal);
   const dispatch: AppDispatch = useDispatch();
   const [options, setOptions] = useState({
-    indexOfBoard: 0,
+    indexOfBoard: boards.findIndex((b) => boardId && b.id === +boardId) || 0,
     indexOfSelectedList: listOnModal.position - 1,
   });
-  const selectValue = useRef<HTMLSelectElement>(null);
+  const selectCardPosition = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
-    if (boardId !== undefined) setOptions({ ...options, indexOfBoard: boards.findIndex((b) => b.id === +boardId) });
+    if (boardId !== undefined)
+      setOptions({
+        ...options,
+        indexOfBoard: boards.findIndex((b) => b.id === +boardId),
+      });
   }, []);
+
+  useEffect(() => {
+    if (boardId && +boardId !== +boards[options.indexOfBoard].id) setOptions({ ...options, indexOfSelectedList: 0 });
+  }, [options.indexOfBoard]);
 
   const boardValueHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setOptions({ ...options, indexOfBoard: +e.target.value });
@@ -40,7 +48,12 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
   const listValueHandler = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setOptions({ ...options, indexOfSelectedList: +e.target.value });
   };
-  const createCopyCard = (targetBoardId: number, targetListId: number, position: number): void => {
+  const createCopyCard = (
+    targetBoardId: number,
+    targetListId: number,
+    position: number,
+    noFetchBoard?: boolean
+  ): void => {
     dispatch(
       createCard(
         targetBoardId,
@@ -48,7 +61,8 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         targetListId,
         position,
         cardOnModal?.description,
-        cardOnModal?.custom
+        cardOnModal?.custom,
+        noFetchBoard
       )
     );
   };
@@ -81,9 +95,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
       await navigate(`/board/${boards[options.indexOfBoard].id}`);
     }
   };
-  // const updateTargetArrCardsPosition = async (newCardPosition: number): Promise<void> => {
 
-  // };
   const replaceCard = async (newCardPosition: number): Promise<void> => {
     // create copy card
     const newCard: ICard = { ...cardOnModal };
@@ -91,7 +103,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
     let cardsArr = [...listOnModal.cards];
     cardsArr.splice(cardOnModal.position - 1, 1);
     // check if selected board same that we choose on modal
-    if (boardId && +boardId === boards[options.indexOfBoard].id) {
+    if (boardId && +boardId === +boards[options.indexOfBoard].id) {
       // check if selected list same that we choose on modal
       if (listOnModal.id === selectedBoard.lists[options.indexOfSelectedList].id) {
         cardsArr.splice(newCardPosition - 1, 0, newCard);
@@ -138,47 +150,49 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         await navigate(`/board/${boardId}`);
       }
     } else {
-      // replace card position where delete card
-      cardsArr = cardsArr.map((c, index) => {
-        return { ...c, position: index + 1 };
-      });
-
-      const newList = { ...boardOnScreen.lists[listOnModal.position - 1], cards: cardsArr };
-      const startListsArr = [...boardOnScreen.lists];
-      startListsArr.splice(listOnModal.position - 1, 1, newList);
-
-      const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
-        return { id: c.id, position: c.position, list_id: boardOnScreen.lists[listOnModal.position - 1].id };
-      });
-
-      if (boardId) await dispatch(moveCards(+boardId, arrUpdatedCards, startListsArr));
       await createCopyCard(
         boards[options.indexOfBoard].id,
         selectedBoard.lists[options.indexOfSelectedList].id,
-        newCardPosition
+        newCardPosition,
+        true
       );
-      if (boardId) await dispatch(deleteCardAction(+boardId, cardOnModal.id));
-      // if (selectedBoard.lists[options.indexOfSelectedList].cards.length !== 0) {
-      //   let targetArrOfCards = [...selectedBoard.lists[options.indexOfSelectedList].cards];
-      //   targetArrOfCards = targetArrOfCards.map((c, index) => {
-      //     if (c.position >= newCardPosition) return { ...c, position: c.position + 1 };
-      //     return { ...c, position: index + 1 };
-      //   });
-      //   const newTargetList = { ...selectedBoard.lists[options.indexOfSelectedList], cards: targetArrOfCards };
-      //   const updatedListsArr = [...selectedBoard.lists];
-      //   updatedListsArr.splice(options.indexOfSelectedList, 1, newTargetList);
-      //   const targetArrUpdatedCards: UpdatedCards[] = targetArrOfCards.map((c) => {
-      //     return { id: c.id, position: c.position, list_id: selectedBoard.lists[options.indexOfSelectedList].id };
-      //   });
-      //   await dispatch(moveCards(+boards[options.indexOfBoard].id, targetArrUpdatedCards, updatedListsArr));
-      // }
-      // updateTargetArrCardsPosition(newCardPosition);
+      // replace card position where delete card
+      if (cardsArr.length > 0) {
+        cardsArr = cardsArr.map((c, index) => {
+          return { ...c, position: index + 1 };
+        });
+
+        const newList = { ...boardOnScreen.lists[listOnModal.position - 1], cards: cardsArr };
+        const startListsArr = [...boardOnScreen.lists];
+        startListsArr.splice(listOnModal.position - 1, 1, newList);
+
+        const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
+          return { id: c.id, position: c.position, list_id: boardOnScreen.lists[listOnModal.position - 1].id };
+        });
+        if (boardId) await dispatch(moveCards(+boardId, arrUpdatedCards, startListsArr, true));
+      }
+      if (boardId) await dispatch(deleteCardAction(+boardId, cardOnModal.id, true));
+      // replace target cards arr positions
+      if (selectedBoard.lists[options.indexOfSelectedList].cards.length !== 0) {
+        let targetArrOfCards = [...selectedBoard.lists[options.indexOfSelectedList].cards];
+        targetArrOfCards = targetArrOfCards.map((c, index) => {
+          if (c.position >= newCardPosition) return { ...c, position: c.position + 1 };
+          return { ...c, position: index + 1 };
+        });
+        const newTargetList = { ...selectedBoard.lists[options.indexOfSelectedList], cards: targetArrOfCards };
+        const updatedListsArr = [...selectedBoard.lists];
+        updatedListsArr.splice(options.indexOfSelectedList, 1, newTargetList);
+        const targetArrUpdatedCards: UpdatedCards[] = targetArrOfCards.map((c) => {
+          return { id: c.id, position: c.position, list_id: selectedBoard.lists[options.indexOfSelectedList].id };
+        });
+        await dispatch(moveCards(+boards[options.indexOfBoard].id, targetArrUpdatedCards, updatedListsArr));
+      }
       await navigate(`/board/${boards[options.indexOfBoard].id}`);
     }
   };
 
   const onSubmitForm = (): void => {
-    const newCardPosition = Number(selectValue.current?.value);
+    const newCardPosition = Number(selectCardPosition.current?.value);
     if (
       (boardId && +boardId !== boards[options.indexOfBoard].id) ||
       listOnModal.position !== options.indexOfSelectedList + 1 ||
@@ -236,7 +250,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
             })}
         </select>
         <label htmlFor="position-select">Позиция:</label>
-        <select name="position-select" id="position-select" form="copy-move-card" ref={selectValue}>
+        <select name="position-select" id="position-select" form="copy-move-card" ref={selectCardPosition}>
           {selectedBoard.lists[options.indexOfSelectedList] ? (
             selectedBoard.lists[options.indexOfSelectedList].cards.map((c) => {
               return (
@@ -248,11 +262,12 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           ) : (
             <option value={1}>{1}</option>
           )}
-          {selectedBoard.lists[options.indexOfSelectedList].id !== listOnModal.id && (
-            <option value={selectedBoard.lists[options.indexOfSelectedList].cards.length + 1}>
-              {selectedBoard.lists[options.indexOfSelectedList].cards.length + 1}
-            </option>
-          )}
+          {selectedBoard.lists[options.indexOfSelectedList] &&
+            selectedBoard.lists[options.indexOfSelectedList].id !== listOnModal.id && (
+              <option value={selectedBoard.lists[options.indexOfSelectedList].cards.length + 1}>
+                {selectedBoard.lists[options.indexOfSelectedList].cards.length + 1}
+              </option>
+            )}
         </select>
         <br />
         <button className="card-copy-move-modal-btn" type="submit">

@@ -25,7 +25,7 @@ export const editNameBoard = (id: number, boardName: string): AppThunk => {
       });
       await dispatch({ type: 'UPDATE_BOARD_NAME', payload: boardName });
       // console.log(response);
-      dispatch(getBoard(id));
+      await dispatch(getBoard(id));
     } catch (e) {
       dispatch(handleResponseError(e));
     }
@@ -39,7 +39,7 @@ export const createList = (id: number, listName: string, position: number): AppT
         position,
       });
       await dispatch({ type: 'CREATE_LIST' });
-      dispatch(getBoard(id));
+      await dispatch(getBoard(id));
     } catch (e) {
       dispatch(handleResponseError(e));
     }
@@ -53,7 +53,7 @@ export const editListName = (board_id: number, listName: string, list_id: number
         position,
       });
       await dispatch({ type: 'UPDATE_LIST_NAME' });
-      dispatch(getBoard(board_id));
+      await dispatch(getBoard(board_id));
     } catch (e) {
       dispatch(handleResponseError(e));
     }
@@ -65,7 +65,8 @@ export const createCard = (
   list_id: number,
   position: number,
   description?: string,
-  custom?: object
+  custom?: object,
+  noFetchBoard?: boolean
 ): AppThunk => {
   return async (dispatch: TypedDispatch): Promise<void> => {
     try {
@@ -77,7 +78,7 @@ export const createCard = (
         custom,
       });
       await dispatch({ type: 'CREATE_CARD' });
-      dispatch(getBoard(board_id));
+      if (!noFetchBoard) await dispatch(getBoard(board_id));
     } catch (e) {
       dispatch(handleResponseError(e));
     }
@@ -87,12 +88,17 @@ export const replaceCardInList = (lists: Lists[]): PayloadAction<Lists[]> => {
   return { type: 'REPLACE_CARD_IN_LIST', payload: lists };
 };
 
-export const moveCards = (board_id: number, arrUpdatedCards: UpdatedCards[], lists: Lists[]): AppThunk => {
+export const moveCards = (
+  board_id: number,
+  arrUpdatedCards: UpdatedCards[],
+  lists: Lists[],
+  noFetchBoard?: boolean
+): AppThunk => {
   return async (dispatch: TypedDispatch): Promise<void> => {
     dispatch(replaceCardInList(lists));
     try {
       await api.put(`/board/${board_id}/card`, arrUpdatedCards);
-      dispatch(getBoard(board_id));
+      if (!noFetchBoard) await dispatch(getBoard(board_id));
     } catch (e) {
       dispatch(handleResponseError(e));
     }

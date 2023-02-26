@@ -50,19 +50,19 @@ export const updateCard = (
         description,
         list_id,
       });
-      dispatch(updateCardFields(title, description));
-      dispatch(getBoard(board_id));
+      await dispatch(updateCardFields(title, description));
+      await dispatch(getBoard(board_id));
     } catch (e) {
       dispatch(handleResponseError(e));
     }
   };
 };
-export const deleteCardAction = (board_id: number, card_id: number): AppThunk => {
+export const deleteCardAction = (board_id: number, card_id: number, noFetchBoard?: boolean): AppThunk => {
   return async (dispatch: TypedDispatch): Promise<void> => {
     try {
       await api.delete(`/board/${board_id}/card/${card_id}`);
-      dispatch(setDefaultCard);
-      dispatch(getBoard(board_id));
+      await dispatch(setDefaultCard);
+      if (!noFetchBoard) await dispatch(getBoard(board_id));
     } catch (e) {
       dispatch(handleResponseError(e));
     }

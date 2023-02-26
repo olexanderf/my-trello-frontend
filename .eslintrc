@@ -5,7 +5,8 @@
     "airbnb",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
-    "airbnb-typescript"
+    "airbnb-typescript",
+    "prettier"
   ],
   "parserOptions": {
     "ecmaVersion": 2018,
@@ -56,7 +57,7 @@
     "eol-last": "error",
     "no-console": "error",
     "comma-dangle": "off",
-    "@typescript-eslint/comma-dangle": "off",
+    "@typescript-eslint/comma-dangle": "off"
   },
   "overrides": []
 }
