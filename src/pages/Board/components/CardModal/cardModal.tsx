@@ -17,6 +17,7 @@ import {
 import { AppDispatch, AppState } from '../../../../store/store';
 import CardCopyMoveModal from '../CardCopyMoveModal/cardCopyMoveModal';
 import './cardModal.scss';
+import LinkComponent from './LinkComponent/LinkComponent';
 
 export default function CardModal(): JSX.Element {
   const navigate = useNavigate();
@@ -49,19 +50,6 @@ export default function CardModal(): JSX.Element {
       dispatch(setCardModal(arrLists[indexList].cards[cardIndex]));
     }
   };
-
-  // const createUrls = (text: string): string => {
-  //   const words = text.split(' ');
-  //   const nw = words.map((t) => {
-  //     if (t.match(urlRgx))
-  //       return (
-  //         <>
-  //           `<a href={t}>${t}</a>`;
-  //         </>
-  //       );
-  //   });
-  //   return nw.join(' ');
-  // };
 
   useEffect(() => {
     if (cardId !== undefined) loadCardData(board.lists, +cardId);
@@ -130,11 +118,11 @@ export default function CardModal(): JSX.Element {
   const endEditDescription = (e: React.KeyboardEvent): void => {
     if (e.key === 'Enter') {
       updateCardFields();
-      setEditCardTitle(false);
+      setEditDescription(false);
     }
     if (e.key === 'Escape' && currentCard.description !== undefined) {
       setValueOfDescription(currentCard.description);
-      setEditCardTitle(false);
+      setEditDescription(false);
     }
   };
 
@@ -234,7 +222,9 @@ export default function CardModal(): JSX.Element {
                 }}
               />
             ) : (
-              <p className="card-modal-description-text">{currentCard.description}</p>
+              <p className="card-modal-description-text">
+                {currentCard.description && <LinkComponent text={currentCard.description} />}
+              </p>
             )}
           </div>
         </div>

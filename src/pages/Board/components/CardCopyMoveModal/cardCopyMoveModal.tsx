@@ -171,7 +171,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         });
         if (boardId) await dispatch(moveCards(+boardId, arrUpdatedCards, startListsArr, true));
       }
-      if (boardId) await dispatch(deleteCardAction(+boardId, cardOnModal.id, true));
+      if (boardId) await dispatch(deleteCardAction(+boardId, cardOnModal.id));
       // replace target cards arr positions
       if (selectedBoard.lists[options.indexOfSelectedList].cards.length !== 0) {
         let targetArrOfCards = [...selectedBoard.lists[options.indexOfSelectedList].cards];
