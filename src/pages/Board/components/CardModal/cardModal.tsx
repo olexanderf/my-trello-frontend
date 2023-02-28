@@ -81,7 +81,7 @@ export default function CardModal(): JSX.Element {
   const updateCardFields = (): void => {
     if (valueOfCardTitle.match(boardInputRegex) && boardId && cardId && valueOfCardTitle !== currentCard.title) {
       setValidInput(true);
-      dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle));
+      dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle, currentCard.description));
       setEditCardTitle(false);
     }
     if (valueOfCardTitle.match(boardInputRegex) && valueOfCardTitle === currentCard.title) {

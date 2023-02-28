@@ -156,7 +156,16 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         newCardPosition,
         true
       );
+      // const crd: ICard = {
+      //   id: boards[options.indexOfBoard].id,
+      //   list_id: selectedBoard.lists[options.indexOfSelectedList].id,
+      //   position: newCardPosition,
+      //   title: cardOnModal.title,
+      //   description: cardOnModal.description,
+      //   custom: cardOnModal.custom,
+      // };
       // replace card position where delete card
+      // let arr1 = {};
       if (cardsArr.length > 0) {
         cardsArr = cardsArr.map((c, index) => {
           return { ...c, position: index + 1 };
@@ -170,9 +179,12 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           return { id: c.id, position: c.position, list_id: boardOnScreen.lists[listOnModal.position - 1].id };
         });
         if (boardId) await dispatch(moveCards(+boardId, arrUpdatedCards, startListsArr, true));
+        // arr1 = { boardId: +boardId, arrUpdatedCards: arrUpdatedCards, startListsArr: startListsArr };
       }
       if (boardId) await dispatch(deleteCardAction(+boardId, cardOnModal.id));
+      // const delcrd = { boardId: +boardId, cardOnModalId: cardOnModal.id };
       // replace target cards arr positions
+      // let arr2 = {};
       if (selectedBoard.lists[options.indexOfSelectedList].cards.length !== 0) {
         let targetArrOfCards = [...selectedBoard.lists[options.indexOfSelectedList].cards];
         targetArrOfCards = targetArrOfCards.map((c, index) => {
@@ -186,7 +198,13 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           return { id: c.id, position: c.position, list_id: selectedBoard.lists[options.indexOfSelectedList].id };
         });
         await dispatch(moveCards(+boards[options.indexOfBoard].id, targetArrUpdatedCards, updatedListsArr));
+        //   arr2 = {
+        //     boardId: boards[options.indexOfBoard].id,
+        //     targetArrUpdatedCards: targetArrUpdatedCards,
+        //     updatedListsArr: updatedListsArr,
+        //   };
       }
+      // replaceCardAction(crd, arr1, delcrd, arr2);
       await navigate(`/board/${boards[options.indexOfBoard].id}`);
     }
   };
