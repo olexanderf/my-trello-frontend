@@ -147,9 +147,14 @@ export default function CardModal(): JSX.Element {
     }
   };
 
+  const cardModalContainerHandler = (e: React.MouseEvent): void => {
+    e.stopPropagation();
+    if (isVisibleCopyMoveModal) setVisibleCopyMoveModal(false);
+  };
+
   return (
     <div>
-      <div className="card-modal-container">
+      <div className="card-modal-container" onClick={cardModalContainerHandler}>
         <div className="card-modal-container-main">
           {isEditCardTitle ? (
             <input
@@ -198,7 +203,7 @@ export default function CardModal(): JSX.Element {
               <button
                 className="card-modal-description-btn-edit"
                 onClick={(e: React.MouseEvent): void => {
-                  setEditDescription(true);
+                  setEditDescription(!isEditCardDescription);
                   e.stopPropagation();
                 }}
               >
@@ -231,29 +236,36 @@ export default function CardModal(): JSX.Element {
         <div className="card-modal-actions-container">
           <h4 className="card-modal-actions-header">Действия</h4>
           <button
-            className="card-modal-actions-btn"
+            className={
+              isVisibleCopyMoveModal && !isCopyCard ? 'card-modal-actions-btn disabled' : 'card-modal-actions-btn'
+            }
             onClick={(): void => {
               setCopyCard(true);
               setVisibleCopyMoveModal(!isVisibleCopyMoveModal);
             }}
+            disabled={isVisibleCopyMoveModal && !isCopyCard}
           >
             Копировать
           </button>
           <button
-            className="card-modal-actions-btn"
+            className={
+              isVisibleCopyMoveModal && isCopyCard ? 'card-modal-actions-btn disabled' : 'card-modal-actions-btn'
+            }
             onClick={(): void => {
               setCopyCard(false);
               setVisibleCopyMoveModal(!isVisibleCopyMoveModal);
             }}
+            disabled={isVisibleCopyMoveModal && isCopyCard}
           >
             Перемещение
           </button>
           <button
-            className="card-modal-actions-btn archive"
+            className={isVisibleCopyMoveModal ? 'card-modal-actions-btn disabled' : 'card-modal-actions-btn archive'}
             onClick={(): void => {
               cardBtnArchiveHandler();
               onCardModalClose();
             }}
+            disabled={isVisibleCopyMoveModal}
           >
             Архивация
           </button>

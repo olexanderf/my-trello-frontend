@@ -19,6 +19,8 @@ export default function reducer(state = initialState, action: AnyAction): Single
       return { ...state };
     case 'CREATE_CARD':
       return { ...state };
+    case 'DELETE_LIST':
+      return { ...state, lists: state.lists.filter((l) => l.id !== action.payload) };
     case 'REPLACE_CARD_IN_LIST':
       return { ...state, lists: action.payload };
     default: {

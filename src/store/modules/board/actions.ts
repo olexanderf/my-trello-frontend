@@ -59,6 +59,17 @@ export const editListName = (board_id: number, listName: string, list_id: number
     }
   };
 };
+export const deleteListAction = (board_id: number, list_id: number): AppThunk => {
+  return async (dispatch: TypedDispatch): Promise<void> => {
+    try {
+      await api.delete(`/board/${board_id}/list/${list_id}`);
+      await dispatch({ type: 'DELETE_LIST', payload: list_id });
+      await dispatch(getBoard(board_id));
+    } catch (e) {
+      dispatch(handleResponseError(e));
+    }
+  };
+};
 export const createCard = (
   board_id: number,
   title: string,

@@ -68,16 +68,3 @@ export const deleteCardAction = (board_id: number, card_id: number, noFetchBoard
     }
   };
 };
-// export const replaceCardAction = (card: ICard, arr1, delcrd, arr2): AppThunk => {
-//   return async (dispatch: TypedDispatch): Promise<void> => {
-//     try {
-//       await dispatch(createCard(card.id, card.title, card.list_id, card.position, card.description, card.custom));
-//       await dispatch(deleteCardAction(delcrd.boardId, delcrd.cardOnModalId));
-//       if (arr1.id !== undefined) await dispatch(moveCards(arr1.boardId, arr1.arrUpdatedCards, arr1.startListsArr));
-//       if (arr2.id !== undefined)
-//         await dispatch(moveCards(arr2.boardId, arr2.targetArrUpdatedCards, arr2.updatedListsArr));
-//     } catch (e) {
-//       dispatch(handleResponseError(e));
-//     }
-//   };
-// };

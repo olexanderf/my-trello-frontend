@@ -1,5 +1,6 @@
 .board-on-table-container {
   min-height: 170px;
+  transition: all 0.2s ease-in;
 }
 .board-on-table {
   width: 200px;
@@ -15,7 +16,7 @@
   }
 }
 .board-on-table-container:hover .btn-delete {
-    display: inline-block;
+    opacity: 1;
   }
 a {
   text-decoration: none;
@@ -37,7 +38,7 @@ a {
   }
 }
 .btn-delete {
-  display: none;
+  opacity: 0;
   cursor: pointer;
   border-radius: 50%;
   background-color:rgb(247, 76, 9);

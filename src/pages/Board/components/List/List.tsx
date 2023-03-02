@@ -6,7 +6,7 @@ import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import dragCardMover from '../../../../common/tools/dragCardMover';
-import { createCard, editListName, moveCards } from '../../../../store/modules/board/actions';
+import { createCard, deleteListAction, editListName, moveCards } from '../../../../store/modules/board/actions';
 import { getBoards } from '../../../../store/modules/boards/actions';
 import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
@@ -145,6 +145,10 @@ export default function List(props: PropsType): JSX.Element {
   const containerDragLeaveHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     if (e.currentTarget.classList.contains('slot')) e.currentTarget.classList.add('last');
   };
+  const deleteList = (e: React.MouseEvent): void => {
+    e.stopPropagation();
+    if (boardId) dispatch(deleteListAction(+boardId, id));
+  };
 
   return (
     <div className="list">
@@ -177,7 +181,12 @@ export default function List(props: PropsType): JSX.Element {
             }}
           />
         ) : (
-          <h2>{title}</h2>
+          <>
+            <h2>{title}</h2>
+            <button className="list-btn-delete" onClick={deleteList}>
+              +
+            </button>
+          </>
         )}
       </div>
       <div className="list-item-container">
