@@ -68,3 +68,22 @@ export const deleteCardAction = (board_id: number, card_id: number, noFetchBoard
     }
   };
 };
+// export const mvCrd = (card, targetBoardId: number, delCardData, startMove?, targetMove?): AppThunk => {
+//   return async (dispatch: TypedDispatch): Promise<void> => {
+//     try {
+//       await dispatch(
+//         createCard(card.board_id, card.title, card.list_id, card.position, card?.description, card?.custom, true)
+//       );
+//       await dispatch(deleteCardAction(delCardData.boardId, delCardData.cardId, true));
+//       if (startMove.boardId)
+//         await dispatch(moveCards(startMove.boardId, startMove.arrUpdatedCards, startMove.startListsArr, true));
+//       if (targetMove.tboardId)
+//         await dispatch(
+//           moveCards(targetMove.tboardId, targetMove.targetArrUpdatedCards, targetMove.updatedListsArr, true)
+//         );
+//       await getBoard(card.board_id);
+//     } catch (e) {
+//       dispatch(handleResponseError(e));
+//     }
+//   };
+// };

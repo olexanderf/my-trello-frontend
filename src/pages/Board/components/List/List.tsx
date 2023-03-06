@@ -5,8 +5,15 @@ import { AnyAction } from 'redux';
 import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
+import UpdatedLists from '../../../../common/interfaces/UpdatedLists';
 import dragCardMover from '../../../../common/tools/dragCardMover';
-import { createCard, deleteListAction, editListName, moveCards } from '../../../../store/modules/board/actions';
+import {
+  createCard,
+  deleteListAction,
+  editListName,
+  moveCards,
+  updateListsPositionAction,
+} from '../../../../store/modules/board/actions';
 import { getBoards } from '../../../../store/modules/boards/actions';
 import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
@@ -26,6 +33,7 @@ export default function List(props: PropsType): JSX.Element {
   const dispatch: AppDispatch = useDispatch();
   const location = useLocation();
   const isVisibleCardModal = useSelector((state: AppState) => state.cardEditModal.isVisibleCardModalEdit);
+  const listsArr = useSelector((state: AppState) => state.board.lists);
 
   // work with list name change
   const [isValidInput, setValidInput] = useState(true);
@@ -145,9 +153,24 @@ export default function List(props: PropsType): JSX.Element {
   const containerDragLeaveHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     if (e.currentTarget.classList.contains('slot')) e.currentTarget.classList.add('last');
   };
+  const updateListsPosition = (arrLists: Lists[], listId: number): void => {
+    let newLists = [...arrLists];
+    newLists = newLists
+      .filter((l) => l.id !== listId)
+      .map((l, index) => {
+        return { ...l, position: index + 1 };
+      });
+    const updatedLists: UpdatedLists[] = newLists.map((l) => {
+      return { id: l.id, position: l.position };
+    });
+    if (boardId) dispatch(updateListsPositionAction(+boardId, listId, updatedLists));
+  };
+
   const deleteList = (e: React.MouseEvent): void => {
     e.stopPropagation();
-    if (boardId) dispatch(deleteListAction(+boardId, id));
+    if (boardId && position === listsArr.length) {
+      dispatch(deleteListAction(+boardId, id));
+    } else updateListsPosition(listsArr, id);
   };
 
   return (

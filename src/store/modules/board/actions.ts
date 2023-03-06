@@ -5,6 +5,7 @@ import Lists from '../../../common/interfaces/Lists';
 import SingleBoard from '../../../common/interfaces/OneBoard';
 import UpdatedCards from '../../../common/interfaces/UpdatedCards';
 import { handleResponseError } from '../errorHandler/action';
+import UpdatedLists from '../../../common/interfaces/UpdatedLists';
 
 export const getBoard = (id: number): AppThunk => {
   return async (dispatch: TypedDispatch): Promise<void> => {
@@ -110,6 +111,21 @@ export const moveCards = (
     try {
       await api.put(`/board/${board_id}/card`, arrUpdatedCards);
       if (!noFetchBoard) await dispatch(getBoard(board_id));
+    } catch (e) {
+      dispatch(handleResponseError(e));
+    }
+  };
+};
+
+export const updateListsPositionAction = (
+  board_id: number,
+  list_id: number,
+  updatedLists: UpdatedLists[]
+): AppThunk => {
+  return async (dispatch: TypedDispatch): Promise<void> => {
+    try {
+      await api.put(`/board/${board_id}/list`, updatedLists);
+      await dispatch(deleteListAction(board_id, list_id));
     } catch (e) {
       dispatch(handleResponseError(e));
     }
