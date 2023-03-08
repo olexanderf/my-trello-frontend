@@ -1,8 +1,7 @@
-import { MovedICard } from './../../../common/interfaces/ICard.d';
 import { PayloadAction, AnyAction } from '@reduxjs/toolkit';
+import ICard, { MovedICard } from '../../../common/interfaces/ICard.d';
 import { createCard, getBoard, moveCards } from '../board/actions';
 import api from '../../../api/request';
-import ICard from '../../../common/interfaces/ICard';
 import Lists from '../../../common/interfaces/Lists';
 import SingleBoard from '../../../common/interfaces/OneBoard';
 import { AppThunk, TypedDispatch } from '../../store';
@@ -82,8 +81,8 @@ export const moveCardAnotherBoard = (
         createCard(card.board_id, card.title, card.list_id, card.position, card?.description, card?.custom, true)
       );
       await dispatch(deleteCardAction(deleteCardData.boardId, deleteCardData.cardId, true));
-      if (startMove.boardId) await dispatch(moveCards(startMove.boardId, startMove.cards, startMove.lists, true));
-      if (targetMove.tboardId) await dispatch(moveCards(targetMove.boardId, targetMove.cards, targetMove.lists, true));
+      if (startMove) await dispatch(moveCards(startMove.boardId, startMove.cards, startMove.lists, true));
+      if (targetMove) await dispatch(moveCards(targetMove.boardId, targetMove.cards, targetMove.lists, true));
     } catch (e) {
       dispatch(handleResponseError(e));
     }
