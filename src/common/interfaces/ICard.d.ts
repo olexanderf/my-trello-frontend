@@ -6,3 +6,6 @@ export default interface ICard {
   description?: string;
   custom?: object;
 }
+export interface MovedICard extends Omit<ICard, 'id'> {
+  board_id: number;
+}

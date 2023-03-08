@@ -13,6 +13,9 @@ const updateCardPositions = (
   let arrOfCards = cardsArr;
   if (newCard && newPosition) arrOfCards.splice(newPosition - 1, 0, newCard);
   arrOfCards = cardsArr.map((c, index) => {
+    // case if card move to another board and need to replace position in cards arr
+    if (newPosition && !newCard && c.position >= newPosition) return { ...c, position: c.position + 1 };
+
     return { ...c, position: index + 1 };
   });
   const newList = { ...targetBoard.lists[indexOfList], cards: arrOfCards };

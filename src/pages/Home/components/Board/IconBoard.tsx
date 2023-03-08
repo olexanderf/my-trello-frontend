@@ -1,8 +1,11 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import randomColor from 'randomcolor';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import Board from '../../../../common/interfaces/Board';
 import './iconBoard.scss';
+import { TypedDispatch } from '../../../../store/store';
+import { setColorIconBoard } from '../../../../store/modules/boards/actions';
 
 type PropsType = {
   board: Board;
@@ -11,12 +14,16 @@ type PropsType = {
 
 export default function IconBoard(props: PropsType): ReactElement {
   const { handleClickDeleteBoard, board } = props;
-  const { title, id } = board;
+  const { title, id, custom } = board;
   const color = randomColor();
+  const dispatch: TypedDispatch = useDispatch();
+  useEffect(() => {
+    if (!custom?.color && id) dispatch(setColorIconBoard(id, color));
+  }, []);
   return (
     <div className="board-on-table-container">
       <Link to={`/board/${id}`}>
-        <div className="board-on-table" style={{ backgroundColor: color }}>
+        <div className="board-on-table" style={{ backgroundColor: custom?.color }}>
           <p>{title}</p>
         </div>
       </Link>

@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import ICard from '../../../../common/interfaces/ICard';
+import ICard, { MovedICard } from '../../../../common/interfaces/ICard';
 import UpdatedCards from '../../../../common/interfaces/UpdatedCards';
-import { createCard, moveCards } from '../../../../store/modules/board/actions';
-import { deleteCardAction, fetchBoardDate as fetchBoardData } from '../../../../store/modules/cardEditModal/action';
+import { createCard, getBoard, moveCards } from '../../../../store/modules/board/actions';
+import { fetchBoardData, moveCardAnotherBoard } from '../../../../store/modules/cardEditModal/action';
 import { AppDispatch, AppState } from '../../../../store/store';
 import updateCardPositions from '../../../../common/tools/ModalCardMover';
 import './cardCopyMoveModal.scss';
+import { DeleteCardData, UpdatedCardsPosition } from '../../../../common/interfaces/movedCardsInterface';
 
 interface PropsType {
   isCopy: boolean;
@@ -97,7 +98,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
     // create copy card
     const newCard: ICard = { ...cardOnModal };
     // create copy of cards arr on list and delete current card
-    let cardsArr = [...listOnModal.cards];
+    const cardsArr = [...listOnModal.cards];
     cardsArr.splice(cardOnModal.position - 1, 1);
     // check if selected board same that we choose on modal
     if (boardId && +boardId === +boards[options.indexOfBoard].id) {
@@ -132,61 +133,46 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         await navigate(`/board/${boardId}`);
       }
     } else {
-      await createCopyCard(
-        boards[options.indexOfBoard].id,
-        board.lists[options.indexOfSelectedList].id,
-        newCardPosition,
-        true
-      );
-      // let startMove = {};
+      let startMove: UpdatedCardsPosition = {};
       if (cardOnModal.position < cardsArr.length + 1) {
-        cardsArr = cardsArr.map((c, index) => {
-          return { ...c, position: index + 1 };
-        });
-
-        const newList = { ...boardOnScreen.lists[listOnModal.position - 1], cards: cardsArr };
-        const startListsArr = [...boardOnScreen.lists];
-        startListsArr.splice(listOnModal.position - 1, 1, newList);
-
-        const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
-          return { id: c.id, position: c.position, list_id: boardOnScreen.lists[listOnModal.position - 1].id };
-        });
-        if (boardId) await dispatch(moveCards(+boardId, arrUpdatedCards, startListsArr, true));
-        // if (boardId) startMove = { boardId, arrUpdatedCards, startListsArr };
+        const { arrUpdatedCards, updatedListsArr: startListsArr } = updateCardPositions(
+          cardsArr,
+          boardOnScreen,
+          listOnModal.position - 1
+        );
+        if (boardId) startMove = { boardId: +boardId, cards: arrUpdatedCards, lists: startListsArr };
       }
-      if (boardId) await dispatch(deleteCardAction(+boardId, cardOnModal.id, true));
-      // let targetMove = {};
+      let targetMove: UpdatedCardsPosition = {};
       if (board.lists[options.indexOfSelectedList].cards.length !== 0) {
-        let targetArrOfCards = [...board.lists[options.indexOfSelectedList].cards];
-
-        targetArrOfCards = targetArrOfCards.map((c, index) => {
-          if (c.position >= newCardPosition) return { ...c, position: c.position + 1 };
-          return { ...c, position: index + 1 };
-        });
-        const newTargetList = { ...board.lists[options.indexOfSelectedList], cards: targetArrOfCards };
-        const updatedListsArr = [...board.lists];
-        updatedListsArr.splice(options.indexOfSelectedList, 1, newTargetList);
-        const targetArrUpdatedCards: UpdatedCards[] = targetArrOfCards.map((c) => {
-          return { id: c.id, position: c.position, list_id: board.lists[options.indexOfSelectedList].id };
-        });
-        await dispatch(moveCards(+boards[options.indexOfBoard].id, targetArrUpdatedCards, updatedListsArr, true));
-        // const tboardId = +boards[options.indexOfBoard].id;
-        // targetMove = { tboardId, targetArrUpdatedCards, updatedListsArr };
+        const { arrUpdatedCards: targetArrUpdatedCards, updatedListsArr } = updateCardPositions(
+          [...board.lists[options.indexOfSelectedList].cards],
+          board,
+          options.indexOfSelectedList,
+          newCardPosition
+        );
+        targetMove = {
+          boardId: +boards[options.indexOfBoard].id,
+          cards: targetArrUpdatedCards,
+          lists: updatedListsArr,
+        };
       }
-      // const crd = {
-      //   board_id: boards[options.indexOfBoard].id,
-      //   title: cardOnModal.title,
-      //   list_id: board.lists[options.indexOfSelectedList].id,
-      //   position: newCardPosition,
-      //   description: cardOnModal.description,
-      //   custom: cardOnModal.custom,
-      // };
-      // const delCrd = {
-      //   boardId,
-      //   cardId: cardOnModal.id,
-      // };
-      // await dispatch(mvCrd(crd, +boards[options.indexOfBoard].id, delCrd, startMove, targetMove));
-      await navigate(`/board/${boardId}`);
+      const cardToNewBoard: MovedICard = {
+        board_id: boards[options.indexOfBoard].id,
+        title: cardOnModal.title,
+        list_id: board.lists[options.indexOfSelectedList].id,
+        position: newCardPosition,
+        description: cardOnModal.description,
+        custom: cardOnModal.custom,
+      };
+      if (boardId) {
+        const deleteCardData: DeleteCardData = {
+          boardId: +boardId,
+          cardId: cardOnModal.id,
+        };
+        await dispatch(moveCardAnotherBoard(cardToNewBoard, deleteCardData, startMove, targetMove));
+      }
+      dispatch(getBoard(+boards[options.indexOfBoard].id));
+      await navigate(`/board/${+boards[options.indexOfBoard].id}`);
     }
   };
 

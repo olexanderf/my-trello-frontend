@@ -12,6 +12,8 @@ export default function reducer(state = initialState, action: AnyAction): Board[
       return [...state];
     case 'DELETE_BOARD':
       return [...state];
+    case 'SET_ICON_COLOR':
+      return [...state];
     default: {
       return state;
     }
