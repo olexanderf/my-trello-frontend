@@ -82,12 +82,8 @@ export const moveCardAnotherBoard = (
         createCard(card.board_id, card.title, card.list_id, card.position, card?.description, card?.custom, true)
       );
       await dispatch(deleteCardAction(deleteCardData.boardId, deleteCardData.cardId, true));
-      if (startMove.boardId)
-        await dispatch(moveCards(startMove.boardId, startMove.arrUpdatedCards, startMove.startListsArr, true));
-      if (targetMove.tboardId)
-        await dispatch(
-          moveCards(targetMove.tboardId, targetMove.targetArrUpdatedCards, targetMove.updatedListsArr, true)
-        );
+      if (startMove.boardId) await dispatch(moveCards(startMove.boardId, startMove.cards, startMove.lists, true));
+      if (targetMove.tboardId) await dispatch(moveCards(targetMove.boardId, targetMove.cards, targetMove.lists, true));
     } catch (e) {
       dispatch(handleResponseError(e));
     }
