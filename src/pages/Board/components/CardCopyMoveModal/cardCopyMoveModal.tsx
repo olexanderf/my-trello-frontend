@@ -8,7 +8,7 @@ import { fetchBoardData, moveCardAnotherBoard } from '../../../../store/modules/
 import { AppDispatch, AppState } from '../../../../store/store';
 import updateCardPositions from '../../../../common/tools/ModalCardMover';
 import './cardCopyMoveModal.scss';
-import { DeleteCardData, UpdatedCardsPosition } from '../../../../common/interfaces/movedCardsInterface';
+import { DeleteCardData, UpdatedCardsPosition } from '../../../../common/interfaces/movedCardsInterfaces';
 
 interface PropsType {
   isCopy: boolean;
@@ -133,7 +133,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         await navigate(`/board/${boardId}`);
       }
     } else {
-      let startMove: UpdatedCardsPosition = {};
+      let startMove = {};
       if (cardOnModal.position < cardsArr.length + 1) {
         const { arrUpdatedCards, updatedListsArr: startListsArr } = updateCardPositions(
           cardsArr,
@@ -142,7 +142,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         );
         if (boardId) startMove = { boardId: +boardId, cards: arrUpdatedCards, lists: startListsArr };
       }
-      let targetMove: UpdatedCardsPosition = {};
+      let targetMove = {};
       if (board.lists[options.indexOfSelectedList].cards.length !== 0) {
         const { arrUpdatedCards: targetArrUpdatedCards, updatedListsArr } = updateCardPositions(
           [...board.lists[options.indexOfSelectedList].cards],
@@ -169,7 +169,14 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           boardId: +boardId,
           cardId: cardOnModal.id,
         };
-        await dispatch(moveCardAnotherBoard(cardToNewBoard, deleteCardData, startMove, targetMove));
+        await dispatch(
+          moveCardAnotherBoard(
+            cardToNewBoard,
+            deleteCardData,
+            startMove as UpdatedCardsPosition,
+            targetMove as UpdatedCardsPosition
+          )
+        );
       }
       dispatch(getBoard(+boards[options.indexOfBoard].id));
       await navigate(`/board/${+boards[options.indexOfBoard].id}`);

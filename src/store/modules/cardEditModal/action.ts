@@ -6,7 +6,7 @@ import Lists from '../../../common/interfaces/Lists';
 import SingleBoard from '../../../common/interfaces/OneBoard';
 import { AppThunk, TypedDispatch } from '../../store';
 import { handleResponseError } from '../errorHandler/action';
-import { DeleteCardData, UpdatedCardsPosition } from '../../../common/interfaces/movedCardsInterface';
+import { DeleteCardData, UpdatedCardsPosition } from '../../../common/interfaces/movedCardsInterfaces';
 
 export const toggleCardEditModal = (isVisibleCardModalEdit: boolean): PayloadAction<boolean> => {
   return { type: 'TOGGLE_CARD_EDIT_MODAL', payload: isVisibleCardModalEdit };
@@ -81,8 +81,8 @@ export const moveCardAnotherBoard = (
         createCard(card.board_id, card.title, card.list_id, card.position, card?.description, card?.custom, true)
       );
       await dispatch(deleteCardAction(deleteCardData.boardId, deleteCardData.cardId, true));
-      if (startMove) await dispatch(moveCards(startMove.boardId, startMove.cards, startMove.lists, true));
-      if (targetMove) await dispatch(moveCards(targetMove.boardId, targetMove.cards, targetMove.lists, true));
+      if (startMove?.boardId) await dispatch(moveCards(startMove.boardId, startMove.cards, startMove.lists, true));
+      if (targetMove?.boardId) await dispatch(moveCards(targetMove.boardId, targetMove.cards, targetMove.lists, true));
     } catch (e) {
       dispatch(handleResponseError(e));
     }
