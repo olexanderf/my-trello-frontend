@@ -9,6 +9,7 @@ import Home from './pages/Home/Home';
 import 'react-toastify/dist/ReactToastify.css';
 import ProgressBar from './pages/Multipurpose/ProgressBar/ProgressBar';
 import CardModal from './pages/Board/components/CardModal/cardModal';
+import Registration from './pages/Authorization/SignUp/Registration';
 
 function App(): ReactElement {
   const errorMessage = useSelector((store: AppState) => store.errorMessage);
@@ -51,6 +52,7 @@ function App(): ReactElement {
         <Route path="/board/:board_id" element={<Board />}>
           <Route path="/board/:board_id/card/:card_id/" element={<CardModal />} />
         </Route>
+        <Route path="/registration" element={<Registration />} />
       </Routes>
       {background && (
         <Routes>

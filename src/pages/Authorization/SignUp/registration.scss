@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
+$main-font: 'Comfortaa', cursive;
+
+.registration-page-box {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.registration-page-container {
+  font-family: $main-font;
+  background-color: rgba(216, 204, 204, 0.623);
+  width: 350px;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border: 1px solid black;
+}
+.registration-page-title {}
+#registration-page-form {
+  display: flex;
+  flex-direction: column;
+}
+#registration-page-form > label {
+  margin-top: 10px;
+}
+.registration-page-input {
+  font-family: $main-font;
+  box-sizing: border-box;
+  font-size: 16px;
+  width: 300px;
+  height: 40px;
+}
+
+.registration-page-error-pswd {
+  color: red;
+  margin-top: 10px;
+  transition: all 0.2s ease-in;
+}
+.registration-page-submit-btn {
+  margin-top: 10px;
+  border: none;
+  width: 300px;
+  height: 40px;
+  color: white;
+  background-color: rgb(78, 78, 255);
+  cursor: pointer;
+  transition: all 0.2s ease-in;
+  &:hover {
+    outline: 2px solid black;
+  }
+}
+.registration-page-link  {
+  font-size: 14px;
+  margin-top: 10px;
+  color: gray;
+}
