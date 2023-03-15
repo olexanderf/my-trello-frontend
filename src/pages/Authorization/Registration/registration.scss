@@ -12,14 +12,15 @@ $main-font: 'Comfortaa', cursive;
   font-family: $main-font;
   background-color: rgba(216, 204, 204, 0.623);
   width: 350px;
-  height: 420px;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   border: 1px solid black;
 }
-.registration-page-title {}
+// .registration-page-title {
+// }
 #registration-page-form {
   display: flex;
   flex-direction: column;
@@ -34,8 +35,11 @@ $main-font: 'Comfortaa', cursive;
   width: 300px;
   height: 40px;
 }
+#confirm-password {
+  margin-bottom: 10px;
+}
 
-.registration-page-error-pswd {
+.registration-page-error {
   color: red;
   margin-top: 10px;
   transition: all 0.2s ease-in;
@@ -53,8 +57,8 @@ $main-font: 'Comfortaa', cursive;
     outline: 2px solid black;
   }
 }
-.registration-page-link  {
+.registration-page-link {
   font-size: 14px;
-  margin-top: 10px;
+  margin: 10px 0 20px 0;
   color: gray;
 }

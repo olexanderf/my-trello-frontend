@@ -1,15 +1,19 @@
-import React, { ReactElement } from 'react';
+import React, { Dispatch, ReactElement, SetStateAction, useEffect } from 'react';
 import './passwordStrengthMeter.scss';
 import zxcvbn from 'zxcvbn';
 
 interface PropsType {
   password: string;
+  setPasswordStrength: Dispatch<SetStateAction<number>>;
 }
 
 export default function PasswordStrengthMeter(props: PropsType): ReactElement {
-  const { password } = props;
+  const { password, setPasswordStrength } = props;
   const passwordTestResult = zxcvbn(password);
   const passwordStrengthNumber = passwordTestResult.score;
+  useEffect(() => {
+    setPasswordStrength(passwordStrengthNumber);
+  }, [passwordStrengthNumber]);
   return (
     <div className="password-strength-progress">
       <div className={passwordStrengthNumber > 0 ? 'progress-bar short' : 'progress-bar'} />

@@ -9,7 +9,7 @@ import Home from './pages/Home/Home';
 import 'react-toastify/dist/ReactToastify.css';
 import ProgressBar from './pages/Multipurpose/ProgressBar/ProgressBar';
 import CardModal from './pages/Board/components/CardModal/cardModal';
-import Registration from './pages/Authorization/SignUp/Registration';
+import Registration from './pages/Authorization/Registration/Registration';
 
 function App(): ReactElement {
   const errorMessage = useSelector((store: AppState) => store.errorMessage);
