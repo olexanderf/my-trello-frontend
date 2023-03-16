@@ -25,7 +25,30 @@ export default function Registration(): ReactElement {
   const handleEmailInput = (e: ChangeEvent<HTMLInputElement>): void => {
     setEmailValue(e.target.value);
   };
-
+  const checkValidForm = (): boolean => {
+    if (
+      isCorrectMail &&
+      isPasswordMatch &&
+      isPasswordStrong &&
+      email !== '' &&
+      password !== '' &&
+      confirmPassword !== ''
+    )
+      return true;
+    return false;
+  };
+  const signUp = (): void => {
+    // if (
+    //   isCorrectMail &&
+    //   isPasswordMatch &&
+    //   isPasswordStrong &&
+    //   email !== '' &&
+    //   password !== '' &&
+    //   confirmPassword !== ''
+    // ) {
+    console.log(`email: ${email}, password: ${password}, comfPassword ${confirmPassword}`);
+    // }
+  };
   return (
     <div className="registration-page-box">
       <div className="registration-page-container">
@@ -38,16 +61,7 @@ export default function Registration(): ReactElement {
             setPasswordMatch(password === confirmPassword && confirmPassword !== '');
             setCorrectMail(checkValidEmail(email));
             setPasswordStrong(passwordStrength > 2);
-            if (
-              isCorrectMail &&
-              isPasswordMatch &&
-              isPasswordStrong &&
-              email !== '' &&
-              password !== '' &&
-              confirmPassword !== ''
-            ) {
-              console.log(`email: ${email}, password: ${password}, comfPassword ${confirmPassword}`);
-            }
+            if (checkValidForm()) signUp();
           }}
         >
           <label htmlFor="registration-page-email">Email</label>
@@ -56,6 +70,7 @@ export default function Registration(): ReactElement {
             type="text"
             name="registration-page-email"
             id="registration-page-email"
+            value={email}
             onChange={handleEmailInput}
           />
           <span className="registration-page-error" hidden={isCorrectMail}>
@@ -67,6 +82,7 @@ export default function Registration(): ReactElement {
             type="password"
             name="password"
             id="password"
+            value={password}
             onChange={passwordValueHandler}
           />
           <PasswordStrengthMeter password={password} setPasswordStrength={setPasswordStrength} />
@@ -79,6 +95,7 @@ export default function Registration(): ReactElement {
             type="password"
             name="confirm-password"
             id="confirm-password"
+            value={confirmPassword}
             onChange={confirmPasswordValueHandler}
           />
           <span className="registration-page-error" hidden={isPasswordMatch}>

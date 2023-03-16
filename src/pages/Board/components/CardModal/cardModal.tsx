@@ -227,9 +227,9 @@ export default function CardModal(): JSX.Element {
                 }}
               />
             ) : (
-              <p className="card-modal-description-text">
+              <span className="card-modal-description-text">
                 {currentCard.description && <LinkComponent text={currentCard.description} />}
-              </p>
+              </span>
             )}
           </div>
         </div>
