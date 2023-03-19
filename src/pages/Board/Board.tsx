@@ -9,7 +9,7 @@ import { AppState } from '../../store/store';
 import { editNameBoard, getBoard, createList } from '../../store/modules/board/actions';
 import SingleBoard from '../../common/interfaces/OneBoard';
 import { boardInputRegex } from '../../common/constants/regExp';
-import Modal from '../../common/components/Modal/Modal';
+import Modal from '../../common/components/NewElementModal/NewElementModal';
 import CardEditModal from '../../common/interfaces/CardEditModal';
 import withRouter from '../../common/tools/withRouter';
 
@@ -153,9 +153,9 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
                 return <List key={list.id} list={list} />;
               })}
           </div>
-          <div className="btn-container">
+          <div className="add-item-container">
             <button
-              className="add-list"
+              className="add-item"
               onClick={(): void => {
                 return this.toggleModal();
               }}

@@ -11,9 +11,9 @@ export default function ProgressBar(): JSX.Element {
   }, [completed]);
   return (
     <div className="progressBar-container">
-      <p className="progressBar-name">Loading...</p>
-      <div className="progressBar-bg">
-        <div className="progressBar-filler" style={progressFiller} />
+      <p className="name">Loading...</p>
+      <div className="progressBar-background ">
+        <div className="filler" style={progressFiller} />
       </div>
     </div>
   );

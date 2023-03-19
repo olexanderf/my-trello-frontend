@@ -3,17 +3,33 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  .table-board {
+    display: grid;
+    max-width: 70%;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+    justify-self: center;
+    align-self: center;
+    font-size: 18px;
+  }
+  .table-name {
+    text-align: center;
+    font-size: 25px;
+  }
 }
-.table-board {
-  display: grid;
-  max-width: 70%;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
-  justify-self: center;
-  align-self: center;
-  font-size: 18px;
-}
-.table-name {
-  text-align: center;
-  font-size: 25px;
+.add-item-container {
+  padding: 20px;
+  .add-item {
+      box-sizing: border-box;
+      font-size: 35px;
+      cursor: pointer;
+      padding: 5px 15px;
+      border-radius: 50%;
+      border: none;
+      transition: all 0.2s ease-in;
+      &:hover {
+          outline: 2px solid rgba(115, 113, 252, 0.651);
+          transform: rotate(90deg);
+      }
+  }
 }

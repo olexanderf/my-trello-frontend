@@ -18,7 +18,7 @@ import { getBoards } from '../../../../store/modules/boards/actions';
 import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
 import { AppDispatch, AppState } from '../../../../store/store';
-import Modal from '../../../../common/components/Modal/Modal';
+import Modal from '../../../../common/components/NewElementModal/NewElementModal';
 import Card from '../Card/Card';
 import './list.scss';
 
@@ -246,8 +246,8 @@ export default function List(props: PropsType): JSX.Element {
           onDragLeave={(e): void => containerDragLeaveHandler(e)}
         />
       </div>
-      <div className="btn-container">
-        <button className="add-list" onClick={toggleModal}>
+      <div className="add-item-container">
+        <button className="add-item" onClick={toggleModal}>
           +
         </button>
       </div>

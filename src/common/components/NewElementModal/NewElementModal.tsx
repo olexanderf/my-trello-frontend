@@ -1,6 +1,6 @@
 import React, { ChangeEvent, ReactElement, useState } from 'react';
 import { boardInputRegex } from '../../constants/regExp';
-import './modal.scss';
+import './newElementModal.scss';
 
 type PropsType = {
   toggleModal: () => void;

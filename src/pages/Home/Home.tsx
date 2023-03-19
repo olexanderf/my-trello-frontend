@@ -5,7 +5,7 @@ import IconBoard from './components/Board/IconBoard';
 import './home.scss';
 import { createBoard, deleteBoard, getBoards } from '../../store/modules/boards/actions';
 import { AppState } from '../../store/store';
-import Modal from '../../common/components/Modal/Modal';
+import Modal from '../../common/components/NewElementModal/NewElementModal';
 import { boardInputRegex } from '../../common/constants/regExp';
 
 type PropsType = {
@@ -90,9 +90,9 @@ class Home extends React.Component<PropsType, StateType> {
             handleClickCreateElement={this.handleClickCreateElement}
           />
         )}
-        <div className="btn-container">
+        <div className="add-item-container">
           <button
-            className="add-list"
+            className="add-item"
             onClick={(): void => {
               return this.toggleModal();
             }}

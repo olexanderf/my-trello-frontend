@@ -1,6 +1,11 @@
 .board-on-table-container {
   min-height: 170px;
   transition: all 0.2s ease-in;
+  &:hover {
+    .btn-delete {
+      opacity: 1;
+    }
+  }
 }
 .board-on-table {
   width: 200px;
@@ -15,28 +20,7 @@
     color: #000;
   }
 }
-.board-on-table-container:hover .btn-delete {
-    opacity: 1;
-  }
-a {
-  text-decoration: none;
-}
-.btn-container {
-  padding: 20px;
-  .add-list {
-      box-sizing: border-box;
-      font-size: 35px;
-      cursor: pointer;
-      padding: 5px 15px;
-      border-radius: 50%;
-      border: none;
-      transition: all 0.2s ease-in;
-      &:hover {
-          outline: 2px solid rgba(115, 113, 252, 0.651);
-          transform: rotate(90deg);
-      }
-  }
-}
+
 .btn-delete {
   opacity: 0;
   cursor: pointer;

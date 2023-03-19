@@ -155,7 +155,7 @@ export default function CardModal(): JSX.Element {
   return (
     <div>
       <div className="card-modal-container" onClick={cardModalContainerHandler}>
-        <div className="card-modal-container-main">
+        <div className="card-modal-box">
           {isEditCardTitle ? (
             <input
               type="text"
