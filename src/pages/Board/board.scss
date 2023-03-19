@@ -1,38 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
-
-$main-font: 'Comfortaa', cursive;
-
 .board-container {
-    font-family: $main-font;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .board-title {
-    background-color: rgba(174, 172, 255, 0.651);
-    text-align: center;
-    min-height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    width: 50%;
-    border-radius: 15px;
+  background-color: rgba(174, 172, 255, 0.651);
+  text-align: center;
+  min-height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 50%;
+  border-radius: 15px;
 }
 .block-table {
-    min-height: 650px;
-    display: flex;
-    width: 100%;
+  min-height: 650px;
+  display: flex;
+  width: 100%;
 }
 
 .block-lists {
-    display: flex;
-    padding: 15px;
+  display: flex;
+  padding: 15px;
 }
 .header-input {
-    font-family: $main-font;
-    font-size: 35px;
-    font-weight: 600;
-    border-radius: 12px;
+  font-size: 35px;
+  font-weight: 600;
+  border-radius: 12px;
 }

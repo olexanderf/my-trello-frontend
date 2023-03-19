@@ -1,11 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
-
-$main-font: 'Comfortaa', cursive;
-
 .list {
   display: flex;
   flex-direction: column;
-  font-family: $main-font;
   margin: 0 15px 0 15px;
   width: 450px;
   min-height: 300px;
