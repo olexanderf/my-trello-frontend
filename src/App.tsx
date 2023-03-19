@@ -7,7 +7,7 @@ import Board from './pages/Board/Board';
 import './App.scss';
 import Home from './pages/Home/Home';
 import 'react-toastify/dist/ReactToastify.css';
-import ProgressBar from './pages/Multipurpose/ProgressBar/ProgressBar';
+import ProgressBar from './common/components/ProgressBar/ProgressBar';
 import CardModal from './pages/Board/components/CardModal/cardModal';
 
 function App(): ReactElement {

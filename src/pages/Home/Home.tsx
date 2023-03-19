@@ -5,7 +5,7 @@ import IconBoard from './components/Board/IconBoard';
 import './home.scss';
 import { createBoard, deleteBoard, getBoards } from '../../store/modules/boards/actions';
 import { AppState } from '../../store/store';
-import Modal from '../Multipurpose/Modal/Modal';
+import Modal from '../../common/components/Modal/Modal';
 import { boardInputRegex } from '../../common/constants/regExp';
 
 type PropsType = {

@@ -9,7 +9,7 @@ import { AppState } from '../../store/store';
 import { editNameBoard, getBoard, createList } from '../../store/modules/board/actions';
 import SingleBoard from '../../common/interfaces/OneBoard';
 import { boardInputRegex } from '../../common/constants/regExp';
-import Modal from '../Multipurpose/Modal/Modal';
+import Modal from '../../common/components/Modal/Modal';
 import CardEditModal from '../../common/interfaces/CardEditModal';
 import withRouter from '../../common/tools/withRouter';
 

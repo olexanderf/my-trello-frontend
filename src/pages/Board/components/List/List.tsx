@@ -18,7 +18,7 @@ import { getBoards } from '../../../../store/modules/boards/actions';
 import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
 import { AppDispatch, AppState } from '../../../../store/store';
-import Modal from '../../../Multipurpose/Modal/Modal';
+import Modal from '../../../../common/components/Modal/Modal';
 import Card from '../Card/Card';
 import './list.scss';
 
