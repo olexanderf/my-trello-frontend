@@ -34,6 +34,11 @@ export default function CardModal(): JSX.Element {
   const [isVisibleCopyMoveModal, setVisibleCopyMoveModal] = useState(false);
   const [isCopyCard, setCopyCard] = useState(false);
 
+  const onCardModalClose = (): void => {
+    dispatch(toggleCardEditModal(false));
+    navigate(`/board/${boardId}`);
+  };
+
   const loadCardData = (arrLists: Lists[], currentCardId: number): void => {
     let cardIndex = 0;
     const indexList = arrLists.findIndex((l) =>
@@ -45,10 +50,10 @@ export default function CardModal(): JSX.Element {
         return undefined;
       })
     );
-    if (arrLists !== undefined) {
+    if (arrLists && indexList !== -1) {
       dispatch(setListOnModal(arrLists[indexList]));
       dispatch(setCardModal(arrLists[indexList].cards[cardIndex]));
-    }
+    } else onCardModalClose();
   };
 
   useEffect(() => {
@@ -64,11 +69,6 @@ export default function CardModal(): JSX.Element {
     if (currentCard.description !== undefined) setValueOfDescription(currentCard.description);
     else setValueOfDescription('');
   }, [currentCard.description]);
-
-  const onCardModalClose = (): void => {
-    dispatch(toggleCardEditModal(false));
-    navigate(`/board/${boardId}`);
-  };
 
   const changeCardTitle = (e: ChangeEvent<HTMLInputElement>): void => {
     setValueOfCardTitle(e.target.value);
