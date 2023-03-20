@@ -198,8 +198,9 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
 
   return (
     <div className="card-copy-move-modal-container">
-      <h3 className="card-copy-move-modal-name">{isCopy ? 'Копировать' : 'Переместить'}</h3>
+      <h3 className="title-card-copy-move">{isCopy ? 'Копировать' : 'Переместить'}</h3>
       <form
+        className="form-card-copy-move"
         action=""
         id="copy-move-card"
         onSubmit={(e): void => {
@@ -209,6 +210,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
       >
         <label htmlFor="board-select">Доска:</label>
         <select
+          className="board-select"
           name="board-select"
           id="board-select"
           form="copy-move-card"
@@ -226,6 +228,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         </select>
         <label htmlFor="list-select">Список:</label>
         <select
+          className="list-select"
           name="list-select"
           id="list-select"
           form="copy-move-card"
@@ -242,7 +245,13 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
             })}
         </select>
         <label htmlFor="position-select">Позиция:</label>
-        <select name="position-select" id="position-select" form="copy-move-card" ref={selectCardPosition}>
+        <select
+          className="position-select"
+          name="position-select"
+          id="position-select"
+          form="copy-move-card"
+          ref={selectCardPosition}
+        >
           {board.lists[options.indexOfSelectedList] ? (
             board.lists[options.indexOfSelectedList].cards.map((c) => {
               return (

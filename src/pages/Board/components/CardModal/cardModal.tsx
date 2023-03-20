@@ -175,7 +175,7 @@ export default function CardModal(): JSX.Element {
             />
           ) : (
             <h1
-              className="card-modal-title"
+              className="title"
               onClick={(e: React.MouseEvent): void => {
                 setEditCardTitle(true);
                 e.stopPropagation();

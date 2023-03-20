@@ -6,35 +6,36 @@
       opacity: 1;
     }
   }
-}
-.board-on-table {
-  width: 200px;
-  height: 100px;
-  border: 2px solid #000;
-  border-radius: 15px;
-  margin: 15px;
-  cursor: pointer;
-  p {
-    margin: 5px;
-    padding: 10px;
-    color: #000;
-  }
-}
 
-.btn-delete {
-  opacity: 0;
-  cursor: pointer;
-  border-radius: 50%;
-  background-color:rgb(247, 76, 9);
-  border: none;
-  width: 30px;
-  height: 30px;
-  font-size: 25px;
-  position: relative;
-  top:-75%;
-  left: 85%;
-  transition: all 0.2s ease-in;
-  &:hover {
-    transform: rotate(135deg);
+  .board-on-table {
+    width: 200px;
+    height: 100px;
+    border: 2px solid #000;
+    border-radius: 15px;
+    margin: 15px;
+    cursor: pointer;
+    p {
+      margin: 5px;
+      padding: 10px;
+      color: #000;
+    }
+  }
+
+  .btn-delete {
+    opacity: 0;
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: rgb(247, 76, 9);
+    border: none;
+    width: 30px;
+    height: 30px;
+    font-size: 25px;
+    position: relative;
+    top: -75%;
+    left: 85%;
+    transition: all 0.2s ease-in;
+    &:hover {
+      transform: rotate(135deg);
+    }
   }
 }
