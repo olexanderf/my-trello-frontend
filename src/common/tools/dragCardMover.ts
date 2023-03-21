@@ -2,6 +2,12 @@ import ICard from '../interfaces/ICard';
 import Lists from '../interfaces/Lists';
 import UpdatedCards from '../interfaces/UpdatedCards';
 
+function insertObjectInArr<T>(arr: Array<T>, insertIndex: number, object: T): Array<T> {
+  const firstPart = arr.slice(0, insertIndex);
+  const secondPart = arr.slice(insertIndex);
+  return [...firstPart, object, ...secondPart];
+}
+
 export default function dragCardMover(
   targetList: Lists,
   currentBoardLists: Lists[],
@@ -10,21 +16,19 @@ export default function dragCardMover(
   card?: ICard
 ): { arrUpdatedCards: UpdatedCards[]; changedArrOfList: Lists[] } {
   const indexOfListDraggedCard = currentBoardLists.findIndex((l) => l.id === dragListId);
-  const currentIndex = currentBoardLists[indexOfListDraggedCard].cards.indexOf(dragCard);
 
   // delete card from cards arr in list
-  let cardsDragStart = [...currentBoardLists[indexOfListDraggedCard].cards];
-  cardsDragStart.splice(currentIndex, 1);
-  cardsDragStart = cardsDragStart.map((c, index) => {
-    return { ...c, position: index + 1 };
-  });
-
+  let cardsDragStart = currentBoardLists[indexOfListDraggedCard].cards
+    .filter((c) => c.id !== dragCard.id)
+    .map((c: ICard, index) => {
+      return { ...c, position: index + 1 };
+    });
   // change card position if list same
   if (card !== undefined) {
     const dropIndex = card.position - 1;
     if (dragListId === targetList.id) {
       // add card to list and change position
-      cardsDragStart.splice(dropIndex, 0, dragCard);
+      cardsDragStart = insertObjectInArr(cardsDragStart, dropIndex, dragCard);
       cardsDragStart = cardsDragStart.map((c, index) => {
         return { ...c, position: index + 1 };
       });
@@ -32,7 +36,7 @@ export default function dragCardMover(
       const newList = { ...targetList, cards: cardsDragStart };
       // update list and replace to new
       const changedArrOfList = [...currentBoardLists];
-      changedArrOfList.splice(indexOfListDraggedCard, 1, newList);
+      changedArrOfList[indexOfListDraggedCard] = newList;
       // update state and send request to server
       const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
         return { id: c.id, position: c.position, list_id: targetList.id };
@@ -43,8 +47,7 @@ export default function dragCardMover(
     // move card to another list
     if (dragListId !== targetList.id) {
       // add card to target card arr and change positions of card
-      let changedArrOfCards = [...targetList.cards];
-      changedArrOfCards.splice(dropIndex, 0, dragCard);
+      let changedArrOfCards = insertObjectInArr(targetList.cards, dropIndex, dragCard);
       changedArrOfCards = changedArrOfCards.map((c, index) => {
         return { ...c, position: index + 1 };
       });
@@ -54,8 +57,8 @@ export default function dragCardMover(
       const newTargetList = { ...targetList, cards: changedArrOfCards };
       // update list and replace to new
       const changedArrOfList = [...currentBoardLists];
-      changedArrOfList.splice(indexOfListDraggedCard, 1, newList);
-      changedArrOfList.splice(currentBoardLists.indexOf(targetList), 1, newTargetList);
+      changedArrOfList[indexOfListDraggedCard] = newList;
+      changedArrOfList[currentBoardLists.indexOf(targetList)] = newTargetList;
 
       // update state and send request
       const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
@@ -74,8 +77,8 @@ export default function dragCardMover(
       const newList = { ...currentBoardLists[indexOfListDraggedCard], cards: cardsDragStart };
       const newTargetList = { ...targetList, cards: tempArr };
       const changedArrOfList = [...currentBoardLists];
-      changedArrOfList.splice(indexOfListDraggedCard, 1, newList);
-      changedArrOfList.splice(currentBoardLists.indexOf(targetList), 1, newTargetList);
+      changedArrOfList[indexOfListDraggedCard] = newList;
+      changedArrOfList[currentBoardLists.indexOf(targetList)] = newTargetList;
 
       // update state and send request to server
       const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
@@ -99,8 +102,8 @@ export default function dragCardMover(
       const newList = { ...currentBoardLists[indexOfListDraggedCard], cards: cardsDragStart };
       const newTargetList = { ...targetList, cards: changedArrOfCards };
       const changedArrOfList = [...currentBoardLists];
-      changedArrOfList.splice(indexOfListDraggedCard, 1, newList);
-      changedArrOfList.splice(currentBoardLists.indexOf(targetList), 1, newTargetList);
+      changedArrOfList[indexOfListDraggedCard] = newList;
+      changedArrOfList[currentBoardLists.indexOf(targetList)] = newTargetList;
       // update state and send request
       const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
         return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDraggedCard].id };
