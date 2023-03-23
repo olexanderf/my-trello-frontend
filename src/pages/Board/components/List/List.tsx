@@ -154,8 +154,7 @@ export default function List(props: PropsType): JSX.Element {
     if (e.currentTarget.classList.contains('slot')) e.currentTarget.classList.add('last');
   };
   const updateListsPosition = (arrLists: Lists[], listId: number): void => {
-    let newLists = [...arrLists];
-    newLists = newLists
+    const newLists = arrLists
       .filter((l) => l.id !== listId)
       .map((l, index) => {
         return { ...l, position: index + 1 };
