@@ -9,6 +9,7 @@ import { AppDispatch, AppState } from '../../../../store/store';
 import updateCardPositions from '../../../../common/tools/ModalCardMover';
 import './cardCopyMoveModal.scss';
 import { DeleteCardData, UpdatedCardsPosition } from '../../../../common/interfaces/movedCardsInterfaces';
+import { deleteCardFromList, moveOnSheet } from '../../../../common/tools/dragCardMover';
 
 interface PropsType {
   isCopy: boolean;
@@ -98,18 +99,18 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
     // create copy card
     const newCard: ICard = { ...cardOnModal };
     // create copy of cards arr on list and delete current card
-    const cardsArr = [...listOnModal.cards];
-    cardsArr.splice(cardOnModal.position - 1, 1);
+    const cardsArr = listOnModal.cards.filter((c) => c.id !== cardOnModal.id);
     // check if selected board same that we choose on modal
     if (boardId && +boardId === +boards[options.indexOfBoard].id) {
       // check if selected list same that we choose on modal
       if (listOnModal.id === board.lists[options.indexOfSelectedList].id) {
-        const { arrUpdatedCards, updatedListsArr } = updateCardPositions(
+        const { arrUpdatedCards, changedArrOfList: updatedListsArr } = moveOnSheet(
+          cardOnModal,
+          newCardPosition - 1,
           cardsArr,
-          board,
-          options.indexOfSelectedList,
-          newCardPosition,
-          newCard
+          board.lists[options.indexOfSelectedList],
+          board.lists,
+          options.indexOfSelectedList
         );
         await dispatch(moveCards(boards[options.indexOfBoard].id, arrUpdatedCards, updatedListsArr));
         await navigate(`/board/${boards[options.indexOfBoard].id}`);

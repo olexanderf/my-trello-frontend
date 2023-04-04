@@ -22,6 +22,7 @@ interface PropsType {
 }
 
 interface StateType {
+  idOfBoard: number;
   title: string;
   lists: Lists[];
   editHeader: boolean;
@@ -40,6 +41,7 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     super(props);
     const { board, cardEditModal } = this.props;
     this.state = {
+      idOfBoard: -1,
       title: board.title,
       lists: board.lists,
       editHeader: false,
@@ -58,13 +60,17 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     const { board_id: boardId } = router.params;
     if (boardId !== undefined) {
       getBoardAction(+boardId);
+      this.setState({
+        idOfBoard: +boardId,
+      });
     }
   }
 
   componentDidUpdate(): void {
-    const { board, cardEditModal } = this.props;
+    const { board, cardEditModal, router, getBoard: getBoardAction } = this.props;
     const { isVisibleCardModalEdit } = cardEditModal;
-    const { title, lists, isVisibleCardEditModal } = this.state;
+    const { title, lists, isVisibleCardEditModal, idOfBoard } = this.state;
+    const { board_id: boardId } = router.params;
     if (board.title !== title) {
       this.setState({
         title: board.title,
@@ -79,6 +85,12 @@ class Board extends React.Component<PropsType & RouteComponentProps<Params>, Sta
     if (isVisibleCardEditModal !== isVisibleCardModalEdit) {
       this.setState({
         isVisibleCardEditModal: isVisibleCardModalEdit,
+      });
+    }
+    if (boardId && idOfBoard !== +boardId) {
+      getBoardAction(+boardId);
+      this.setState({
+        idOfBoard: +boardId,
       });
     }
   }
