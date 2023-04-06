@@ -76,7 +76,7 @@ class Home extends React.Component<PropsType, StateType> {
     const { isVisibleModal, boards } = this.state;
     return (
       <div className="container">
-        <h3 className="table-name">Мои Доски</h3>
+        <h3 className="table-name">My boards</h3>
         <div className="table-board">
           {boards &&
             boards.map((el) => {

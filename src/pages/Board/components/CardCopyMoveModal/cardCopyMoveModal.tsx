@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import ICard, { MovedICard } from '../../../../common/interfaces/ICard';
+import { MovedICard } from '../../../../common/interfaces/ICard';
 import UpdatedCards from '../../../../common/interfaces/UpdatedCards';
 import { createCard, getBoard, moveCards } from '../../../../store/modules/board/actions';
 import { fetchBoardData, moveCardAnotherBoard } from '../../../../store/modules/cardEditModal/action';
@@ -9,7 +9,7 @@ import { AppDispatch, AppState } from '../../../../store/store';
 import updateCardPositions from '../../../../common/tools/ModalCardMover';
 import './cardCopyMoveModal.scss';
 import { DeleteCardData, UpdatedCardsPosition } from '../../../../common/interfaces/movedCardsInterfaces';
-import { deleteCardFromList, moveOnSheet } from '../../../../common/tools/dragCardMover';
+import { moveOnSheet } from '../../../../common/tools/dragCardMover';
 
 interface PropsType {
   isCopy: boolean;
@@ -97,7 +97,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
 
   const replaceCard = async (newCardPosition: number): Promise<void> => {
     // create copy card
-    const newCard: ICard = { ...cardOnModal };
+    // const newCard: ICard = { ...cardOnModal };
     // create copy of cards arr on list and delete current card
     const cardsArr = listOnModal.cards.filter((c) => c.id !== cardOnModal.id);
     // check if selected board same that we choose on modal
@@ -121,15 +121,23 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           board,
           options.indexOfSelectedList,
           newCardPosition,
-          newCard
+          cardOnModal
         );
-        if (newCard.position < cardsArr.length + 1) {
+        if (cardOnModal.position < cardsArr.length + 1) {
           const { arrUpdatedCards: moveStartUpdatedCards, updatedListsArr: moveStartUpdatedListArr } =
             updateCardPositions(cardsArr, boardOnScreen, listOnModal.position - 1);
           const changedList = moveStartUpdatedListArr[listOnModal.position - 1];
           updatedListsArr.splice(listOnModal.position - 1, 1, changedList);
           arrUpdatedCards.splice(arrUpdatedCards.length, 0, ...moveStartUpdatedCards);
         }
+        // const { arrUpdatedCards, changedArrOfList: updatedListsArr } = moveBetweenSheets(
+        //   cardOnModal,
+        //   newCardPosition - 1,
+        //   cardsArr,
+        //   board.lists[options.indexOfSelectedList],
+        //   board.lists,
+        //   options.indexOfSelectedList
+        // );
         await dispatch(moveCards(+boardId, arrUpdatedCards, updatedListsArr));
         await navigate(`/board/${boardId}`);
       }
@@ -199,7 +207,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
 
   return (
     <div className="card-copy-move-modal-container">
-      <h3 className="title-card-copy-move">{isCopy ? 'Копировать' : 'Переместить'}</h3>
+      <h3 className="title-card-copy-move">{isCopy ? 'Copy' : 'Move'}</h3>
       <form
         className="form-card-copy-move"
         action=""
@@ -209,7 +217,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           e.preventDefault();
         }}
       >
-        <label htmlFor="board-select">Доска:</label>
+        <label htmlFor="board-select">Board:</label>
         <select
           className="board-select"
           name="board-select"
@@ -227,7 +235,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
               );
             })}
         </select>
-        <label htmlFor="list-select">Список:</label>
+        <label htmlFor="list-select">List:</label>
         <select
           className="list-select"
           name="list-select"
@@ -245,7 +253,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
               );
             })}
         </select>
-        <label htmlFor="position-select">Позиция:</label>
+        <label htmlFor="position-select">Position:</label>
         <select
           className="position-select"
           name="position-select"
@@ -273,7 +281,7 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         </select>
         <br />
         <button className="card-copy-move-modal-btn" type="submit">
-          {isCopy ? 'Копировать' : 'Переместить'}
+          {isCopy ? 'Copy' : 'Move'}
         </button>
       </form>
     </div>

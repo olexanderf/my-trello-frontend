@@ -28,7 +28,7 @@ export function moveOnSheet(
   });
   return { arrUpdatedCards, changedArrOfList };
 }
-function moveBetweenSheets(
+export function moveBetweenSheets(
   dragCard: ICard,
   dropIndex: number,
   cardsDragStart: ICard[],

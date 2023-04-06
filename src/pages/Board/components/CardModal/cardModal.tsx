@@ -185,21 +185,21 @@ export default function CardModal(): JSX.Element {
             </h1>
           )}
           <span className="card-modal-list-name">
-            В колонке: <span>{currentList.title}</span>
+            In a collumn: <span>{currentList.title}</span>
           </span>
           <div className="card-modal-members">
-            <h4 className="card-modal-users-title">Участники:</h4>
+            <h4 className="card-modal-users-title">Users:</h4>
             <div className="card-modal-users-container">
               <div className="card-modal-users-icon" />
               <div className="card-modal-users-icon" />
               <div className="card-modal-users-icon" />
               <button className="card-modal-users-icon invite">+</button>
-              <button className="card-modal-btn-join-member">Присоединиться</button>
+              <button className="card-modal-btn-join-member">Join</button>
             </div>
           </div>
           <div className="card-modal-description">
             <div className="card-modal-description-header-container">
-              <h4 className="card-modal-description-header">Описание</h4>
+              <h4 className="card-modal-description-header">Description</h4>
               <button
                 className="card-modal-description-btn-edit"
                 onClick={(e: React.MouseEvent): void => {
@@ -207,7 +207,7 @@ export default function CardModal(): JSX.Element {
                   e.stopPropagation();
                 }}
               >
-                Изменить
+                Edit
               </button>
             </div>
             {isEditCardDescription ? (
@@ -234,7 +234,7 @@ export default function CardModal(): JSX.Element {
           </div>
         </div>
         <div className="card-modal-actions-container">
-          <h4 className="card-modal-actions-header">Действия</h4>
+          <h4 className="card-modal-actions-header">Actions</h4>
           <button
             className={
               isVisibleCopyMoveModal && !isCopyCard ? 'card-modal-actions-btn disabled' : 'card-modal-actions-btn'
@@ -245,7 +245,7 @@ export default function CardModal(): JSX.Element {
             }}
             disabled={isVisibleCopyMoveModal && !isCopyCard}
           >
-            Копировать
+            Copy
           </button>
           <button
             className={
@@ -257,7 +257,7 @@ export default function CardModal(): JSX.Element {
             }}
             disabled={isVisibleCopyMoveModal && isCopyCard}
           >
-            Перемещение
+            Move
           </button>
           <button
             className={isVisibleCopyMoveModal ? 'card-modal-actions-btn disabled' : 'card-modal-actions-btn archive'}
@@ -267,7 +267,7 @@ export default function CardModal(): JSX.Element {
             }}
             disabled={isVisibleCopyMoveModal}
           >
-            Архивация
+            Archive
           </button>
         </div>
         <button className="card-modal-btn-close" onClick={(): void => onCardModalClose()}>
