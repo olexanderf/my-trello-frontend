@@ -117,7 +117,6 @@ function moveToEndSheet(
     changedArrOfCards,
     currentBoardLists.indexOf(targetList)
   );
-  // update state and send request
   const arrUpdatedCards = [
     ...cardsDragStart.map((c) => {
       return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDraggedCard].id };

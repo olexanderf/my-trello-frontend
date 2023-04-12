@@ -19,8 +19,9 @@ const updateCardPositions = (
     // case if card move to another board and need to replace position in cards arr
     if (newPosition && newCard && newCard.id !== c.id && c.position >= newPosition)
       return { ...c, position: c.position + 1 };
-    if (newPosition && !newCard && c.position >= newPosition) return { ...c, position: c.position + 1 };
-
+    if (newPosition && !newCard && c.position >= newPosition) {
+      return { ...c, position: c.position + 1 };
+    }
     return { ...c, position: index + 1 };
   });
   const newList = { ...targetBoard.lists[indexOfList], cards: arrOfCards };
