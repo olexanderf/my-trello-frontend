@@ -125,7 +125,7 @@ export default function CardModal(): JSX.Element {
       setEditDescription(false);
     }
   };
-
+  // change this method
   const updateCardPositions = (currentBoardId: number, deleteCardId: number): void => {
     let cardsArr = currentList.cards.filter((c) => c.id !== deleteCardId);
     cardsArr = cardsArr.map((c: ICard, index) => {

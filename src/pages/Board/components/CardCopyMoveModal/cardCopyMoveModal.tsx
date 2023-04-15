@@ -9,7 +9,13 @@ import { AppDispatch, AppState } from '../../../../store/store';
 import updateCardPositions from '../../../../common/tools/ModalCardMover';
 import './cardCopyMoveModal.scss';
 import { DeleteCardData, UpdatedCardsPosition } from '../../../../common/interfaces/movedCardsInterfaces';
-import { deleteCardFromList, moveBetweenSheets, moveOnSheet } from '../../../../common/tools/dragCardMover';
+import {
+  createUpdatedCardsArr,
+  deleteCardFromList,
+  moveBetweenSheets,
+  moveOnSheet,
+  replaceCardsInList,
+} from '../../../../common/tools/dragCardMover';
 
 interface PropsType {
   isCopy: boolean;
@@ -180,12 +186,20 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
       // moveBetweenBoards(newCardPosition, cardsArr);
       let startMove = {};
       if (cardOnModal.position < cardsArr.length + 1) {
-        const { arrUpdatedCards, updatedListsArr: startListsArr } = updateCardPositions(
+        const updatedListsArr = replaceCardsInList(
+          boardOnScreen.lists,
+          boardOnScreen.lists[listOnModal.position - 1],
           cardsArr,
-          boardOnScreen,
           listOnModal.position - 1
         );
-        if (boardId) startMove = { boardId: +boardId, cards: arrUpdatedCards, lists: startListsArr };
+        const arrUpdatedCards = createUpdatedCardsArr(cardsArr, boardOnScreen.lists[listOnModal.position - 1].id);
+        // const { arrUpdatedCards, updatedListsArr: startListsArr } = updateCardPositions(
+        //   cardsArr,
+        //   boardOnScreen,
+        //   listOnModal.position - 1
+        // );
+        // if (boardId) startMove = { boardId: +boardId, cards: arrUpdatedCards, lists: startListsArr };
+        if (boardId) startMove = { boardId: +boardId, cards: arrUpdatedCards, lists: updatedListsArr };
       }
       let targetMove = {};
       if (board.lists[options.indexOfSelectedList].cards.length !== 0) {
@@ -195,6 +209,12 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
           options.indexOfSelectedList,
           newCardPosition
         );
+        // const { arrUpdatedCards: targetArrUpdatedCards, updatedListsArr } = updateCardPositions(
+        //   [...board.lists[options.indexOfSelectedList].cards],
+        //   board,
+        //   options.indexOfSelectedList,
+        //   newCardPosition
+        // );
         targetMove = {
           boardId: +boards[options.indexOfBoard].id,
           cards: targetArrUpdatedCards,

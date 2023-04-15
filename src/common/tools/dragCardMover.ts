@@ -8,6 +8,11 @@ export function insertObjectInArr<T>(arr: Array<T>, insertIndex: number, object:
 export function replaceCardsInList(listArr: Lists[], list: Lists, cards: ICard[], insertIndex: number): Lists[] {
   return [...listArr.slice(0, insertIndex), { ...list, cards }, ...listArr.slice(insertIndex + 1)];
 }
+export function createUpdatedCardsArr(cardsArr: ICard[], listId: number): UpdatedCards[] {
+  return cardsArr.map((c) => {
+    return { id: c.id, position: c.position, list_id: listId };
+  });
+}
 export function moveOnSheet(
   dragCard: ICard,
   dropIndex: number,
@@ -23,9 +28,7 @@ export function moveOnSheet(
   // // update cards arr in list
   const changedArrOfList = replaceCardsInList(currentBoardLists, targetList, cardsArr, indexOfListDraggedCard);
   // update state and send request to server
-  const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
-    return { id: c.id, position: c.position, list_id: targetList.id };
-  });
+  const arrUpdatedCards: UpdatedCards[] = createUpdatedCardsArr(cardsArr, targetList.id);
   return { arrUpdatedCards, changedArrOfList };
 }
 export function moveBetweenSheets(
@@ -55,12 +58,8 @@ export function moveBetweenSheets(
   );
   // update state and send request
   const arrUpdatedCards = [
-    ...cardsDragStart.map((c) => {
-      return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDraggedCard].id };
-    }),
-    ...changedArrOfCards.map((c) => {
-      return { id: c.id, position: c.position, list_id: targetList.id };
-    }),
+    ...createUpdatedCardsArr(cardsDragStart, currentBoardLists[indexOfListDraggedCard].id),
+    ...createUpdatedCardsArr(changedArrOfCards, targetList.id),
   ];
   return { arrUpdatedCards, changedArrOfList };
 }
@@ -84,9 +83,10 @@ function moveToEmptySheet(
     currentBoardLists.indexOf(targetList)
   );
   // update state and send request to server
-  const arrUpdatedCards: UpdatedCards[] = cardsDragStart.map((c) => {
-    return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDraggedCard].id };
-  });
+  const arrUpdatedCards: UpdatedCards[] = createUpdatedCardsArr(
+    cardsDragStart,
+    currentBoardLists[indexOfListDraggedCard].id
+  );
   arrUpdatedCards.push({ id: dragCard.id, position: 1, list_id: targetList.id });
   return { arrUpdatedCards, changedArrOfList };
 }
@@ -118,12 +118,8 @@ function moveToEndSheet(
     currentBoardLists.indexOf(targetList)
   );
   const arrUpdatedCards = [
-    ...cardsDragStart.map((c) => {
-      return { id: c.id, position: c.position, list_id: currentBoardLists[indexOfListDraggedCard].id };
-    }),
-    ...changedArrOfCards.map((c) => {
-      return { id: c.id, position: c.position, list_id: targetList.id };
-    }),
+    ...createUpdatedCardsArr(cardsDragStart, currentBoardLists[indexOfListDraggedCard].id),
+    ...createUpdatedCardsArr(changedArrOfCards, targetList.id),
   ];
   return { arrUpdatedCards, changedArrOfList };
 }
