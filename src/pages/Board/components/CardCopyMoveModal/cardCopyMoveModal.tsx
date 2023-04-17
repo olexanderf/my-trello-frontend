@@ -6,7 +6,6 @@ import UpdatedCards from '../../../../common/interfaces/UpdatedCards';
 import { createCard, getBoard, moveCards } from '../../../../store/modules/board/actions';
 import { fetchBoardData, moveCardAnotherBoard } from '../../../../store/modules/cardEditModal/action';
 import { AppDispatch, AppState } from '../../../../store/store';
-import updateCardPositions from '../../../../common/tools/ModalCardMover';
 import './cardCopyMoveModal.scss';
 import { DeleteCardData, UpdatedCardsPosition } from '../../../../common/interfaces/movedCardsInterfaces';
 import {
@@ -15,7 +14,7 @@ import {
   moveBetweenSheets,
   moveOnSheet,
   replaceCardsInList,
-} from '../../../../common/tools/dragCardMover';
+} from '../../../../common/tools/cardMover';
 
 interface PropsType {
   isCopy: boolean;
@@ -127,124 +126,80 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
       await navigate(`/board/${idBoard}`);
     }
   };
-  // const moveBetweenBoards = async (newCardPosition: number, cardsArr: ICard[]): Promise<void> => {
-  //   let startMove = {};
-  //   if (cardOnModal.position < cardsArr.length + 1) {
-  //     const { arrUpdatedCards, updatedListsArr: startListsArr } = updateCardPositions(
-  //       cardsArr,
-  //       boardOnScreen,
-  //       listOnModal.position - 1
-  //     );
-  //     if (boardId) startMove = { boardId: +boardId, cards: arrUpdatedCards, lists: startListsArr };
-  //   }
-  //   let targetMove = {};
-  //   if (board.lists[options.indexOfSelectedList].cards.length !== 0) {
-  //     const { arrUpdatedCards: targetArrUpdatedCards, updatedListsArr } = updateCardPositions(
-  //       [...board.lists[options.indexOfSelectedList].cards],
-  //       board,
-  //       options.indexOfSelectedList,
-  //       newCardPosition
-  //     );
-  //     targetMove = {
-  //       boardId: +boards[options.indexOfBoard].id,
-  //       cards: targetArrUpdatedCards,
-  //       lists: updatedListsArr,
-  //     };
-  //   }
-  //   const cardToNewBoard: MovedICard = {
-  //     board_id: boards[options.indexOfBoard].id,
-  //     title: cardOnModal.title,
-  //     list_id: board.lists[options.indexOfSelectedList].id,
-  //     position: newCardPosition,
-  //     description: cardOnModal.description,
-  //     custom: cardOnModal.custom,
-  //   };
-  //   if (boardId) {
-  //     const deleteCardData: DeleteCardData = {
-  //       boardId: +boardId,
-  //       cardId: cardOnModal.id,
-  //     };
-  //     await dispatch(
-  //       moveCardAnotherBoard(
-  //         cardToNewBoard,
-  //         deleteCardData,
-  //         startMove as UpdatedCardsPosition,
-  //         targetMove as UpdatedCardsPosition
-  //       )
-  //     );
-  //   }
-  //   dispatch(getBoard(+boards[options.indexOfBoard].id));
-  //   await navigate(`/board/${+boards[options.indexOfBoard].id}`);
-  // };
+  const createStartMoveData = (cardsArr: ICard[]): {} => {
+    if (cardOnModal.position < cardsArr.length + 1) {
+      const updatedListsArr = replaceCardsInList(
+        boardOnScreen.lists,
+        boardOnScreen.lists[listOnModal.position - 1],
+        cardsArr,
+        listOnModal.position - 1
+      );
+      const arrUpdatedCards = createUpdatedCardsArr(cardsArr, boardOnScreen.lists[listOnModal.position - 1].id);
+      if (boardId) return { boardId: +boardId, cards: arrUpdatedCards, lists: updatedListsArr };
+    }
+    return {};
+  };
+  const createTargetMoveDate = (newCardPosition: number): {} => {
+    if (board.lists[options.indexOfSelectedList].cards.length !== 0) {
+      const targetCardsUpdatedPositions = board.lists[options.indexOfSelectedList].cards.map((c: ICard) => {
+        if (c.position < newCardPosition) return { ...c };
+        return { ...c, position: c.position + 1 };
+      });
+      const updatedListsArr = replaceCardsInList(
+        board.lists,
+        board.lists[options.indexOfSelectedList],
+        targetCardsUpdatedPositions,
+        options.indexOfSelectedList
+      );
+      const arrUpdatedCards = createUpdatedCardsArr(
+        targetCardsUpdatedPositions,
+        board.lists[options.indexOfSelectedList].id
+      );
+      return {
+        boardId: +boards[options.indexOfBoard].id,
+        cards: arrUpdatedCards,
+        lists: updatedListsArr,
+      };
+    }
+    return {};
+  };
+  const moveBetweenBoards = async (newCardPosition: number, cardsArr: ICard[]): Promise<void> => {
+    const startMove = createStartMoveData(cardsArr);
+    const targetMove = createTargetMoveDate(newCardPosition);
+
+    const cardToNewBoard: MovedICard = {
+      board_id: boards[options.indexOfBoard].id,
+      title: cardOnModal.title,
+      list_id: board.lists[options.indexOfSelectedList].id,
+      position: newCardPosition,
+      description: cardOnModal.description,
+      custom: cardOnModal.custom,
+    };
+    if (boardId) {
+      const deleteCardData: DeleteCardData = {
+        boardId: +boardId,
+        cardId: cardOnModal.id,
+      };
+      await dispatch(
+        moveCardAnotherBoard(
+          cardToNewBoard,
+          deleteCardData,
+          startMove as UpdatedCardsPosition,
+          targetMove as UpdatedCardsPosition
+        )
+      );
+    }
+    dispatch(getBoard(+boards[options.indexOfBoard].id));
+    await navigate(`/board/${+boards[options.indexOfBoard].id}`);
+  };
   const replaceCard = async (newCardPosition: number): Promise<void> => {
     // create copy of cards arr on list and delete current card
-    const cardsArr = deleteCardFromList(cardOnModal, board.lists, options.indexOfSelectedList);
+    const cardsArr = deleteCardFromList(cardOnModal, boardOnScreen.lists, listOnModal.position - 1);
     // check if selected board same that we choose on modal
     if (boardId && +boardId === +boards[options.indexOfBoard].id) {
       moveBetweenLists(newCardPosition, cardsArr, +boardId);
     } else {
-      // moveBetweenBoards(newCardPosition, cardsArr);
-      let startMove = {};
-      if (cardOnModal.position < cardsArr.length + 1) {
-        const updatedListsArr = replaceCardsInList(
-          boardOnScreen.lists,
-          boardOnScreen.lists[listOnModal.position - 1],
-          cardsArr,
-          listOnModal.position - 1
-        );
-        const arrUpdatedCards = createUpdatedCardsArr(cardsArr, boardOnScreen.lists[listOnModal.position - 1].id);
-        // const { arrUpdatedCards, updatedListsArr: startListsArr } = updateCardPositions(
-        //   cardsArr,
-        //   boardOnScreen,
-        //   listOnModal.position - 1
-        // );
-        // if (boardId) startMove = { boardId: +boardId, cards: arrUpdatedCards, lists: startListsArr };
-        if (boardId) startMove = { boardId: +boardId, cards: arrUpdatedCards, lists: updatedListsArr };
-      }
-      let targetMove = {};
-      if (board.lists[options.indexOfSelectedList].cards.length !== 0) {
-        const { arrUpdatedCards: targetArrUpdatedCards, updatedListsArr } = updateCardPositions(
-          [...board.lists[options.indexOfSelectedList].cards],
-          board,
-          options.indexOfSelectedList,
-          newCardPosition
-        );
-        // const { arrUpdatedCards: targetArrUpdatedCards, updatedListsArr } = updateCardPositions(
-        //   [...board.lists[options.indexOfSelectedList].cards],
-        //   board,
-        //   options.indexOfSelectedList,
-        //   newCardPosition
-        // );
-        targetMove = {
-          boardId: +boards[options.indexOfBoard].id,
-          cards: targetArrUpdatedCards,
-          lists: updatedListsArr,
-        };
-      }
-      const cardToNewBoard: MovedICard = {
-        board_id: boards[options.indexOfBoard].id,
-        title: cardOnModal.title,
-        list_id: board.lists[options.indexOfSelectedList].id,
-        position: newCardPosition,
-        description: cardOnModal.description,
-        custom: cardOnModal.custom,
-      };
-      if (boardId) {
-        const deleteCardData: DeleteCardData = {
-          boardId: +boardId,
-          cardId: cardOnModal.id,
-        };
-        await dispatch(
-          moveCardAnotherBoard(
-            cardToNewBoard,
-            deleteCardData,
-            startMove as UpdatedCardsPosition,
-            targetMove as UpdatedCardsPosition
-          )
-        );
-      }
-      dispatch(getBoard(+boards[options.indexOfBoard].id));
-      await navigate(`/board/${+boards[options.indexOfBoard].id}`);
+      moveBetweenBoards(newCardPosition, cardsArr);
     }
   };
 

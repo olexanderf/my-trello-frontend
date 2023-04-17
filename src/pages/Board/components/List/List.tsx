@@ -6,7 +6,7 @@ import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import UpdatedLists from '../../../../common/interfaces/UpdatedLists';
-import dragCardMover from '../../../../common/tools/dragCardMover';
+import dragCardMover from '../../../../common/tools/cardMover';
 import {
   createCard,
   deleteListAction,
