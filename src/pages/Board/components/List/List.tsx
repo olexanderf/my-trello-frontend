@@ -26,8 +26,7 @@ interface PropsType {
   list: Lists;
 }
 
-export default function List(props: PropsType): JSX.Element {
-  const { list } = props;
+export default function List({ list }: PropsType): JSX.Element {
   const { title, cards, id, position } = list;
   const { board_id: boardId, card_id: cardId } = useParams();
   const dispatch: AppDispatch = useDispatch();

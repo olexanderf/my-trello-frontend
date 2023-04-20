@@ -160,7 +160,6 @@ export default function dragCardMover(
       );
       return { arrUpdatedCards, changedArrOfList };
     }
-
     // move card to another list
     if (dragListId !== targetList.id) {
       const { arrUpdatedCards, changedArrOfList } = moveBetweenSheets(

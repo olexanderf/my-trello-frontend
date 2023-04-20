@@ -20,8 +20,7 @@ interface PropsType {
   isCopy: boolean;
 }
 
-export default function CardCopyMoveModal(props: PropsType): JSX.Element {
-  const { isCopy } = props;
+export default function CardCopyMoveModal({ isCopy }: PropsType): JSX.Element {
   const { board_id: boardId } = useParams();
   const navigate = useNavigate();
   const boards = useSelector((state: AppState) => state.boards);
@@ -83,9 +82,12 @@ export default function CardCopyMoveModal(props: PropsType): JSX.Element {
         if (c.position >= newCardPosition) return { ...c, position: c.position + 1 };
         return { ...c, position: index + 1 };
       });
-      const newList = { ...board.lists[options.indexOfSelectedList], cards: cardsArr };
-      const updatedListsArr = [...board.lists];
-      updatedListsArr.splice(options.indexOfSelectedList, 1, newList);
+      const updatedListsArr = replaceCardsInList(
+        board.lists,
+        board.lists[options.indexOfSelectedList],
+        cardsArr,
+        options.indexOfSelectedList
+      );
       const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
         return { id: c.id, position: c.position, list_id: board.lists[options.indexOfSelectedList].id };
       });

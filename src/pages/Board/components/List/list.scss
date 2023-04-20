@@ -1,12 +1,18 @@
 .list {
   display: flex;
   flex-direction: column;
+  position: relative;
   margin: 0 15px 0 15px;
   width: 450px;
-  min-height: 300px;
+  min-height: 50px;
   background-color: rgba(216, 204, 204, 0.623);
   border-radius: 8px;
   word-wrap: break-word;
+  overflow: hidden;
+  .add-item-container {
+    position: relative;
+    z-index: 25;
+  }
 
   .list-title-container {
     box-sizing: border-box;
@@ -40,8 +46,11 @@
     flex-direction: column;
     justify-content: flex-start;
     gap: 10px;
+    height: inherit;
 
     .card {
+      position: relative;
+      z-index: 150;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -76,11 +85,13 @@
       margin-bottom: 90px;
     }
     .last {
-      margin: -20px 0px 0px 0px;
+      position: absolute;
+      z-index: 50;
       padding: 0;
       color: transparent;
       background-color: transparent;
-      min-height: 25px;
+      width: 450px;
+      height: 100%;
     }
   }
   .list-btn-delete {

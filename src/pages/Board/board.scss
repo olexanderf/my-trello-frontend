@@ -16,11 +16,12 @@
     border-radius: 15px;
   }
   .block-table {
-    min-height: 650px;
     display: flex;
     width: 100%;
     .block-lists {
       display: flex;
+      flex-direction: row;
+      align-items: flex-start;
       padding: 15px;
     }
   }

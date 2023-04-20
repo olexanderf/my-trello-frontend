@@ -18,6 +18,7 @@ import { AppDispatch, AppState } from '../../../../store/store';
 import CardCopyMoveModal from '../CardCopyMoveModal/cardCopyMoveModal';
 import './cardModal.scss';
 import LinkComponent from './LinkComponent/LinkComponent';
+import { deleteCardFromList, replaceCardsInList } from '../../../../common/tools/cardMover';
 
 export default function CardModal(): JSX.Element {
   const navigate = useNavigate();
@@ -125,15 +126,14 @@ export default function CardModal(): JSX.Element {
       setEditDescription(false);
     }
   };
-  // change this method
-  const updateCardPositions = (currentBoardId: number, deleteCardId: number): void => {
-    let cardsArr = currentList.cards.filter((c) => c.id !== deleteCardId);
-    cardsArr = cardsArr.map((c: ICard, index) => {
-      return { ...c, position: index + 1 };
-    });
-    const newList = { ...currentList, cards: cardsArr };
-    const updatedListsArr = [...board.lists];
-    updatedListsArr.splice(currentList.position - 1, 1, newList);
+  const updateCardsPositionInList = (currentBoardId: number, card: ICard): void => {
+    const cardsArr = deleteCardFromList(card, board.lists, currentList.position - 1);
+    const updatedListsArr = replaceCardsInList(
+      board.lists,
+      board.lists[currentList.position - 1],
+      cardsArr,
+      currentList.position - 1
+    );
     const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
       return { id: c.id, position: c.position, list_id: currentList.id };
     });
@@ -142,7 +142,7 @@ export default function CardModal(): JSX.Element {
 
   const cardBtnArchiveHandler = async (): Promise<void> => {
     if (boardId && cardId) {
-      if (currentCard.position !== currentList.cards.length) await updateCardPositions(+boardId, +cardId);
+      if (currentCard.position !== currentList.cards.length) await updateCardsPositionInList(+boardId, currentCard);
       await dispatch(deleteCardAction(+boardId, +cardId));
     }
   };

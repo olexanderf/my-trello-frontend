@@ -7,7 +7,6 @@ export const getBoards = (): AppThunk => {
   return async (dispatch: TypedDispatch): Promise<void> => {
     try {
       const response = await api.get<string, { boards: Board[] }>('/board');
-      // console.log(response);
       await dispatch({ type: 'UPDATE_BOARDS', payload: response.boards });
     } catch (e) {
       dispatch(handleResponseError(e));
@@ -20,7 +19,6 @@ export const createBoard = (boardName: string): AppThunk => {
       const response = await api.post('/board', {
         title: boardName,
       });
-      // console.log(response);
       await dispatch({ type: 'CREATE_BOARD', payload: { response, boardName } });
       await dispatch(getBoards());
     } catch (e) {
@@ -33,7 +31,6 @@ export const deleteBoard = (id: number): AppThunk => {
     try {
       await api.delete(`/board/${id}`);
       await dispatch({ type: 'DELETE_BOARD' });
-      // console.log(response);
       await dispatch(getBoards());
     } catch (e) {
       dispatch(handleResponseError(e));
