@@ -113,12 +113,12 @@ export default function List({ list }: PropsType): JSX.Element {
     e.preventDefault();
   };
   const dragEnterHandler = (e: React.DragEvent<HTMLDivElement>): void => {
-    if (dragElement === e.currentTarget) {
+    if (dragCard && dragElement === e.currentTarget) {
       dragElement?.classList.add('slot');
       dragElement?.classList.remove('hidden-card');
     }
     dragElement?.classList.remove('card');
-    if (dragElement !== e.currentTarget) {
+    if (dragCard && dragElement !== e.currentTarget) {
       e.currentTarget.classList.add('slot-before');
       e.currentTarget.classList.add('card-top');
     }
@@ -147,7 +147,7 @@ export default function List({ list }: PropsType): JSX.Element {
     }
   };
   const containerDragEnterHandler = (e: React.DragEvent<HTMLDivElement>): void => {
-    if (e.currentTarget.classList.contains('last')) e.currentTarget.classList.remove('last');
+    if (dragCard && e.currentTarget.classList.contains('last')) e.currentTarget.classList.remove('last');
   };
   const containerDragLeaveHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     if (e.currentTarget.classList.contains('slot')) e.currentTarget.classList.add('last');
