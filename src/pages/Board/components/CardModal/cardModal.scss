@@ -7,7 +7,7 @@
   min-height: 350px;
   background-color: white;
   border-radius: 5px;
-  z-index: 100;
+  z-index: 600;
   display: flex;
   justify-content: top;
   align-items: left;
@@ -29,6 +29,9 @@
       margin-top: 18px;
       margin-bottom: 15px;
       font-weight: bold;
+      &.error {
+        border: 2px solid red;
+      }
     }
     .title {
       margin-bottom: 10px;

@@ -63,13 +63,10 @@ export default function CardModal(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    setValueOfCardTitle(currentCard.title);
-  }, [currentCard.title]);
-
-  useEffect(() => {
     if (currentCard.description !== undefined) setValueOfDescription(currentCard.description);
     else setValueOfDescription('');
-  }, [currentCard.description]);
+    setValueOfCardTitle(currentCard.title);
+  }, [currentCard.description, currentCard.title]);
 
   const changeCardTitle = (e: ChangeEvent<HTMLInputElement>): void => {
     setValueOfCardTitle(e.target.value);
@@ -80,29 +77,11 @@ export default function CardModal(): JSX.Element {
   };
 
   const updateCardFields = (): void => {
-    if (valueOfCardTitle.match(boardInputRegex) && boardId && cardId && valueOfCardTitle !== currentCard.title) {
-      setValidInput(true);
-      dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle, currentCard.description));
-      setEditCardTitle(false);
-    }
-    if (valueOfCardTitle.match(boardInputRegex) && valueOfCardTitle === currentCard.title) {
-      setValidInput(true);
-      setEditCardTitle(false);
-    }
-    if (!valueOfCardTitle.match(boardInputRegex)) setValidInput(false);
-
-    if (
-      valueOfCardTitle.match(boardInputRegex) &&
-      boardId &&
-      cardId &&
-      valueOfDescription !== currentCard.description
-    ) {
+    if (boardId && cardId && valueOfCardTitle.match(boardInputRegex)) {
       dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle, valueOfDescription));
-      setEditCardTitle(false);
+      setValidInput(true);
     }
-    if (valueOfDescription === currentCard.description) {
-      setEditCardTitle(false);
-    }
+    setValidInput(false);
   };
 
   const endEditTitle = (e: React.KeyboardEvent): void => {
@@ -185,7 +164,7 @@ export default function CardModal(): JSX.Element {
             </h1>
           )}
           <span className="card-modal-list-name">
-            In a collumn: <span>{currentList.title}</span>
+            In a column: <span>{currentList.title}</span>
           </span>
           <div className="card-modal-members">
             <h4 className="card-modal-users-title">Users:</h4>
