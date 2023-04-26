@@ -6,7 +6,7 @@ import { boardInputRegex } from '../../../../common/constants/regExp';
 import ICard from '../../../../common/interfaces/ICard';
 import Lists from '../../../../common/interfaces/Lists';
 import UpdatedLists from '../../../../common/interfaces/UpdatedLists';
-import dragCardMover from '../../../../common/tools/dragCardMover';
+import dragCardMover from '../../../../common/tools/cardMover';
 import {
   createCard,
   deleteListAction,
@@ -18,7 +18,7 @@ import { getBoards } from '../../../../store/modules/boards/actions';
 import { toggleCardEditModal } from '../../../../store/modules/cardEditModal/action';
 import { setDragCard, setDragStartListId } from '../../../../store/modules/dragNdrop/action';
 import { AppDispatch, AppState } from '../../../../store/store';
-import Modal from '../../../Multipurpose/Modal/Modal';
+import Modal from '../../../../common/components/NewElementModal/NewElementModal';
 import Card from '../Card/Card';
 import './list.scss';
 
@@ -26,8 +26,7 @@ interface PropsType {
   list: Lists;
 }
 
-export default function List(props: PropsType): JSX.Element {
-  const { list } = props;
+export default function List({ list }: PropsType): JSX.Element {
   const { title, cards, id, position } = list;
   const { board_id: boardId, card_id: cardId } = useParams();
   const dispatch: AppDispatch = useDispatch();
@@ -114,12 +113,12 @@ export default function List(props: PropsType): JSX.Element {
     e.preventDefault();
   };
   const dragEnterHandler = (e: React.DragEvent<HTMLDivElement>): void => {
-    if (dragElement === e.currentTarget) {
+    if (dragCard && dragElement === e.currentTarget) {
       dragElement?.classList.add('slot');
       dragElement?.classList.remove('hidden-card');
     }
     dragElement?.classList.remove('card');
-    if (dragElement !== e.currentTarget) {
+    if (dragCard && dragElement !== e.currentTarget) {
       e.currentTarget.classList.add('slot-before');
       e.currentTarget.classList.add('card-top');
     }
@@ -148,14 +147,13 @@ export default function List(props: PropsType): JSX.Element {
     }
   };
   const containerDragEnterHandler = (e: React.DragEvent<HTMLDivElement>): void => {
-    if (e.currentTarget.classList.contains('last')) e.currentTarget.classList.remove('last');
+    if (dragCard && e.currentTarget.classList.contains('last')) e.currentTarget.classList.remove('last');
   };
   const containerDragLeaveHandler = (e: React.DragEvent<HTMLDivElement>): void => {
     if (e.currentTarget.classList.contains('slot')) e.currentTarget.classList.add('last');
   };
   const updateListsPosition = (arrLists: Lists[], listId: number): void => {
-    let newLists = [...arrLists];
-    newLists = newLists
+    const newLists = arrLists
       .filter((l) => l.id !== listId)
       .map((l, index) => {
         return { ...l, position: index + 1 };
@@ -246,8 +244,8 @@ export default function List(props: PropsType): JSX.Element {
           onDragLeave={(e): void => containerDragLeaveHandler(e)}
         />
       </div>
-      <div className="btn-container">
-        <button className="add-list" onClick={toggleModal}>
+      <div className="add-item-container">
+        <button className="add-item" onClick={toggleModal}>
           +
         </button>
       </div>

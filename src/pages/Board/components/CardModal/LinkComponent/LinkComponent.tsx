@@ -10,9 +10,9 @@ export default function LinkComponent(props: PropsType): JSX.Element {
   const words = text.split(' ');
   return (
     <p>
-      {words.map((t) => {
+      {words.map((t, index) => {
         return t.match(urlRgx) ? (
-          <a href={t} target="_blank" rel="noreferrer">
+          <a href={t} key={+index + t} target="_blank" rel="noreferrer">
             {`${t} `}
           </a>
         ) : (

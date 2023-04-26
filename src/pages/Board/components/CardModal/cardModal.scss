@@ -1,7 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
-
-$main-font: 'Comfortaa', cursive;
-
 .card-modal-container {
   position: absolute;
   top: 40%;
@@ -11,185 +7,191 @@ $main-font: 'Comfortaa', cursive;
   min-height: 350px;
   background-color: white;
   border-radius: 5px;
-  z-index: 100;
+  z-index: 600;
   display: flex;
   justify-content: top;
   align-items: left;
   padding-left: 20px;
   color: gray;
-}
-.card-modal-container-main {
-  display: flex;
-  justify-content: top;
-  align-items: left;
-  flex-direction: column;
-  gap: 10px;
-  word-wrap: break-word;
-  overflow: hidden;
-  min-width: 390px;
-}
-.card-modal-title {
-  margin-bottom: 10px;
-  color: black;
-}
-.card-modal-list-name > span {
-  border-bottom: 2px solid;
-}
-.card-modal-members {
-  display: flex;
-  align-items: left;
-  flex-direction: column;
-}
-.card-modal-users-container {
-  display: flex;
-  align-items: left;
-  flex-direction: row;
-  padding-top: 0;
-  padding-bottom: 10px;
-}
-.card-modal-users-title {
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
-.card-modal-users-icon {
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-  background-color: yellow;
-  outline: gray 2px solid;
-  cursor: pointer;
-}
-.card-modal-users-icon:first-child {
-  margin-left: 5px;
-}
 
-.card-modal-users-icon.invite {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: lightgrey;
-  color: black;
-  font-size: 40px;
-  border: none;
-  transition: all 0.2s ease-in;
-  &:hover {
-    background-color: rgba(115, 113, 252, 0.651);
-    transform: rotate(30deg);
+  .card-modal-box {
+    display: flex;
+    justify-content: top;
+    align-items: left;
+    flex-direction: column;
+    gap: 10px;
+    word-wrap: break-word;
+    overflow: hidden;
+    min-width: 390px;
+    .card-modal-input {
+      border-radius: 5px;
+      font-size: 30px;
+      margin-top: 18px;
+      margin-bottom: 15px;
+      font-weight: bold;
+      &.error {
+        border: 2px solid red;
+      }
+    }
+    .title {
+      margin-bottom: 10px;
+      color: black;
+    }
+    .card-modal-list-name {
+      span {
+        border-bottom: 2px solid;
+      }
+    }
+    .card-modal-members {
+      display: flex;
+      align-items: left;
+      flex-direction: column;
+
+      .card-modal-users-container {
+        display: flex;
+        align-items: left;
+        flex-direction: row;
+        padding-top: 0;
+        padding-bottom: 10px;
+      }
+      .card-modal-users-title {
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+      .card-modal-users-icon {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+        background-color: yellow;
+        outline: gray 2px solid;
+        cursor: pointer;
+      }
+      .card-modal-users-icon:first-child {
+        margin-left: 5px;
+      }
+
+      .card-modal-users-icon.invite {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: lightgrey;
+        color: black;
+        font-size: 40px;
+        border: none;
+        transition: all 0.2s ease-in;
+        &:hover {
+          background-color: rgba(115, 113, 252, 0.651);
+          transform: rotate(30deg);
+        }
+      }
+      .card-modal-btn-join-member {
+        outline: 2px solid gray;
+        border: none;
+        margin-top: 5px;
+        padding: 5px;
+        height: 30px;
+        cursor: pointer;
+        transition: all 0.2s ease-in;
+        &:hover {
+          background-color: rgba(115, 113, 252, 0.651);
+          border-color: gray;
+          box-shadow: none;
+        }
+      }
+    }
+    .card-modal-description-header-container {
+      display: flex;
+      justify-content: left;
+      .card-modal-description-header {
+        color: black;
+        margin: 5px;
+      }
+      .card-modal-description-btn-edit {
+        outline: 2px solid gray;
+        border: none;
+        height: 30px;
+        cursor: pointer;
+        transition: all 0.2s ease-in;
+        &:hover {
+          background-color: rgba(115, 113, 252, 0.651);
+          border-color: gray;
+          box-shadow: none;
+        }
+      }
+    }
+
+    .card-modal-description-edit {
+      font-size: 18px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      resize: vertical;
+      width: 95%;
+      max-width: 95%;
+      height: 100px;
+      max-height: 300px;
+      border-radius: 5px;
+      border: 2px solid;
+    }
   }
-}
-.card-modal-btn-join-member {
-  outline: 2px solid gray;
-  border: none;
-  margin-top: 5px;
-  padding: 5px;
-  height: 30px;
-  cursor: pointer;
-  transition: all 0.2s ease-in;
-  &:hover {
-    background-color: rgba(115, 113, 252, 0.651);
-    border-color: gray;
-    box-shadow: none;
+  .card-modal-actions-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;
+    padding: 70px 20px 0 20px;
+    margin-left: auto;
+    .card-modal-actions-header {
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .card-modal-actions-btn {
+      outline: 2px solid gray;
+      border: none;
+      height: 30px;
+      margin-bottom: 10px;
+      width: 120px;
+      cursor: pointer;
+      transition: all 0.2s ease-in;
+      &:hover {
+        background-color: rgba(115, 113, 252, 0.651);
+        border-color: gray;
+        box-shadow: none;
+      }
+    }
+    .card-modal-actions-btn.archive {
+      outline: 2px solid rgb(255, 117, 117);
+      border: none;
+      color: red;
+      background-color: rgb(250, 193, 193);
+      transition: all 0.2s ease-in;
+      &:hover {
+        background-color: rgba(115, 113, 252, 0.651);
+        border-color: red;
+        box-shadow: none;
+      }
+    }
+    .disabled {
+      cursor: not-allowed;
+      background-color: rgb(207, 202, 202);
+    }
   }
-}
-.card-modal-description-header-container {
-  display: flex;
-  justify-content: left;
-}
-.card-modal-description-header {
-  color: black;
-  margin: 5px;
-}
-.card-modal-description-btn-edit {
-  outline: 2px solid gray;
-  border: none;
-  height: 30px;
-  cursor: pointer;
-  transition: all 0.2s ease-in;
-  &:hover {
-    background-color: rgba(115, 113, 252, 0.651);
-    border-color: gray;
-    box-shadow: none;
+  .card-modal-btn-close {
+    position: absolute;
+    font-size: 25px;
+    width: 30px;
+    height: 30px;
+    top: 10px;
+    left: 92%;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in;
+    transform: rotate(45deg);
+    background-color: transparent;
+    &:hover {
+      transform: rotate(135deg);
+      background-color: rgb(247, 76, 9);
+    }
   }
-}
-.card-modal-actions-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: top;
-  align-items: center;
-  padding: 70px 20px 0 20px;
-  margin-left: auto;
-}
-.card-modal-actions-header {
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
-.card-modal-actions-btn {
-  outline: 2px solid gray;
-  border: none;
-  height: 30px;
-  margin-bottom: 10px;
-  width: 120px;
-  cursor: pointer;
-  transition: all 0.2s ease-in;
-  &:hover {
-    background-color: rgba(115, 113, 252, 0.651);
-    border-color: gray;
-    box-shadow: none;
-  }
-}
-.card-modal-actions-btn.archive {
-  outline: 2px solid rgb(255, 117, 117);
-  border: none;
-  color: red;
-  background-color: rgb(250, 193, 193);
-  transition: all 0.2s ease-in;
-  &:hover {
-    background-color: rgba(115, 113, 252, 0.651);
-    border-color: red;
-    box-shadow: none;
-  }
-}
-.disabled {
-  cursor: not-allowed;
-  background-color: rgb(207, 202, 202);
-}
-.card-modal-btn-close {
-  position: absolute;
-  font-size: 25px;
-  width: 30px;
-  height: 30px;
-  top: 10px;
-  left: 92%;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease-in;
-  transform: rotate(45deg);
-  background-color: transparent;
-  &:hover {
-    transform: rotate(135deg);
-    background-color: rgb(247, 76, 9);
-  }
-}
-.card-modal-input {
-  font-family: $main-font;
-  border-radius: 5px;
-  font-size: 30px;
-  margin-top: 18px;
-  margin-bottom: 15px;
-  font-weight: bold;
-}
-.card-modal-description-edit {
-  font-family: $main-font;
-  font-size: 18px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  resize: vertical;
-  width: 95%;
-  max-width: 95%;
-  height: 100px;
-  max-height: 300px;
-  border-radius: 5px;
-  border: 2px solid;
 }

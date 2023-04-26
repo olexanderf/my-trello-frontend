@@ -4,10 +4,10 @@ import { ToastContainer, toast, ToastContent } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { AppState } from './store/store';
 import Board from './pages/Board/Board';
-import './App.css';
+import './App.scss';
 import Home from './pages/Home/Home';
 import 'react-toastify/dist/ReactToastify.css';
-import ProgressBar from './pages/Multipurpose/ProgressBar/ProgressBar';
+import ProgressBar from './common/components/ProgressBar/ProgressBar';
 import CardModal from './pages/Board/components/CardModal/cardModal';
 import Registration from './pages/Authorization/Registration/Registration';
 

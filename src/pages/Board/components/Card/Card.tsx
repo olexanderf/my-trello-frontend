@@ -9,9 +9,7 @@ interface PropsType {
   state: { background: Location };
 }
 
-export default function Card(props: PropsType): JSX.Element {
-  const { card } = props;
-  const { title } = card;
+export default function Card({ card: { title } }: PropsType): JSX.Element {
   return (
     <div>
       <p className="card-text">{title}</p>

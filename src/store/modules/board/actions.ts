@@ -11,7 +11,6 @@ export const getBoard = (id: number): AppThunk => {
   return async (dispatch: TypedDispatch): Promise<void> => {
     try {
       const response = await api.get<string, { board: SingleBoard }>(`/board/${id}`);
-      // console.log(response);
       await dispatch({ type: 'FETCH_BOARD', payload: response });
     } catch (e) {
       dispatch(handleResponseError(e));
@@ -25,7 +24,6 @@ export const editNameBoard = (id: number, boardName: string): AppThunk => {
         title: boardName,
       });
       await dispatch({ type: 'UPDATE_BOARD_NAME', payload: boardName });
-      // console.log(response);
       await dispatch(getBoard(id));
     } catch (e) {
       dispatch(handleResponseError(e));

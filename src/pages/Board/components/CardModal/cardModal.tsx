@@ -18,6 +18,7 @@ import { AppDispatch, AppState } from '../../../../store/store';
 import CardCopyMoveModal from '../CardCopyMoveModal/cardCopyMoveModal';
 import './cardModal.scss';
 import LinkComponent from './LinkComponent/LinkComponent';
+import { deleteCardFromList, replaceCardsInList } from '../../../../common/tools/cardMover';
 
 export default function CardModal(): JSX.Element {
   const navigate = useNavigate();
@@ -34,6 +35,11 @@ export default function CardModal(): JSX.Element {
   const [isVisibleCopyMoveModal, setVisibleCopyMoveModal] = useState(false);
   const [isCopyCard, setCopyCard] = useState(false);
 
+  const onCardModalClose = (): void => {
+    dispatch(toggleCardEditModal(false));
+    navigate(`/board/${boardId}`);
+  };
+
   const loadCardData = (arrLists: Lists[], currentCardId: number): void => {
     let cardIndex = 0;
     const indexList = arrLists.findIndex((l) =>
@@ -45,10 +51,10 @@ export default function CardModal(): JSX.Element {
         return undefined;
       })
     );
-    if (arrLists !== undefined) {
+    if (arrLists && indexList !== -1) {
       dispatch(setListOnModal(arrLists[indexList]));
       dispatch(setCardModal(arrLists[indexList].cards[cardIndex]));
-    }
+    } else onCardModalClose();
   };
 
   useEffect(() => {
@@ -57,18 +63,10 @@ export default function CardModal(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    setValueOfCardTitle(currentCard.title);
-  }, [currentCard.title]);
-
-  useEffect(() => {
     if (currentCard.description !== undefined) setValueOfDescription(currentCard.description);
     else setValueOfDescription('');
-  }, [currentCard.description]);
-
-  const onCardModalClose = (): void => {
-    dispatch(toggleCardEditModal(false));
-    navigate(`/board/${boardId}`);
-  };
+    setValueOfCardTitle(currentCard.title);
+  }, [currentCard.description, currentCard.title]);
 
   const changeCardTitle = (e: ChangeEvent<HTMLInputElement>): void => {
     setValueOfCardTitle(e.target.value);
@@ -79,29 +77,11 @@ export default function CardModal(): JSX.Element {
   };
 
   const updateCardFields = (): void => {
-    if (valueOfCardTitle.match(boardInputRegex) && boardId && cardId && valueOfCardTitle !== currentCard.title) {
-      setValidInput(true);
-      dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle, currentCard.description));
-      setEditCardTitle(false);
-    }
-    if (valueOfCardTitle.match(boardInputRegex) && valueOfCardTitle === currentCard.title) {
-      setValidInput(true);
-      setEditCardTitle(false);
-    }
-    if (!valueOfCardTitle.match(boardInputRegex)) setValidInput(false);
-
-    if (
-      valueOfCardTitle.match(boardInputRegex) &&
-      boardId &&
-      cardId &&
-      valueOfDescription !== currentCard.description
-    ) {
+    if (boardId && cardId && valueOfCardTitle.match(boardInputRegex)) {
       dispatch(updateCard(+boardId, +cardId, currentList.id, valueOfCardTitle, valueOfDescription));
-      setEditCardTitle(false);
+      setValidInput(true);
     }
-    if (valueOfDescription === currentCard.description) {
-      setEditCardTitle(false);
-    }
+    setValidInput(false);
   };
 
   const endEditTitle = (e: React.KeyboardEvent): void => {
@@ -125,15 +105,14 @@ export default function CardModal(): JSX.Element {
       setEditDescription(false);
     }
   };
-
-  const updateCardPositions = (currentBoardId: number, deleteCardId: number): void => {
-    let cardsArr = currentList.cards.filter((c) => c.id !== deleteCardId);
-    cardsArr = cardsArr.map((c: ICard, index) => {
-      return { ...c, position: index + 1 };
-    });
-    const newList = { ...currentList, cards: cardsArr };
-    const updatedListsArr = [...board.lists];
-    updatedListsArr.splice(currentList.position - 1, 1, newList);
+  const updateCardsPositionInList = (currentBoardId: number, card: ICard): void => {
+    const cardsArr = deleteCardFromList(card, board.lists, currentList.position - 1);
+    const updatedListsArr = replaceCardsInList(
+      board.lists,
+      board.lists[currentList.position - 1],
+      cardsArr,
+      currentList.position - 1
+    );
     const arrUpdatedCards: UpdatedCards[] = cardsArr.map((c) => {
       return { id: c.id, position: c.position, list_id: currentList.id };
     });
@@ -142,7 +121,7 @@ export default function CardModal(): JSX.Element {
 
   const cardBtnArchiveHandler = async (): Promise<void> => {
     if (boardId && cardId) {
-      if (currentCard.position !== currentList.cards.length) await updateCardPositions(+boardId, +cardId);
+      if (currentCard.position !== currentList.cards.length) await updateCardsPositionInList(+boardId, currentCard);
       await dispatch(deleteCardAction(+boardId, +cardId));
     }
   };
@@ -155,7 +134,7 @@ export default function CardModal(): JSX.Element {
   return (
     <div>
       <div className="card-modal-container" onClick={cardModalContainerHandler}>
-        <div className="card-modal-container-main">
+        <div className="card-modal-box">
           {isEditCardTitle ? (
             <input
               type="text"
@@ -175,7 +154,7 @@ export default function CardModal(): JSX.Element {
             />
           ) : (
             <h1
-              className="card-modal-title"
+              className="title"
               onClick={(e: React.MouseEvent): void => {
                 setEditCardTitle(true);
                 e.stopPropagation();
@@ -185,21 +164,21 @@ export default function CardModal(): JSX.Element {
             </h1>
           )}
           <span className="card-modal-list-name">
-            В колонке: <span>{currentList.title}</span>
+            In a column: <span>{currentList.title}</span>
           </span>
           <div className="card-modal-members">
-            <h4 className="card-modal-users-title">Участники:</h4>
+            <h4 className="card-modal-users-title">Users:</h4>
             <div className="card-modal-users-container">
               <div className="card-modal-users-icon" />
               <div className="card-modal-users-icon" />
               <div className="card-modal-users-icon" />
               <button className="card-modal-users-icon invite">+</button>
-              <button className="card-modal-btn-join-member">Присоединиться</button>
+              <button className="card-modal-btn-join-member">Join</button>
             </div>
           </div>
           <div className="card-modal-description">
             <div className="card-modal-description-header-container">
-              <h4 className="card-modal-description-header">Описание</h4>
+              <h4 className="card-modal-description-header">Description</h4>
               <button
                 className="card-modal-description-btn-edit"
                 onClick={(e: React.MouseEvent): void => {
@@ -207,7 +186,7 @@ export default function CardModal(): JSX.Element {
                   e.stopPropagation();
                 }}
               >
-                Изменить
+                Edit
               </button>
             </div>
             {isEditCardDescription ? (
@@ -234,7 +213,7 @@ export default function CardModal(): JSX.Element {
           </div>
         </div>
         <div className="card-modal-actions-container">
-          <h4 className="card-modal-actions-header">Действия</h4>
+          <h4 className="card-modal-actions-header">Actions</h4>
           <button
             className={
               isVisibleCopyMoveModal && !isCopyCard ? 'card-modal-actions-btn disabled' : 'card-modal-actions-btn'
@@ -245,7 +224,7 @@ export default function CardModal(): JSX.Element {
             }}
             disabled={isVisibleCopyMoveModal && !isCopyCard}
           >
-            Копировать
+            Copy
           </button>
           <button
             className={
@@ -257,7 +236,7 @@ export default function CardModal(): JSX.Element {
             }}
             disabled={isVisibleCopyMoveModal && isCopyCard}
           >
-            Перемещение
+            Move
           </button>
           <button
             className={isVisibleCopyMoveModal ? 'card-modal-actions-btn disabled' : 'card-modal-actions-btn archive'}
@@ -267,7 +246,7 @@ export default function CardModal(): JSX.Element {
             }}
             disabled={isVisibleCopyMoveModal}
           >
-            Архивация
+            Archive
           </button>
         </div>
         <button className="card-modal-btn-close" onClick={(): void => onCardModalClose()}>

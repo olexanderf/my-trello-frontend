@@ -12,8 +12,7 @@ type PropsType = {
   handleClickDeleteBoard: (id: number) => void;
 };
 
-export default function IconBoard(props: PropsType): ReactElement {
-  const { handleClickDeleteBoard, board } = props;
+export default function IconBoard({ handleClickDeleteBoard, board }: PropsType): ReactElement {
   const { title, id, custom } = board;
   const color = randomColor();
   const dispatch: TypedDispatch = useDispatch();
