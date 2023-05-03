@@ -16,6 +16,7 @@ export default function Registration(): ReactElement {
   const [isPasswordMatch, setPasswordMatch] = useState(true);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [isPasswordStrong, setPasswordStrong] = useState(true);
+
   const passwordValueHandler = (e: ChangeEvent<HTMLInputElement>): void => {
     setPasswordValue(e.target.value);
   };
@@ -26,45 +27,27 @@ export default function Registration(): ReactElement {
     setEmailValue(e.target.value);
   };
   const checkValidForm = (): boolean => {
-    if (
-      isCorrectMail &&
-      isPasswordMatch &&
-      isPasswordStrong &&
-      email !== '' &&
-      password !== '' &&
-      confirmPassword !== ''
-    )
-      return true;
-    return false;
+    return (
+      isCorrectMail && isPasswordMatch && isPasswordStrong && email !== '' && password !== '' && confirmPassword !== ''
+    );
   };
   const signUp = (): void => {
-    // if (
-    //   isCorrectMail &&
-    //   isPasswordMatch &&
-    //   isPasswordStrong &&
-    //   email !== '' &&
-    //   password !== '' &&
-    //   confirmPassword !== ''
-    // ) {
-    console.log(`email: ${email}, password: ${password}, comfPassword ${confirmPassword}`);
-    // }
+    if (checkValidForm()) console.log(`email: ${email}, password: ${password}, comfPassword ${confirmPassword}`);
   };
   return (
     <div className="registration-page-box">
       <div className="registration-page-container">
-        <h1 className="registration-page-title">Регистрация</h1>
+        <h1 className="registration-page-title">Sign Up</h1>
         <form
           action=""
           id="registration-page-form"
+          className="registration-page-form"
           onSubmit={(e): void => {
             e.preventDefault();
-            setPasswordMatch(password === confirmPassword && confirmPassword !== '');
-            setCorrectMail(checkValidEmail(email));
-            setPasswordStrong(passwordStrength > 2);
-            if (checkValidForm()) signUp();
+            signUp();
           }}
         >
-          <label htmlFor="registration-page-email">Email</label>
+          <label htmlFor="registration-page-email">Enter your email</label>
           <input
             className="registration-page-input"
             type="text"
@@ -72,11 +55,12 @@ export default function Registration(): ReactElement {
             id="registration-page-email"
             value={email}
             onChange={handleEmailInput}
+            onBlur={(): void => setCorrectMail(checkValidEmail(email))}
           />
           <span className="registration-page-error" hidden={isCorrectMail}>
-            {email === '' ? 'Это поле должно быть заполнено ' : 'Email не корректный'}
+            {email === '' ? 'Enter your email' : 'Please enter a valid email address'}
           </span>
-          <label htmlFor="password">Пароль</label>
+          <label htmlFor="password">Create password</label>
           <input
             className="registration-page-input"
             type="password"
@@ -84,12 +68,13 @@ export default function Registration(): ReactElement {
             id="password"
             value={password}
             onChange={passwordValueHandler}
+            onBlur={(): void => setPasswordStrong(passwordStrength > 2)}
           />
           <PasswordStrengthMeter password={password} setPasswordStrength={setPasswordStrength} />
           <span className="registration-page-error" hidden={isPasswordStrong}>
-            {password === '' ? 'Это поле должно быть заполнено ' : 'Пароли слишком простой'}
+            {password === '' ? 'Enter a password' : 'Use 8 or more characters'}
           </span>
-          <label htmlFor="confirm-password">Повторите пароль</label>
+          <label htmlFor="confirm-password">Confirm password</label>
           <input
             className="registration-page-input"
             type="password"
@@ -97,15 +82,16 @@ export default function Registration(): ReactElement {
             id="confirm-password"
             value={confirmPassword}
             onChange={confirmPasswordValueHandler}
+            onBlur={(): void => setPasswordMatch(password === confirmPassword && confirmPassword !== '')}
           />
           <span className="registration-page-error" hidden={isPasswordMatch}>
-            {confirmPassword === '' ? 'Это поле должно быть заполнено ' : 'Пароли не совпадают'}
+            {confirmPassword === '' ? 'Enter a password' : 'Those passwords didn`t match'}
           </span>
           <button type="submit" className="registration-page-submit-btn">
-            Зарегистрироваться
+            Register now
           </button>
           <span className="registration-page-link">
-            Уже есть аккаунт? <a href="/login"> Войти</a>
+            Already have an account? <a href="/login">Login</a>
           </span>
         </form>
       </div>
