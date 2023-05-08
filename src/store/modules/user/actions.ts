@@ -1,7 +1,7 @@
 import { handleResponseError } from '../errorHandler/action';
 import api from '../../../api/request';
 
-export const getToken = (email: string, password: string) => {
+export const login = (email: string, password: string) => {
   return async (): Promise<void> => {
     try {
       await api.post('/login', {

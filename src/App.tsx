@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ProgressBar from './common/components/ProgressBar/ProgressBar';
 import CardModal from './pages/Board/components/CardModal/cardModal';
 import Registration from './pages/Authorization/Registration/Registration';
+import LoginPage from './pages/Authorization/Login/LoginPage';
 
 function App(): ReactElement {
   const errorMessage = useSelector((store: AppState) => store.errorMessage);
@@ -46,6 +47,7 @@ function App(): ReactElement {
       <div>
         <Link to="/">Home </Link>
         <Link to="/registration">Registration </Link>
+        <Link to="/login">Login</Link>
       </div>
       <Routes location={background || location}>
         <Route path="/" element={<Home />} />
@@ -53,6 +55,7 @@ function App(): ReactElement {
           <Route path="/board/:board_id/card/:card_id/" element={<CardModal />} />
         </Route>
         <Route path="/registration" element={<Registration />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
       {background && (
         <Routes>

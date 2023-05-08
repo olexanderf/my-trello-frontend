@@ -1,12 +1,7 @@
 import React, { ChangeEvent, ReactElement, useState } from 'react';
-import { emailRgx } from '../../../common/constants/regExp';
 import PasswordStrengthMeter from './components/PasswordStrengthMeter';
 import './registration.scss';
-
-const checkValidEmail = (emailAddress: string): boolean => {
-  if (emailAddress.match(emailRgx)) return true;
-  return false;
-};
+import { checkValidEmail } from '../../../common/tools/validatorTools';
 
 export default function Registration(): ReactElement {
   const [email, setEmailValue] = useState('');
@@ -32,24 +27,24 @@ export default function Registration(): ReactElement {
     );
   };
   const signUp = (): void => {
-    if (checkValidForm()) console.log(`email: ${email}, password: ${password}, comfPassword ${confirmPassword}`);
+    if (checkValidForm()) console.log(`email: ${email}, password: ${password}, confPassword ${confirmPassword}`);
   };
   return (
-    <div className="registration-page-box">
-      <div className="registration-page-container">
-        <h1 className="registration-page-title">Sign Up</h1>
+    <div className="authorization-page-box">
+      <div className="authorization-page-container">
+        <h1 className="authorization-page-title">Sign Up</h1>
         <form
           action=""
           id="registration-page-form"
-          className="registration-page-form"
+          className="authorization-page-form"
           onSubmit={(e): void => {
             e.preventDefault();
             signUp();
           }}
         >
-          <label htmlFor="registration-page-email">Enter your email</label>
+          <label htmlFor="authorization-page-email">Enter your email</label>
           <input
-            className="registration-page-input"
+            className="authorization-page-input"
             type="text"
             name="registration-page-email"
             id="registration-page-email"
@@ -57,12 +52,12 @@ export default function Registration(): ReactElement {
             onChange={handleEmailInput}
             onBlur={(): void => setCorrectMail(checkValidEmail(email))}
           />
-          <span className="registration-page-error" hidden={isCorrectMail}>
+          <span className="authorization-page-error" hidden={isCorrectMail}>
             {email === '' ? 'Enter your email' : 'Please enter a valid email address'}
           </span>
           <label htmlFor="password">Create password</label>
           <input
-            className="registration-page-input"
+            className="authorization-page-input"
             type="password"
             name="password"
             id="password"
@@ -71,12 +66,12 @@ export default function Registration(): ReactElement {
             onBlur={(): void => setPasswordStrong(passwordStrength > 2)}
           />
           <PasswordStrengthMeter password={password} setPasswordStrength={setPasswordStrength} />
-          <span className="registration-page-error" hidden={isPasswordStrong}>
-            {password === '' ? 'Enter a password' : 'Use 8 or more characters'}
+          <span className="authorization-page-error" hidden={isPasswordStrong}>
+            {password === '' ? 'Enter a password' : 'Password is weak'}
           </span>
           <label htmlFor="confirm-password">Confirm password</label>
           <input
-            className="registration-page-input"
+            className="authorization-page-input"
             type="password"
             name="confirm-password"
             id="confirm-password"
@@ -84,13 +79,13 @@ export default function Registration(): ReactElement {
             onChange={confirmPasswordValueHandler}
             onBlur={(): void => setPasswordMatch(password === confirmPassword && confirmPassword !== '')}
           />
-          <span className="registration-page-error" hidden={isPasswordMatch}>
+          <span className="authorization-page-error" hidden={isPasswordMatch}>
             {confirmPassword === '' ? 'Enter a password' : 'Those passwords didn`t match'}
           </span>
-          <button type="submit" className="registration-page-submit-btn">
+          <button type="submit" className="authorization-page-submit-btn">
             Register now
           </button>
-          <span className="registration-page-link">
+          <span className="authorization-page-link">
             Already have an account? <a href="/login">Login</a>
           </span>
         </form>
