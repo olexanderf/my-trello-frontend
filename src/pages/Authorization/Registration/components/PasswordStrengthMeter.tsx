@@ -7,8 +7,7 @@ interface PropsType {
   setPasswordStrength: Dispatch<SetStateAction<number>>;
 }
 
-export default function PasswordStrengthMeter(props: PropsType): ReactElement {
-  const { password, setPasswordStrength } = props;
+export default function PasswordStrengthMeter({ password, setPasswordStrength }: PropsType): ReactElement {
   const passwordTestResult = zxcvbn(password);
   const passwordStrengthNumber = passwordTestResult.score;
   useEffect(() => {

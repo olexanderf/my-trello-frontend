@@ -11,15 +11,19 @@ export default function Registration(): ReactElement {
   const [isPasswordMatch, setPasswordMatch] = useState(true);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [isPasswordStrong, setPasswordStrong] = useState(true);
+  const [isSignUpPressed, setSignUpPress] = useState(false);
 
   const passwordValueHandler = (e: ChangeEvent<HTMLInputElement>): void => {
     setPasswordValue(e.target.value);
+    setPasswordStrong(passwordStrength >= 2);
   };
   const confirmPasswordValueHandler = (e: ChangeEvent<HTMLInputElement>): void => {
     setConfirmPasswordValue(e.target.value);
+    setPasswordMatch(password === e.target.value && e.target.value !== '');
   };
   const handleEmailInput = (e: ChangeEvent<HTMLInputElement>): void => {
     setEmailValue(e.target.value);
+    setCorrectMail(checkValidEmail(e.target.value));
   };
   const checkValidForm = (): boolean => {
     return (
@@ -40,6 +44,7 @@ export default function Registration(): ReactElement {
           onSubmit={(e): void => {
             e.preventDefault();
             signUp();
+            setSignUpPress(true);
           }}
         >
           <label htmlFor="authorization-page-email">Enter your email</label>
@@ -50,11 +55,15 @@ export default function Registration(): ReactElement {
             id="registration-page-email"
             value={email}
             onChange={handleEmailInput}
-            onBlur={(): void => setCorrectMail(checkValidEmail(email))}
+            // onBlur={(): void => setCorrectMail(checkValidEmail(email))}
           />
-          <span className="authorization-page-error" hidden={isCorrectMail}>
-            {email === '' ? 'Enter your email' : 'Please enter a valid email address'}
-          </span>
+          {isSignUpPressed ? (
+            <span className="authorization-page-error" hidden={isCorrectMail}>
+              {email === '' ? 'Enter your email' : 'Please enter a valid email address'}
+            </span>
+          ) : (
+            ''
+          )}
           <label htmlFor="password">Create password</label>
           <input
             className="authorization-page-input"
@@ -63,12 +72,16 @@ export default function Registration(): ReactElement {
             id="password"
             value={password}
             onChange={passwordValueHandler}
-            onBlur={(): void => setPasswordStrong(passwordStrength > 2)}
+            // onBlur={(): void => setPasswordStrong(passwordStrength > 2)}
           />
           <PasswordStrengthMeter password={password} setPasswordStrength={setPasswordStrength} />
-          <span className="authorization-page-error" hidden={isPasswordStrong}>
-            {password === '' ? 'Enter a password' : 'Password is weak'}
-          </span>
+          {isSignUpPressed ? (
+            <span className="authorization-page-error" hidden={isPasswordStrong}>
+              {password === '' ? 'Enter a password' : 'Password is weak'}
+            </span>
+          ) : (
+            ''
+          )}
           <label htmlFor="confirm-password">Confirm password</label>
           <input
             className="authorization-page-input"
@@ -77,11 +90,15 @@ export default function Registration(): ReactElement {
             id="confirm-password"
             value={confirmPassword}
             onChange={confirmPasswordValueHandler}
-            onBlur={(): void => setPasswordMatch(password === confirmPassword && confirmPassword !== '')}
+            // onBlur={(): void => setPasswordMatch(password === confirmPassword && confirmPassword !== '')}
           />
-          <span className="authorization-page-error" hidden={isPasswordMatch}>
-            {confirmPassword === '' ? 'Enter a password' : 'Those passwords didn`t match'}
-          </span>
+          {isSignUpPressed ? (
+            <span className="authorization-page-error" hidden={isPasswordMatch}>
+              {confirmPassword === '' ? 'Enter a comfirm password' : 'Those passwords didn`t match'}
+            </span>
+          ) : (
+            ''
+          )}
           <button type="submit" className="authorization-page-submit-btn">
             Register now
           </button>
