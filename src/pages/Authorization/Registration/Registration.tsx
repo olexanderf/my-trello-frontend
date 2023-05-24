@@ -55,7 +55,6 @@ export default function Registration(): ReactElement {
             id="registration-page-email"
             value={email}
             onChange={handleEmailInput}
-            // onBlur={(): void => setCorrectMail(checkValidEmail(email))}
           />
           {isSignUpPressed ? (
             <span className="authorization-page-error" hidden={isCorrectMail}>
@@ -72,7 +71,6 @@ export default function Registration(): ReactElement {
             id="password"
             value={password}
             onChange={passwordValueHandler}
-            // onBlur={(): void => setPasswordStrong(passwordStrength > 2)}
           />
           <PasswordStrengthMeter password={password} setPasswordStrength={setPasswordStrength} />
           {isSignUpPressed ? (
@@ -90,7 +88,6 @@ export default function Registration(): ReactElement {
             id="confirm-password"
             value={confirmPassword}
             onChange={confirmPasswordValueHandler}
-            // onBlur={(): void => setPasswordMatch(password === confirmPassword && confirmPassword !== '')}
           />
           {isSignUpPressed ? (
             <span className="authorization-page-error" hidden={isPasswordMatch}>
