@@ -48,15 +48,20 @@ function App(): ReactElement {
         <Link to="/">Home </Link>
         <Link to="/registration">Registration </Link>
         <Link to="/login">Login</Link>
-        <button
-          className="btn-log-out"
-          onClick={(): void => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('refreshToken');
-          }}
-        >
-          Log out
-        </button>
+        {localStorage.getItem('token') !== null ? (
+          <button
+            className="btn-log-out"
+            onClick={(): void => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('refreshToken');
+              window.location.href = '/login';
+            }}
+          >
+            Log out
+          </button>
+        ) : (
+          ''
+        )}
       </div>
       <Routes location={background || location}>
         <Route path="/" element={<Home />} />

@@ -6,7 +6,7 @@ import { login } from '../../../store/modules/user/actions';
 export default function LoginPage(): ReactElement {
   const [email, setEmailValue] = useState('');
   const [password, setPasswordValue] = useState('');
-  const [isFromSubmit, toggeSubmitForm] = useState(false);
+  const [isFromSubmit, toggleSubmitForm] = useState(false);
   const [isErrorResponse, setErrorResponse] = useState(false);
   const dispatch: AppDispatch = useDispatch();
   const handleEmailInput = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -28,7 +28,7 @@ export default function LoginPage(): ReactElement {
           className="authorization-page-form"
           onSubmit={(e): void => {
             e.preventDefault();
-            toggeSubmitForm(true);
+            toggleSubmitForm(true);
             if (!checkEmptyInput()) dispatch(login(email, password));
           }}
         >

@@ -21,6 +21,8 @@
 .add-item-container {
   padding: 20px;
   .add-item {
+      position: relative;
+      z-index: 75;
       box-sizing: border-box;
       font-size: 35px;
       cursor: pointer;
