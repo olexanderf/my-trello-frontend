@@ -7,6 +7,7 @@ export const handleResponseError = (error: unknown): AppThunk => {
     if (axios.isAxiosError(error)) {
       await dispatch({ type: 'RESPONSE_ERROR', payload: error.message });
       await dispatch({ type: 'CLEAR_ERROR_STATE' });
+      // if (error.response?.status === 401) window.location.href = '/login';
     } else console.log(error);
   };
 };

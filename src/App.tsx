@@ -47,7 +47,7 @@ function App(): ReactElement {
       <div>
         <Link to="/">Home </Link>
         <Link to="/registration">Registration </Link>
-        <Link to="/login">Login</Link>
+        {localStorage.getItem('token') === null ? <Link to="/login">Login</Link> : ''}
         {localStorage.getItem('token') !== null ? (
           <button
             className="btn-log-out"

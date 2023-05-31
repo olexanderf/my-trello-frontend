@@ -18,11 +18,13 @@ instance.interceptors.response.use(
   (res: AxiosResponse) => {
     store.dispatch(loader(false));
     return res.data;
-  },
-  (error: AxiosError) => {
-    console.log(error);
-    if (error.response?.status === 401) window.location.href = '/login';
   }
+  // (error: AxiosError) => {
+  //   store.dispatch(loader(false));
+  //   console.log(error);
+  //   if (error.response?.status === 401) window.location.href = '/login';
+  //   console.log(error.response?.data.error);
+  // }
 );
 instance.interceptors.request.use((res: AxiosRequestConfig) => {
   store.dispatch(loader(true));

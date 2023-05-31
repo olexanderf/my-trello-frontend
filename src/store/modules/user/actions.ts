@@ -2,7 +2,7 @@ import { handleResponseError } from '../errorHandler/action';
 import api from '../../../api/request';
 
 interface LoginResponseData {
-  resut: string;
+  result: string;
   token: string;
   refreshToken: string;
 }
@@ -32,6 +32,7 @@ export const createUser = (email: string, password: string) => {
         email,
         password,
       });
+      window.location.href = '/login';
     } catch (e) {
       handleResponseError(e);
     }
