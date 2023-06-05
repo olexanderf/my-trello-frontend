@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { Route, Routes, Link, useLocation } from 'react-router-dom';
 import { ToastContainer, toast, ToastContent } from 'react-toastify';
 import { useSelector } from 'react-redux';
@@ -15,7 +15,6 @@ import LoginPage from './pages/Authorization/Login/LoginPage';
 function App(): ReactElement {
   const errorMessage = useSelector((store: AppState) => store.errorMessage);
   const loaderBar = useSelector((store: AppState) => store.loaderBar);
-  const [loaderBarState, setLoaderBarState] = useState(false);
   const location = useLocation();
   const background = location.state && location.state.background;
 
@@ -32,12 +31,7 @@ function App(): ReactElement {
     });
 
   useEffect(() => {
-    setLoaderBarState(loaderBar);
-  }, [loaderBar]);
-
-  useEffect(() => {
-    if (typeof errorMessage === 'string' && errorMessage !== '') {
-      setLoaderBarState(false);
+    if (errorMessage !== '') {
       notify(errorMessage);
     }
   }, [errorMessage]);
@@ -76,7 +70,7 @@ function App(): ReactElement {
           <Route path="/board/:board_id/card/:card_id/" element={<CardModal />} />
         </Routes>
       )}
-      {loaderBarState && <ProgressBar />}
+      {loaderBar && <ProgressBar />}
       <div>
         <ToastContainer />
       </div>

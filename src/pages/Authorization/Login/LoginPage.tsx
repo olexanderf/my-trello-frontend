@@ -1,13 +1,13 @@
 import React, { ChangeEvent, ReactElement, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, AppState } from '../../../store/store';
 import { login } from '../../../store/modules/user/actions';
 
 export default function LoginPage(): ReactElement {
   const [email, setEmailValue] = useState('');
   const [password, setPasswordValue] = useState('');
   const [isFromSubmit, toggleSubmitForm] = useState(false);
-  const [isErrorResponse, setErrorResponse] = useState(false);
+  const errorMassage = useSelector((state: AppState) => state.errorMessage);
   const dispatch: AppDispatch = useDispatch();
   const handleEmailInput = (e: ChangeEvent<HTMLInputElement>): void => {
     setEmailValue(e.target.value);
@@ -15,8 +15,8 @@ export default function LoginPage(): ReactElement {
   const passwordValueHandler = (e: ChangeEvent<HTMLInputElement>): void => {
     setPasswordValue(e.target.value);
   };
-  const checkEmptyInput = (): boolean => {
-    return password === '' && email === '';
+  const checkNoEmptyInput = (): boolean => {
+    return password !== '' && email !== '';
   };
   return (
     <div className="authorization-page-box">
@@ -29,14 +29,14 @@ export default function LoginPage(): ReactElement {
           onSubmit={(e): void => {
             e.preventDefault();
             toggleSubmitForm(true);
-            if (!checkEmptyInput()) dispatch(login(email, password));
+            if (checkNoEmptyInput()) dispatch(login(email, password));
           }}
         >
-          <label htmlFor="authorization-page-email">Enter your email</label>
+          <label htmlFor="login-page-email">Enter your email</label>
           <input
             className="authorization-page-input"
             type="text"
-            name="registration-page-email"
+            name="authorization-page-email"
             id="login-page-email"
             value={email}
             onChange={handleEmailInput}
@@ -64,7 +64,7 @@ export default function LoginPage(): ReactElement {
           ) : (
             ''
           )}
-          <span className="authorization-page-error" hidden={!isErrorResponse}>
+          <span className="authorization-page-error" hidden={errorMassage === ''}>
             User with this password not found
           </span>
           <button type="submit" className="authorization-page-submit-btn">

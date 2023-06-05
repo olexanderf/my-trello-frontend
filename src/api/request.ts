@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { api } from '../common/constants';
 import { loader } from '../store/modules/loadingBar/action';
 import store from '../store/store';
@@ -14,18 +14,10 @@ const instance = axios.create({
   },
 });
 
-instance.interceptors.response.use(
-  (res: AxiosResponse) => {
-    store.dispatch(loader(false));
-    return res.data;
-  }
-  // (error: AxiosError) => {
-  //   store.dispatch(loader(false));
-  //   console.log(error);
-  //   if (error.response?.status === 401) window.location.href = '/login';
-  //   console.log(error.response?.data.error);
-  // }
-);
+instance.interceptors.response.use((res: AxiosResponse) => {
+  store.dispatch(loader(false));
+  return res.data;
+});
 instance.interceptors.request.use((res: AxiosRequestConfig) => {
   store.dispatch(loader(true));
   return res;

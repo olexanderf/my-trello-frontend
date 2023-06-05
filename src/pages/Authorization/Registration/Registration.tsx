@@ -47,7 +47,7 @@ export default function Registration(): ReactElement {
             setSignUpPress(true);
           }}
         >
-          <label htmlFor="authorization-page-email">Enter your email</label>
+          <label htmlFor="registration-page-email">Enter your email</label>
           <input
             className="authorization-page-input"
             type="text"

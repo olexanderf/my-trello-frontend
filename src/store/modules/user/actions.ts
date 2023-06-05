@@ -1,5 +1,6 @@
 import { handleResponseError } from '../errorHandler/action';
 import api from '../../../api/request';
+import { TypedDispatch } from '../../store';
 
 interface LoginResponseData {
   result: string;
@@ -8,7 +9,7 @@ interface LoginResponseData {
 }
 
 export const login = (email: string, password: string) => {
-  return async (): Promise<void> => {
+  return async (dispatch: TypedDispatch): Promise<void> => {
     try {
       const response: LoginResponseData = await api.post('/login', {
         email,
@@ -18,7 +19,7 @@ export const login = (email: string, password: string) => {
       localStorage.setItem('refreshToken', `${response.refreshToken}`);
       window.location.href = '/';
     } catch (e) {
-      handleResponseError(e);
+      dispatch(handleResponseError(e));
     }
   };
 };
@@ -26,7 +27,7 @@ export const login = (email: string, password: string) => {
 // password: 'dfdfdf',
 
 export const createUser = (email: string, password: string) => {
-  return async (): Promise<void> => {
+  return async (dispatch: TypedDispatch): Promise<void> => {
     try {
       await api.post('/user', {
         email,
@@ -34,7 +35,7 @@ export const createUser = (email: string, password: string) => {
       });
       window.location.href = '/login';
     } catch (e) {
-      handleResponseError(e);
+      dispatch(handleResponseError(e));
     }
   };
 };
