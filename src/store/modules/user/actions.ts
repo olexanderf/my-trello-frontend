@@ -1,12 +1,7 @@
 import { handleResponseError } from '../errorHandler/action';
 import api from '../../../api/request';
 import { TypedDispatch } from '../../store';
-
-interface LoginResponseData {
-  result: string;
-  token: string;
-  refreshToken: string;
-}
+import LoginResponseData from '../../../common/interfaces/LoginResponseData';
 
 export const login = (email: string, password: string) => {
   return async (dispatch: TypedDispatch): Promise<void> => {

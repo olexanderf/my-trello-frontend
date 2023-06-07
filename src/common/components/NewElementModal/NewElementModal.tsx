@@ -37,7 +37,7 @@ export default function Modal(props: PropsType): ReactElement {
               }
             }}
           >
-            Добавить
+            Add
           </button>
           <button className="modal-btn-close" onClick={(): void => toggleModal()}>
             +
