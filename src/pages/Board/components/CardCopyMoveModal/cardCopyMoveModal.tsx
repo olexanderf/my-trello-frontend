@@ -256,6 +256,7 @@ export default function CardCopyMoveModal({ isCopy }: PropsType): JSX.Element {
           form="copy-move-card"
           value={options.indexOfSelectedList}
           onChange={(e): void => listValueHandler(e)}
+          disabled={board.lists.length === 0}
         >
           {board.lists &&
             board.lists.map((l, index) => {
@@ -273,6 +274,7 @@ export default function CardCopyMoveModal({ isCopy }: PropsType): JSX.Element {
           id="position-select"
           form="copy-move-card"
           ref={selectCardPosition}
+          disabled={board.lists.length === 0}
         >
           {board.lists[options.indexOfSelectedList] ? (
             board.lists[options.indexOfSelectedList].cards.map((c) => {
@@ -293,7 +295,7 @@ export default function CardCopyMoveModal({ isCopy }: PropsType): JSX.Element {
             )}
         </select>
         <br />
-        <button className="card-copy-move-modal-btn" type="submit">
+        <button className="card-copy-move-modal-btn" type="submit" disabled={board.lists.length === 0}>
           {isCopy ? 'Copy' : 'Move'}
         </button>
       </form>

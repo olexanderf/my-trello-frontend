@@ -7,7 +7,7 @@ export default function LoginPage(): ReactElement {
   const [email, setEmailValue] = useState('');
   const [password, setPasswordValue] = useState('');
   const [isFromSubmit, toggleSubmitForm] = useState(false);
-  const errorMassage = useSelector((state: AppState) => state.errorMessage);
+  const loginErrorMassage = useSelector((state: AppState) => state.errorMessage.loginErrorMassage);
   const dispatch: AppDispatch = useDispatch();
   const handleEmailInput = (e: ChangeEvent<HTMLInputElement>): void => {
     setEmailValue(e.target.value);
@@ -64,7 +64,7 @@ export default function LoginPage(): ReactElement {
           ) : (
             ''
           )}
-          <span className="authorization-page-error" hidden={errorMassage === ''}>
+          <span className="authorization-page-error" hidden={loginErrorMassage === ''}>
             User with this password not found
           </span>
           <button type="submit" className="authorization-page-submit-btn">

@@ -13,7 +13,7 @@ import Registration from './pages/Authorization/Registration/Registration';
 import LoginPage from './pages/Authorization/Login/LoginPage';
 
 function App(): ReactElement {
-  const errorMessage = useSelector((store: AppState) => store.errorMessage);
+  const commonErrorMassage = useSelector((store: AppState) => store.errorMessage.commonErrorMassage);
   const loaderBar = useSelector((store: AppState) => store.loaderBar);
   const location = useLocation();
   const background = location.state && location.state.background;
@@ -31,10 +31,10 @@ function App(): ReactElement {
     });
 
   useEffect(() => {
-    if (errorMessage !== '') {
-      notify(errorMessage);
+    if (commonErrorMassage !== '') {
+      notify(commonErrorMassage);
     }
-  }, [errorMessage]);
+  }, [commonErrorMassage]);
 
   return (
     <div className="App">

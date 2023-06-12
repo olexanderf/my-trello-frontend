@@ -10,9 +10,11 @@ export const login = (email: string, password: string) => {
         email,
         password,
       });
-      localStorage.setItem('token', `${response.token}`);
-      localStorage.setItem('refreshToken', `${response.refreshToken}`);
-      window.location.href = '/';
+      if (response) {
+        localStorage.setItem('token', `${response.token}`);
+        localStorage.setItem('refreshToken', `${response.refreshToken}`);
+        window.location.href = '/';
+      }
     } catch (e) {
       dispatch(handleResponseError(e));
     }
