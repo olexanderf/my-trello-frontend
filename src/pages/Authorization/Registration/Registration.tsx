@@ -1,9 +1,13 @@
 import React, { ChangeEvent, ReactElement, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import PasswordStrengthMeter from './components/PasswordStrengthMeter';
 import './registration.scss';
 import { checkValidEmail } from '../../../common/tools/validatorTools';
+import { createUser } from '../../../store/modules/user/actions';
+import { AppDispatch } from '../../../store/store';
 
 export default function Registration(): ReactElement {
+  const dispatch: AppDispatch = useDispatch();
   const [email, setEmailValue] = useState('');
   const [password, setPasswordValue] = useState('');
   const [confirmPassword, setConfirmPasswordValue] = useState('');
@@ -31,7 +35,7 @@ export default function Registration(): ReactElement {
     );
   };
   const signUp = (): void => {
-    if (checkValidForm()) console.log(`email: ${email}, password: ${password}, confPassword ${confirmPassword}`);
+    if (checkValidForm()) dispatch(createUser(email, password));
   };
   return (
     <div className="authorization-page-box">

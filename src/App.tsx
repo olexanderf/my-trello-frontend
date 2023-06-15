@@ -41,8 +41,9 @@ function App(): ReactElement {
       <div>
         <Link to="/">Home </Link>
         <Link to="/registration">Registration </Link>
-        {localStorage.getItem('token') === null ? <Link to="/login">Login</Link> : ''}
-        {localStorage.getItem('token') !== null ? (
+        {localStorage.getItem('token') === null || localStorage.getItem('token') === 'undefined' ? (
+          <Link to="/login">Login</Link>
+        ) : (
           <button
             className="btn-log-out"
             onClick={(): void => {
@@ -53,8 +54,6 @@ function App(): ReactElement {
           >
             Log out
           </button>
-        ) : (
-          ''
         )}
       </div>
       <Routes location={background || location}>

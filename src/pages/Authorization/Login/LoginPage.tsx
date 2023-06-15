@@ -1,7 +1,8 @@
-import React, { ChangeEvent, ReactElement, useState } from 'react';
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, AppState } from '../../../store/store';
 import { login } from '../../../store/modules/user/actions';
+import { loginError } from '../../../store/modules/errorHandler/action';
 
 export default function LoginPage(): ReactElement {
   const [email, setEmailValue] = useState('');
@@ -9,6 +10,9 @@ export default function LoginPage(): ReactElement {
   const [isFromSubmit, toggleSubmitForm] = useState(false);
   const loginErrorMassage = useSelector((state: AppState) => state.errorMessage.loginErrorMassage);
   const dispatch: AppDispatch = useDispatch();
+  useEffect(() => {
+    if (loginErrorMassage !== '') dispatch(loginError(''));
+  }, []);
   const handleEmailInput = (e: ChangeEvent<HTMLInputElement>): void => {
     setEmailValue(e.target.value);
   };

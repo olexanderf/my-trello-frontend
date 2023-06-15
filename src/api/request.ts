@@ -12,8 +12,7 @@ const instance = axios.create({
   baseURL: api.baseURL,
   headers: {
     'Content-Type': 'application/json',
-    // Authorization: 'Bearer 123', // к этому мы ещё вернёмся как-нибудь потом
-    Authorization: `Bearer ${token}`, // к этому мы ещё вернёмся как-нибудь потом
+    Authorization: `Bearer ${token}`,
   },
 });
 
@@ -30,30 +29,28 @@ instance.interceptors.response.use(
   },
   async (error: AxiosError) => {
     store.dispatch(loader(false));
-    if (error.response?.status === 401 && window.location.pathname !== '/login' && refreshToken) {
-      const response: LoginResponseData = await getGetRefreshToken();
-      localStorage.setItem('token', `${response.token}`);
-      localStorage.setItem('refreshToken', `${response.refreshToken}`);
-      instance.defaults.headers.common.Authorization = `Bearer ${response.token}`;
+    if (error.response?.status === 401) {
+      if (window.location.pathname === '/login') {
+        store.dispatch(loginError(error.message));
+      }
+      if (window.location.pathname !== '/login') {
+        if (refreshToken && refreshToken !== 'undefined') {
+          const response: LoginResponseData = await getGetRefreshToken();
+
+          localStorage.setItem('token', `${response.token}`);
+          localStorage.setItem('refreshToken', `${response.refreshToken}`);
+          instance.defaults.headers.common.Authorization = `Bearer ${response.token}`;
+        }
+        if (!refreshToken || !token || refreshToken === 'undefined') {
+          window.location.href = '/login';
+        }
+      }
     }
-    if (error.response?.status === 401 && window.location.pathname === '/login') {
-      store.dispatch(loginError(error.message));
-    }
-    if (error.response?.status === 401 && window.location.pathname !== '/login' && !refreshToken && !token)
-      window.location.href = '/login';
   }
 );
 instance.interceptors.request.use(async (res: AxiosRequestConfig) => {
   store.dispatch(loader(true));
   return res;
 });
-//   instance
-//     .post('/login', {
-//       email: 'vpupkin@example.com',
-//       password: 'dfdfdf',
-//     })
-//     .then((response) => (token = response.data));
-//   console.log(token);
-//   return token;
 
 export default instance;
