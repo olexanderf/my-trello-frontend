@@ -141,7 +141,7 @@ export default function CardCopyMoveModal({ isCopy }: PropsType): JSX.Element {
     }
     return {};
   };
-  const createTargetMoveDate = (newCardPosition: number): {} => {
+  const createTargetMoveData = (newCardPosition: number): {} => {
     if (board.lists[options.indexOfSelectedList].cards.length !== 0) {
       const targetCardsUpdatedPositions = board.lists[options.indexOfSelectedList].cards.map((c: ICard) => {
         if (c.position < newCardPosition) return { ...c };
@@ -167,7 +167,7 @@ export default function CardCopyMoveModal({ isCopy }: PropsType): JSX.Element {
   };
   const moveBetweenBoards = async (newCardPosition: number, cardsArr: ICard[]): Promise<void> => {
     const startMove = createStartMoveData(cardsArr);
-    const targetMove = createTargetMoveDate(newCardPosition);
+    const targetMove = createTargetMoveData(newCardPosition);
 
     const cardToNewBoard: MovedICard = {
       board_id: boards[options.indexOfBoard].id,
