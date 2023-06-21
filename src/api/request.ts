@@ -3,7 +3,7 @@ import { api } from '../common/constants';
 import { loader } from '../store/modules/loadingBar/action';
 import store from '../store/store';
 import LoginResponseData from '../common/interfaces/LoginResponseData';
-import { loginError } from '../store/modules/errorHandler/action';
+import { handleResponseError, loginError } from '../store/modules/errorHandler/action';
 
 const token = localStorage.getItem('token');
 const refreshToken = localStorage.getItem('refreshToken');
@@ -16,10 +16,14 @@ const instance = axios.create({
   },
 });
 
-const getGetRefreshToken = async (): Promise<LoginResponseData> => {
-  return instance.post('/refresh', {
-    refreshToken,
-  });
+const getGetRefreshToken = async (): Promise<LoginResponseData | undefined> => {
+  try {
+    return await axios.post(`${api.baseURL}/refresh`, {
+      refreshToken,
+    });
+  } catch (e) {
+    return undefined;
+  }
 };
 
 instance.interceptors.response.use(
@@ -35,17 +39,23 @@ instance.interceptors.response.use(
       }
       if (window.location.pathname !== '/login') {
         if (refreshToken && refreshToken !== 'undefined') {
-          const response: LoginResponseData = await getGetRefreshToken();
-
-          localStorage.setItem('token', `${response.token}`);
-          localStorage.setItem('refreshToken', `${response.refreshToken}`);
-          instance.defaults.headers.common.Authorization = `Bearer ${response.token}`;
+          const response: LoginResponseData | undefined = await getGetRefreshToken();
+          if (response !== undefined) {
+            localStorage.setItem('token', `${response.token}`);
+            localStorage.setItem('refreshToken', `${response.refreshToken}`);
+            instance.defaults.headers.common.Authorization = `Bearer ${response.token}`;
+          } else {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            window.location.href = '/login';
+          }
         }
         if (!refreshToken || !token || refreshToken === 'undefined') {
           window.location.href = '/login';
         }
       }
     }
+    store.dispatch(handleResponseError(error));
   }
 );
 instance.interceptors.request.use(async (res: AxiosRequestConfig) => {
